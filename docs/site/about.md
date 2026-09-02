@@ -19,15 +19,18 @@ County geometry and the input panel are reconciled explicitly. The one atlas
 geometry without an input county series remains visible as an exception rather
 than being imputed. Station-to-county assignments come from the Census
 geocoder; the saved assignment table is the authoritative record, including
-the recorded county for each station.
+the recorded county for each station. In the frozen response record, O'Hare is
+assigned to FIPS 17043 and Dallas--Fort Worth to FIPS 48113; the station table,
+rather than an inferred airport boundary, controls the release assignment.
 
 ## Project conventions
 
 The station index is calculated from daily integer-F maximum and minimum
 temperatures. Quality-flagged values are treated as missing. Very short gaps
-may be filled by a documented interpolation rule; a materially incomplete
-month is excluded. These are project quality-control conventions and are not a
-claim about exchange settlement procedures.
+of at most two days may be filled by a documented interpolation rule; a month
+with more than five percent missing days, or any longer gap, is excluded. These
+are project quality-control conventions and are not a claim about exchange
+settlement procedures.
 
 The atlas uses historical index quality, not a contemporaneous contract listing
 screen. Its selection sequence is point-in-time, but the gridded county layer
@@ -43,13 +46,16 @@ from prose.
 
 ## Market context
 
-The contract-universe reference documents the listed U.S. weather stations and
-the dated product change reflected in this project. CME material describes
-weather contracts as primarily ClearPort block products. Contemporary
-third-party and exchange publications cited in the project source catalogue
-describe open-interest and volume context, while the dated weather bulletin
-record is retained as an observed screen-volume fact. These facts are context
-only: this project makes no liquidity, availability, execution, or price claim.
+The contract-universe reference records thirteen U.S. weather stations after
+the U.S. product change dated 2023-05-22, versus nine before that change. CME
+materials describe these contracts as trading primarily as ClearPort blocks.
+Parameta's publication dated 2025-01-07 reported average open interest around
+170,000 contracts in September 2024; CME OpenMarkets, dated 2024-09-03,
+reported 2023 volume up by more than 260% from the prior year. The dated CME
+Section 24 bulletin for 2026-08-31 printed zero on-screen volume for every
+weather line. These statements are sourced market context only, retained in
+the contract-source catalogue; they do not support a liquidity, availability,
+execution, or price claim.
 
 ## Disclaimer
 

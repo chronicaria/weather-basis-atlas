@@ -20,6 +20,11 @@ Station moves, observing-time changes, and other recorded history events are
 retained as context; they do not create retrospective adjustments to the
 pre-registered selection protocol.
 
+The case study includes the additional Nebraska stations alongside the listed
+U.S. index stations. Its tables identify the source station and record status;
+they do not imply that an additional station is a listed contract or an
+available transaction.
+
 ## How to read the result
 
 Distance can help diagnose geographic mismatch, but it is not the atlas's

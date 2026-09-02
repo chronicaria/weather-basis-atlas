@@ -20,6 +20,7 @@ from typing import Final
 import pandas as pd
 
 from weather_basis.http import FetchResult, fetch
+from weather_basis.io import atomic_write_bytes, sha256
 
 CONUS_EXCLUDED_PREFIXES: Final[frozenset[str]] = frozenset(
     {"02", "15", "60", "66", "69", "72", "78"}
@@ -203,4 +204,67 @@ def reconcile_fips(
         atlas_only=frozenset(sorted(atlas_only)),
         nclimgrid_only=frozenset(sorted(raw_nclim_only)),
         exceptions_applied=frozenset(sorted(applied)),
+    )
+
+
+def write_geography_population_manifests(root: Path) -> tuple[Path, Path]:
+    """Write compact, hash-backed provenance records for geographic inputs.
+
+    The HTTP sidecars preserve retrieval metadata while these committed
+    manifests connect the raw Census/downloaded inputs to the canonical county
+    dimension used by the atlas.  They intentionally contain only observed
+    paths, hashes, and counts; no geographic facts are inferred here.
+    """
+
+    root = Path(root)
+    manifest_dir = root / "data/manifests"
+    gazetteer = root / "data/raw/geography/2020_Gaz_counties_national.zip"
+    population = root / "data/raw/census/co-est2021-alldata.csv"
+    counties = root / "data/metadata/counties.csv"
+    vendor = root / "web/vendor/counties-albers-10m.json"
+    for path in (gazetteer, population, counties, vendor):
+        if not path.is_file():
+            raise FileNotFoundError(f"missing geography provenance input: {path}")
+
+    geography_target = manifest_dir / "geography.json"
+    population_target = manifest_dir / "population.json"
+    _write_json(
+        geography_target,
+        {
+            "source": _source_record(root, gazetteer),
+            "vendor_geometry": _source_record(root, vendor),
+            "canonical_counties": _source_record(root, counties),
+            "vintage": "gazetteer_2020",
+        },
+    )
+    _write_json(
+        population_target,
+        {
+            "source": _source_record(root, population),
+            "canonical_counties": _source_record(root, counties),
+            "vintage": "population_2020",
+        },
+    )
+    return geography_target, population_target
+
+
+def _source_record(root: Path, path: Path) -> dict[str, object]:
+    record: dict[str, object] = {
+        "path": path.relative_to(root).as_posix(),
+        "bytes": path.stat().st_size,
+        "sha256": sha256(path),
+    }
+    sidecar = path.with_name(path.name + ".http.json")
+    if sidecar.is_file():
+        payload = json.loads(sidecar.read_text(encoding="utf-8"))
+        for key in ("url", "etag", "last_modified", "retrieved_at_utc"):
+            if key in payload:
+                record[key] = payload[key]
+    return record
+
+
+def _write_json(path: Path, value: dict[str, object]) -> None:
+    atomic_write_bytes(
+        path,
+        (json.dumps(value, sort_keys=True, indent=2) + "\n").encode("utf-8"),
     )

@@ -39,9 +39,9 @@ Station daily temperatures come from frozen GHCN-Daily station snapshots and
 are transformed to the public index convention. A station day with an absent
 or quality-flagged maximum or minimum is missing. Runs of at most two missing
 days may be linearly filled and then rounded to integer Fahrenheit before the
-daily mean is formed; a station-month with more than the project threshold of
-missing days, or a longer gap, is excluded. This is a project convention, not
-an exchange rule.
+daily mean is formed; a station-month with more than five percent missing days,
+or a longer gap, is excluded. This is a project convention, not an exchange
+rule.
 
 The county panel is a gridded and homogenized product. Its scaled daily files
 are regenerated upstream; therefore a small look-ahead in level and trend is
@@ -70,13 +70,12 @@ not elevate individual county cells to hypothesis tests. The selected marginal
 rung is diagnostic only: public distribution and quote payloads come from the
 same joint R2j site run.
 
-The current historical tournament implementation evaluates its R2 and R2j
-rungs with an annual-index residual fallback at each origin; the calibration
-table labels this basis explicitly. It does not claim to be the full daily R2
-refit at every historical origin. The production site simulation and pricing
-path does perform the registered daily R2 fit and shared-innovation R2j
-simulation, and its calibration rows are labelled
-`daily_R2_standardized_innovation`.
+The daily model estimates a seasonal mean, an autoregressive residual process,
+seasonal innovation scale, and resampled standardized innovations. The R2j
+site draw couples included county and station series through a common calendar
+day innovation-block plan. This preserves the simulated dependence required by
+the residual-risk pricing convention; it is assessed through a joint diagnostic
+rather than presented as a separate marginal tournament winner.
 
 The release should report its selected-rung table, joint diagnostic,
 calibration diagnostics, sensitivity runs, and pre-registered power statement

@@ -51,3 +51,15 @@ def test_phase2_station_missingness_matches_qc_status() -> None:
         )
         expected_nan = merged["qc_status"].isin(("excluded", "provisional", "pre_start"))
         assert (merged["index"].isna() == expected_nan).all()
+
+
+def test_phase2_anomaly_counts_obey_registered_minimum_prior_rules() -> None:
+    """Plan Sections 6.2 and 10 Phase 2: anomaly availability follows 15/10-prior rules."""
+    for path in sorted((ROOT / "results/indices").glob("county_*.parquet")):
+        frame = pd.read_parquet(path, columns=["fips", "anomaly", "n_prior"])
+        assert frame["anomaly"].notna().equals(frame["n_prior"].ge(15))
+        assert frame.groupby("fips", sort=False)["n_prior"].max().ge(15).all()
+    for path in sorted((ROOT / "results/indices").glob("station_*.parquet")):
+        frame = pd.read_parquet(path, columns=["anomaly", "n_prior", "index"])
+        usable = frame["index"].notna()
+        assert (frame.loc[usable, "anomaly"].notna() == frame.loc[usable, "n_prior"].ge(10)).all()

@@ -15,6 +15,8 @@ def station_own_county_table(
     residuals: np.ndarray,
     county_anomalies: np.ndarray,
     seasons: np.ndarray,
+    *,
+    fips: np.ndarray | None = None,
 ) -> pd.DataFrame:
     """Return one zero-distance row per station, with explicit non-evaluable rows."""
     stations = np.asarray(station_ids).astype(str)
@@ -29,6 +31,9 @@ def station_own_county_table(
         or years.shape != (r.shape[0],)
     ):
         raise ValueError("incompatible station/county rolling arrays")
+    county_fips = None if fips is None else np.asarray(fips).astype(str)
+    if county_fips is not None and county_fips.shape != (r.shape[1],):
+        raise ValueError("fips must have one entry per county")
     rows = []
     for j, station in enumerate(stations):
         m = _metrics(r[:, own[j], j], a[:, own[j]], years)
@@ -36,8 +41,8 @@ def station_own_county_table(
             {
                 "pair": pair,
                 "station": station,
-                "fips_index": int(own[j]),
-                "he": m["he"],
+                "fips": str(county_fips[own[j]]).zfill(5) if county_fips is not None else None,
+                "he_pooled": m["he"],
                 "rmse": m["rmse"],
                 "es90_upper": m["es90_upper"],
                 "es90_lower": m["es90_lower"],

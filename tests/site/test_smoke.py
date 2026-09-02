@@ -90,12 +90,16 @@ def _expected_drawer_values() -> dict[str, str]:
         payload = json.load(stream)
     pair = payload["pairs"]["HDD-01"]
     pit = pair.get("pit", {})
+    selected = str(pit.get("best_station") or pit.get("station_pit") or "—")
+    hedge = next((row for row in pair.get("hedge", []) if row.get("s") == selected), {})
+    with open(SITE / "data/stations.json") as stream:
+        station_codes = {row.get("ghcn_id"): row.get("code") for row in json.load(stream)}
     return {
         "name": f"{payload['meta']['name']}, {payload['meta']['state']}",
-        "best": str(pit.get("best_station") or pit.get("station_pit") or "—"),
+        "best_code": station_codes.get(selected, selected),
         "he_pit": pit.get("he_pit"),
         "he_nearest": pit.get("he_nearest"),
-        "stability": pit.get("stability"),
+        "es90_lower": hedge.get("es90_lower"),
     }
 
 
@@ -150,27 +154,41 @@ def test_static_atlas_smoke(site_url: str) -> None:
         assert decoded == DEFAULT_FIPS
 
         assert _number_text(page, "#county-name") == expected["name"]
-        assert _number_text(page, "#best-station") == expected["best"]
+        assert _number_text(page, "#best-station").startswith(f"{expected['best_code']} · h ")
         # Displayed percentage precision is intentionally checked from the shipped value,
         # rather than against a hard-coded metric.
         for selector, value in (
-            ("#he-pit", expected["he_pit"]),
             ("#he-nearest", expected["he_nearest"]),
-            ("#stability", expected["stability"]),
         ):
             assert value is not None
             shown = _number_text(page, selector)
             assert shown not in {"", "—"}
             assert abs(float(shown.rstrip("%").replace(",", "")) / 100 - float(value)) <= 0.0005
+        assert _number_text(page, "#he-pit").startswith(f"{float(expected['he_pit']) * 100:.1f}%")
+        assert _number_text(page, "#es90-tail") not in {"", "—"}
 
         page.locator("button[data-layer='station']").click()
         assert page.locator("button[data-layer='station']").get_attribute("aria-pressed") == "true"
         search = page.locator("#county-search")
-        search.fill("Cook IL")
-        search.press("Tab")  # the static UI commits its search on change/blur
+        search.fill("Cook")
+        search.press("Enter")
         page.wait_for_function(
             """() => document.querySelector('#county-name')?.textContent?.includes('Cook')"""
         )
+
+        # A shared link restores every selection dimension, and the map's keyboard
+        # selection updates that link without a server round-trip.
+        page.goto(f"{site_url}/index.html#fips=17031&idx=CDD&m=07&layer=station")
+        page.wait_for_function(
+            """() => document.querySelector('#county-name')?.textContent?.includes('Cook')
+              && document.querySelector('#pair').value === 'CDD-07'"""
+        )
+        assert page.locator("button[data-layer='station']").get_attribute("aria-pressed") == "true"
+        canvas = page.locator("#atlas-map")
+        canvas.focus()
+        canvas.press("ArrowRight")
+        canvas.press("Enter")
+        page.wait_for_function("() => location.hash.includes('fips=17033')")
 
         # Station markers must be exposed to both visual users and assistive tech.
         assert page.locator("#station-key").inner_text().strip(), (

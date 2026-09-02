@@ -31,7 +31,7 @@ making new network requests:
 
 ```bash
 uv run wba data snapshot export --out wba-raw-snapshot.tar
-uv run wba data snapshot import --snapshot wba-raw-snapshot.tar
+uv run wba data snapshot import --from wba-raw-snapshot.tar
 uv run wba data verify
 ```
 
@@ -54,8 +54,8 @@ uv run wba atlas run
 uv run wba atlas headline
 uv run wba models fit
 uv run wba models tournament
-uv run wba models simulate --as-of site
-uv run wba quotes build
+uv run wba models simulate
+uv run wba quotes run
 uv run wba nebraska run
 uv run wba site build
 uv run wba site check
@@ -92,16 +92,18 @@ Use the fixture route for a compact command-path check:
 uv run wba reproduce --fixture --out /tmp/weather-basis-atlas-fixture
 ```
 
-Use the snapshot route for the release-equivalence check:
+Use the snapshot route for the release-equivalence check. The output directory
+must not already exist; it becomes a standalone rebuilt checkout containing
+the imported frozen inputs and its own `results/manifests/reproduce.json`.
 
 ```bash
 uv run wba reproduce --snapshot wba-raw-snapshot.tar --out /tmp/weather-basis-atlas-release
 ```
 
 Compare the recorded hashes for the headline, atlas pair table, and quote table
-in the reproduction manifest. Record the command runtime, maximum county
-payload size, total site size, gate dates, decision records, known limitations,
-and any human-only tasks in `PROGRESS.md`.
+in `/tmp/weather-basis-atlas-release/results/manifests/reproduce.json`. Record
+the command runtime, maximum county payload size, total site size, gate dates,
+decision records, known limitations, and any human-only tasks in `PROGRESS.md`.
 
 ## Operating constraints
 

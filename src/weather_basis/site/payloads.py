@@ -8,6 +8,8 @@ it never invents a number when an upstream stage has not run.
 from __future__ import annotations
 
 import json
+import subprocess
+from datetime import date
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -119,6 +121,16 @@ def _stations_payload(rows: pd.DataFrame) -> list[dict[str, Any]]:
     return output
 
 
+def _station_details(root: Path, rows: pd.DataFrame) -> pd.DataFrame:
+    """Add the contract-universe display fields missing from the QC registry."""
+    universe_path = root / "data/contracts/cme_city_universe.csv"
+    if not universe_path.exists():
+        return rows
+    universe = pd.read_csv(universe_path, dtype={"ghcnd_id": str})
+    keep = [name for name in ("ghcnd_id", "city", "listed_from") if name in universe]
+    return rows.merge(universe[keep], on="ghcnd_id", how="left", suffixes=("", "_universe"))
+
+
 def _summary(
     pairs: pd.DataFrame,
     county: pd.Series,
@@ -189,6 +201,17 @@ def _draws_for(root: Path, pair: str, fips: str, county_position: int) -> np.nda
             return values[np.isfinite(values)]
         if values.ndim == 2 and county_position < values.shape[0]:
             return values[county_position][np.isfinite(values[county_position])]
+    # Fixture reproduction deliberately uses empirical historical samples in
+    # place of a 10,000-path production simulation.  Expand them by fixed
+    # quantile interpolation so the browser payload still obeys the same
+    # 1,000-draw wire contract without inventing a distribution.
+    if (root / "fixture-source").exists():
+        path = root / f"results/indices/county_{pair}.parquet"
+        if path.exists():
+            rows = pd.read_parquet(path, filters=[("fips", "=", str(fips).zfill(5))])
+            values = np.sort(rows.get("index", pd.Series(dtype=float)).dropna().to_numpy(float))
+            if len(values):
+                return np.quantile(values, np.linspace(0, 1, 1_000))
     return np.array([], dtype=float)
 
 
@@ -235,7 +258,9 @@ def _rung_for(root: Path, pair: str, county: pd.Series) -> str:
     selection = _selection_lookup(root)
     if not selection:
         return "R2j (pricing)"
-    state = _value(county, "state", "state_abbr", default=None)
+    state = _value(county, "state_fips", "state", "state_abbr", default=None)
+    if state is not None and not str(state).isdigit():
+        state = _value(county, "fips", "county_fips", default="")[:2]
     selected = selection.get((pair, str(state))) if state is not None else None
     selected = selected or selection.get((pair, None))
     if selected is None:
@@ -252,9 +277,59 @@ def _selection_lookup(root: Path) -> dict[tuple[str, str | None], str]:
     for _, row in rows.iterrows():
         pair = _pair_name(row)
         state = str(row["state"]) if "state" in row and pd.notna(row["state"]) else None
-        selected = _value(row, "rung", "selected_rung", "model", default="R2j")
+        selected = _value(row, "rung_selected", "rung", "selected_rung", "model", default="R2j")
         lookup[(pair, state)] = str(selected)
     return lookup
+
+
+def _commit(root: Path) -> str:
+    try:
+        return subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=root, text=True, stderr=subprocess.DEVNULL
+        ).strip()
+    except (OSError, subprocess.CalledProcessError):
+        return "unknown"
+
+
+def _lead_days(as_of_text: str, pair: str) -> int:
+    """Days from the common valuation date to the next contract month."""
+    valuation = date.fromisoformat(as_of_text)
+    month = int(pair[-2:])
+    year = valuation.year if month > valuation.month else valuation.year + 1
+    return (date(year, month, 1) - valuation).days
+
+
+@lru_cache(maxsize=16)
+def _oos_by_pair(root: Path, pair: str) -> dict[str, list[list[float | int | None]]]:
+    """Project the atlas-owned held-out table into the compact wire format."""
+    path = root / "results/atlas/oos.parquet"
+    if not path.exists():
+        return {}
+    table = pd.read_parquet(path, filters=[("pair", "=", pair)])
+    if table.empty:
+        return {}
+    names = {
+        "county": next((name for name in ("a_c", "county_anomaly") if name in table), None),
+        "pit_proxy": next(
+            (name for name in ("a_j_pit", "pit_proxy_anomaly") if name in table), None
+        ),
+        "nearest_proxy": next(
+            (name for name in ("a_j_nearest", "nearest_proxy_anomaly") if name in table), None
+        ),
+        "pit_residual": next((name for name in ("r_pit", "pit_residual") if name in table), None),
+        "nearest_residual": next(
+            (name for name in ("r_nearest", "nearest_residual") if name in table), None
+        ),
+    }
+    if any(value is None for value in names.values()):
+        return {}
+    out: dict[str, list[list[float | int | None]]] = {}
+    for fips, rows in table.groupby("fips", sort=False):
+        out[str(fips).zfill(5)] = [
+            [int(row["season"]), *[_round(row[column]) for column in names.values()]]
+            for _, row in rows.sort_values("season").iterrows()
+        ]
+    return out
 
 
 def _group_positions(frame: pd.DataFrame) -> dict[tuple[str, str], list[int]]:
@@ -277,7 +352,7 @@ def build_payloads(root: Path, out: Path, config: Any | None = None) -> dict[str
 
     root, out = Path(root), Path(out)
     counties, pairs = _county_rows(root), _records(root / "results/atlas/pairs.parquet")
-    stations = _station_rows(root)
+    stations = _station_details(root, _station_rows(root))
     station_atlas = _records(root / "results/atlas/stations.parquet")
     quote_path = root / "results/quotes/quotes.parquet"
     quotes = _records(quote_path if quote_path.exists() else root / "results/quotes.parquet")
@@ -289,8 +364,13 @@ def build_payloads(root: Path, out: Path, config: Any | None = None) -> dict[str
     station_lookup = _group_positions(station_atlas)
     quote_lookup = _group_positions(quotes)
     site_cfg = config.get("site", {}) if isinstance(config, dict) else getattr(config, "site", {})
-    simulate_cfg = (
-        config.get("simulate", {}) if isinstance(config, dict) else getattr(config, "simulate", {})
+    hedge_cfg = (
+        config.get("hedge", {}) if isinstance(config, dict) else getattr(config, "hedge", {})
+    )
+    bootstrap_cfg = (
+        config.get("bootstrap", {})
+        if isinstance(config, dict)
+        else getattr(config, "bootstrap", {})
     )
     as_of = str(_cfg(site_cfg, "as_of", ""))
     county_list = []
@@ -315,15 +395,26 @@ def build_payloads(root: Path, out: Path, config: Any | None = None) -> dict[str
         else stations
     )
     _write_json(out / "data/stations.json", _stations_payload(map_stations))
+    atlas_manifest = _read_json(root / "results/manifests/atlas.json")
+    vintages = _read_json(root / "config/data_vintage.yaml")
     meta = {
         "as_of": as_of,
         "data_through": _read_data_through(root),
-        "model_version": _git_version(root),
+        "model_version": atlas_manifest.get("git_commit") or _commit(root),
+        "model_commit_date": _commit_date(root),
+        "config_hash": atlas_manifest.get("config_hash"),
+        "vintages": vintages.get("vintages", vintages),
+        "geography_vintage": atlas_manifest.get("geography_vintage"),
         "disclaimer": (
             "Research and education only. Model estimates are not executable quotes, offers, "
             "insurance or advice."
         ),
-        "thresholds": {"hedgeable_he": _cfg(site_cfg, "hedgeable_he", None)},
+        "thresholds": {
+            "hedgeable_he": _cfg(hedge_cfg, "hedgeable_he", None),
+            "hedgeable_lb": _cfg(hedge_cfg, "hedgeable_lb", None),
+            "stability_threshold": _cfg(bootstrap_cfg, "stability_threshold", None),
+            "pit_min_oos": _cfg(hedge_cfg, "pit_min_oos", None),
+        },
     }
     _write_json(out / "data/meta.json", meta)
     headline = root / "results/atlas/headline.json"
@@ -333,8 +424,18 @@ def build_payloads(root: Path, out: Path, config: Any | None = None) -> dict[str
         summary = [_summary(pairs, row, pair, pair_lookup) for _, row in counties.iterrows()]
         _write_json(out / f"data/summary/{pair}.json", summary)
     max_size = 0
+    oos = {pair: _oos_by_pair(root, pair) for pair in pairs_present}
+    events = _records(root / "data/metadata/station_events.csv")
+    event_columns = [name for name in ("ghcnd_id", "event_date", "event_type") if name in events]
     for county_position, (_, county) in enumerate(counties.iterrows()):
         fips = str(county["_fips"])
+        county_summaries = {
+            pair: _summary(pairs, county, pair, pair_lookup) for pair in pairs_present
+        }
+        event_ids = {str(summary["sp"]) for summary in county_summaries.values() if summary["sp"]}
+        event_rows = events.loc[
+            events.get("ghcnd_id", pd.Series(dtype=str)).astype(str).isin(event_ids)
+        ]
         item = {
             "meta": {
                 "fips": fips,
@@ -342,11 +443,17 @@ def build_payloads(root: Path, out: Path, config: Any | None = None) -> dict[str
                 "state": _value(county, "state", "state_abbr", default=""),
                 "pop": _value(county, "pop2020", "population", default=None),
                 "confidence": _value(county, "confidence", default="not_assessed"),
+                "nearest_stations": {
+                    pair: summary["sn"] for pair, summary in county_summaries.items()
+                },
+                "pit_stations": {pair: summary["sp"] for pair, summary in county_summaries.items()},
+                "rung_badges": {pair: _rung_for(root, pair, county) for pair in pairs_present},
+                "station_events": event_rows[event_columns].fillna("").to_dict("records"),
             },
             "pairs": {},
         }
         for pair in pairs_present:
-            summary = _summary(pairs, county, pair, pair_lookup)
+            summary = county_summaries[pair]
             draws = _draws_for(root, pair, fips, county_position)
             item["pairs"][pair] = {
                 "q": [int(value) for value in np.rint(np.quantile(draws, np.linspace(0, 1, 101)))]
@@ -363,10 +470,10 @@ def build_payloads(root: Path, out: Path, config: Any | None = None) -> dict[str
                     "lb": summary["lb"],
                     "ub": summary["ub"],
                 },
-                "oos": [],
+                "oos": oos[pair].get(fips, []),
                 "quotes": _quotes_for(quotes, pair, fips, quote_lookup),
                 "as_of": as_of,
-                "lead_days": int(_cfg(simulate_cfg, "site_lead_in_days", 30)),
+                "lead_days": _lead_days(as_of, pair),
                 "rung": _rung_for(root, pair, county),
             }
         compressed = gzip_bytes(_json_bytes(item))
@@ -391,6 +498,29 @@ def _cfg(config: Any, key: str, default: Any) -> Any:
 def _git_version(root: Path) -> str:
     head = root / ".git/HEAD"
     return head.read_text().strip() if head.exists() else "unknown"
+
+
+def _commit_date(root: Path) -> str | None:
+    try:
+        return subprocess.check_output(
+            ["git", "show", "-s", "--format=%cI", "HEAD"],
+            cwd=root,
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+    except (OSError, subprocess.CalledProcessError):
+        return None
+
+
+def _read_json(path: Path) -> dict[str, Any]:
+    try:
+        import yaml
+
+        contents = path.read_text(encoding="utf-8")
+        value = json.loads(contents) if path.suffix == ".json" else yaml.safe_load(contents)
+        return value if isinstance(value, dict) else {}
+    except (OSError, ValueError):
+        return {}
 
 
 def _read_data_through(root: Path) -> str | None:

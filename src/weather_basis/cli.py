@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import os
 import shutil
 import subprocess
+import sys
 from collections.abc import Sequence
 from datetime import UTC, datetime
+from hashlib import sha256 as sha256_digest
 from pathlib import Path
 
 import numpy as np
@@ -51,6 +54,16 @@ def build_parser() -> argparse.ArgumentParser:
     migrate = data.add_parser("migrate")
     migrate.add_argument("--donor", type=Path, required=True)
     data.add_parser("verify")
+    fetch = data.add_parser("fetch").add_subparsers(dest="fetch_command", required=True)
+    fetch_grid = fetch.add_parser("nclimgrid")
+    fetch_grid.add_argument("--variable", choices=("tavg", "tmax", "tmin"), required=True)
+    fetch_grid.add_argument("--start", required=True, metavar="YYYY-MM")
+    fetch_grid.add_argument("--end", required=True, metavar="YYYY-MM")
+    for name in ("ghcnd", "homr", "geography", "population", "geocode"):
+        fetch.add_parser(name)
+    extend = data.add_parser("extend")
+    extend.add_argument("--through", required=True, metavar="YYYY-MM")
+    extend.add_argument("--decision", type=Path, required=True)
     panel = data.add_parser("panel")
     panel.add_argument(
         "--variable", choices=("tavg", "tmax", "tmin", "stations", "mean_blocks"), required=True
@@ -130,15 +143,18 @@ def _run_data(args: argparse.Namespace, root: Path) -> int:
         print(report)
         return 0 if report.ok else 1
     if args.data_command == "verify":
-        from weather_basis.ingest.migrate import write_sha256sums
+        from weather_basis.ingest.migrate import verify_sha256sums, write_sha256sums
 
         report = verify_manifest(
             root / "data/manifests/nclimgrid_tavg.csv", root / "data/raw/nclimgrid_daily"
         )
-        if report.ok:
+        checksum_drift = verify_sha256sums(root) if (root / "data/raw/SHA256SUMS").exists() else ()
+        if report.ok and not checksum_drift:
             write_sha256sums(root)
         print(report)
-        return 0 if report.ok else 1
+        if checksum_drift:
+            print("\n".join(checksum_drift))
+        return 0 if report.ok and not checksum_drift else 1
     if args.data_command == "snapshot":
         report = (
             export_snapshot(root, args.out)
@@ -147,6 +163,10 @@ def _run_data(args: argparse.Namespace, root: Path) -> int:
         )
         print(report)
         return 0
+    if args.data_command == "fetch":
+        return _fetch_data(args, root)
+    if args.data_command == "extend":
+        return _extend_data(args, root)
     if args.data_command == "panel":
         if args.variable == "stations":
             return _build_station_panel(root)
@@ -167,17 +187,134 @@ def _run_data(args: argparse.Namespace, root: Path) -> int:
         )
         print(report)
         return 0
-    values = np.load(root / "data/panel/tavg_f32.npy", mmap_mode="r")
-    report = {
-        "shape": list(values.shape),
-        "nan_count": int(np.isnan(values).sum()),
-        "minimum_f": float(np.nanmin(values)),
-        "maximum_f": float(np.nanmax(values)),
-    }
-    target = root / "results/qc/panel_tavg.json"
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(json.dumps(report, sort_keys=True, indent=2) + "\n")
-    (root / "results/qc/data_through.json").write_text('{"data_through":"2026-06-30"}\n')
+    from weather_basis.ingest.ghcnd import backfill_station_registry
+    from weather_basis.ingest.qc import build_qc_reports
+
+    cfg = load_config(root / "config/defaults.yaml")
+    backfill_station_registry(root)
+    outputs = build_qc_reports(root, cfg)
+    print("\n".join(str(path.relative_to(root)) for path in outputs))
+    return 0
+
+
+def _write_fetch_manifest(path: Path, results: list[object]) -> None:
+    """Persist fetch responses in the plan's CSV provenance form."""
+
+    rows: list[dict[str, object]] = []
+    for result in results:
+        row = dict(vars(result))
+        target = Path(str(row["path"]))
+        try:
+            row["path"] = target.resolve().relative_to(Path.cwd().resolve()).as_posix()
+        except ValueError:
+            row["path"] = str(target)
+        rows.append(row)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if not rows:
+        return
+    fields = sorted({key for row in rows for key in row})
+    with path.open("w", encoding="utf-8", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=fields)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def _fetch_data(args: argparse.Namespace, root: Path) -> int:
+    """Run only the approved, explicitly selected acquisition operation."""
+
+    command = args.fetch_command
+    cfg = load_config(root / "config/defaults.yaml")
+    if command == "nclimgrid":
+        from weather_basis.ingest.nclimgrid import Month, fetch_month
+
+        start, end = Month.parse(args.start), Month.parse(args.end)
+        if end < start:
+            raise ValueError("--end must not precede --start")
+        results = [
+            fetch_month(args.variable, month, root / "data/raw/nclimgrid_daily")
+            for month in _months((start.year, start.month), (end.year, end.month))
+        ]
+        _write_fetch_manifest(root / f"data/manifests/nclimgrid_{args.variable}.csv", results)
+        return 0
+    if command == "ghcnd":
+        from weather_basis.ingest.ghcnd import fetch_station
+
+        results = [
+            fetch_station(station_id, root / "data/raw/ghcnd") for station_id in cfg.station.ids
+        ]
+        _write_fetch_manifest(root / "data/manifests/ghcnd_stations.csv", results)
+        return 0
+    if command == "homr":
+        from weather_basis.ingest.homr import fetch_station
+
+        results = [
+            fetch_station(station_id, root / "data/raw/homr") for station_id in cfg.station.ids
+        ]
+        _write_fetch_manifest(root / "data/manifests/homr.csv", results)
+        return 0
+    if command == "geography":
+        from weather_basis.ingest.geography import vendor_asset
+
+        result = vendor_asset(
+            "counties-albers-10m.json",
+            "https://cdn.jsdelivr.net/npm/us-atlas@3/counties-albers-10m.json",
+            root / "web/vendor/counties-albers-10m.json",
+        )
+        _write_fetch_manifest(root / "data/manifests/geography.csv", [result])
+        return 0
+    if command == "population":
+        from weather_basis.http import fetch
+
+        result = fetch(
+            "https://www2.census.gov/programs-surveys/popest/datasets/2020-2021/counties/totals/co-est2021-alldata.csv",
+            root / "data/raw/census/co-est2021-alldata.csv",
+            allow_hosts=frozenset({"www2.census.gov"}),
+        )
+        _write_fetch_manifest(root / "data/manifests/population.csv", [result])
+        return 0
+    if command == "geocode":
+        from weather_basis.ingest.geography import geocode_station
+
+        registry = pd.read_csv(root / "data/metadata/station_registry.csv")
+        rows = []
+        for station in registry.itertuples(index=False):
+            fips, raw = geocode_station(float(station.lat), float(station.lon))
+            rows.append(
+                {
+                    "ghcnd_id": station.ghcnd_id,
+                    "county_fips": fips,
+                    "response_sha256": sha256_digest(raw).hexdigest(),
+                    "manual_override": "",
+                }
+            )
+        pd.DataFrame(rows).to_csv(root / "data/contracts/station_county.csv", index=False)
+        return 0
+    raise ValueError(f"Unsupported fetch command: {command}")
+
+
+def _extend_data(args: argparse.Namespace, root: Path) -> int:
+    """Make vintage extension explicit and decision-record-backed."""
+
+    from weather_basis.ingest.nclimgrid import Month
+
+    through = Month.parse(args.through)
+    decision = args.decision.resolve()
+    if not decision.is_file():
+        raise FileNotFoundError(f"extension requires a decision record: {decision}")
+    text = decision.read_text(encoding="utf-8")
+    if "supersedes: D-10" not in text and "supersedes: D-11" not in text:
+        raise ValueError("extension decision must supersede D-10 or D-11")
+    import yaml
+
+    vintage_path = root / "config/data_vintage.yaml"
+    vintage = yaml.safe_load(vintage_path.read_text(encoding="utf-8")) or {}
+    for variable in ("nclimgrid_tavg", "nclimgrid_tmax", "nclimgrid_tmin"):
+        current = dict(vintage.get(variable) or {})
+        current["end"] = str(through)
+        current["id"] = f"nclimgrid-daily_v1-0-0_snap{through.year:04d}-{through.month:02d}"
+        vintage[variable] = current
+    vintage_path.write_text(yaml.safe_dump(vintage, sort_keys=False), encoding="utf-8")
+    print(f"extended declared vintage through {through}; fetch and rebuild panels explicitly")
     return 0
 
 
@@ -234,6 +371,7 @@ def _check_contracts(root: Path) -> int:
 def _build_indices(root: Path, pairs: tuple[Pair, ...]) -> int:
     from weather_basis.indices.county import build_county_frame
     from weather_basis.indices.station import build_station_frame
+    from weather_basis.indices.strips import build_strip_frame
 
     cfg = load_config(root / "config/defaults.yaml")
     dates = np.load(root / "data/panel/dates.npy")
@@ -242,6 +380,8 @@ def _build_indices(root: Path, pairs: tuple[Pair, ...]) -> int:
     station = np.load(root / "data/panel/stations_tbar_f32.npy", mmap_mode="r")
     station_ids = np.load(root / "data/panel/station_ids.npy")
     qc = pd.read_parquet(root / "data/panel/station_qc.parquet")
+    county_frames: dict[str, pd.DataFrame] = {}
+    station_frames: dict[str, pd.DataFrame] = {}
     for pair in pairs:
         county_frame = build_county_frame(
             county,
@@ -264,6 +404,31 @@ def _build_indices(root: Path, pairs: tuple[Pair, ...]) -> int:
         )
         write_parquet(county_frame, root / f"results/indices/county_{pair.key}.parquet")
         write_parquet(station_frame, root / f"results/indices/station_{pair.key}.parquet")
+        county_frames[pair.key] = county_frame
+        station_frames[pair.key] = station_frame
+    strips = {
+        "HDD-X": (("HDD-11", -1), ("HDD-12", -1), ("HDD-01", 0), ("HDD-02", 0), ("HDD-03", 0)),
+        "CDD-K": (("CDD-05", 0), ("CDD-06", 0), ("CDD-07", 0), ("CDD-08", 0), ("CDD-09", 0)),
+    }
+    for strip, component_keys in strips.items():
+        if not all(key in county_frames for key, _ in component_keys):
+            continue
+        county_strip = build_strip_frame(
+            ((county_frames[key], offset) for key, offset in component_keys),
+            strip=strip,
+            identifier_name="fips",
+            window=cfg.anomaly.window,
+            min_prior=cfg.anomaly.min_prior,
+        )
+        station_strip = build_strip_frame(
+            ((station_frames[key], offset) for key, offset in component_keys),
+            strip=strip,
+            identifier_name="ghcnd_id",
+            window=cfg.anomaly.window,
+            min_prior=cfg.anomaly.min_prior_station,
+        )
+        write_parquet(county_strip, root / f"results/indices/county_{strip}.parquet")
+        write_parquet(station_strip, root / f"results/indices/station_{strip}.parquet")
     return 0
 
 
@@ -271,19 +436,38 @@ def _atlas_from_indices(root: Path, pairs: tuple[Pair, ...], station_limit: int 
     from weather_basis.hedge.atlas import PairAtlasInput, run_atlas
     from weather_basis.hedge.bootstrap import year_block_bootstrap
     from weather_basis.hedge.rolling import rolling_residuals
-    from weather_basis.hedge.selection import nearest, point_in_time_best
+    from weather_basis.hedge.selection import highest_train_corr, nearest, point_in_time_best
+    from weather_basis.hedge.zero_distance import station_own_county_table
     from weather_basis.ingest.confidence import haversine_km
 
     cfg = load_config(root / "config/defaults.yaml")
     counties = pd.read_csv(root / "data/metadata/counties.csv", dtype={"fips": str})
     registry = pd.read_csv(root / "data/metadata/station_registry.csv").iloc[:station_limit]
-    children = np.random.SeedSequence(cfg.seed).spawn(len(PAIRS))
+    strip_keys = ("HDD-X", "CDD-K")
+    monthly_keys = tuple(pair.key for pair in pairs)
+    include_strips = monthly_keys == tuple(pair.key for pair in PAIRS)
+    keys = monthly_keys + (strip_keys if include_strips else ())
+    children = np.random.SeedSequence(cfg.seed).spawn(len(keys))
     payloads = []
-    for pair in pairs:
-        county_frame = pd.read_parquet(root / f"results/indices/county_{pair.key}.parquet")
-        station_frame = pd.read_parquet(root / f"results/indices/station_{pair.key}.parquet")
+    zero_tables = []
+    oos_tables = []
+    station_county_path = root / "data/contracts/station_county.csv"
+    station_counties: dict[str, str] = {}
+    if station_county_path.is_file():
+        station_county = pd.read_csv(station_county_path, dtype={"county_fips": str})
+        station_counties = {
+            str(row.ghcnd_id): str(row.county_fips).zfill(5)
+            for row in station_county.itertuples(index=False)
+        }
+    for pair_position, pair_key in enumerate(keys):
+        county_frame = pd.read_parquet(root / f"results/indices/county_{pair_key}.parquet")
+        station_frame = pd.read_parquet(root / f"results/indices/station_{pair_key}.parquet")
         seasons = np.sort(county_frame.season.unique())
         fips = np.sort(county_frame.fips.astype(str).str.zfill(5).unique())
+        county_lookup = counties.assign(fips=counties.fips.astype(str).str.zfill(5)).set_index(
+            "fips"
+        )
+        county_ordered = county_lookup.loc[fips].reset_index()
         ids = registry.ghcnd_id.astype(str).to_numpy()
         county_anomaly = (
             county_frame.pivot(index="season", columns="fips", values="anomaly")
@@ -309,9 +493,13 @@ def _atlas_from_indices(root: Path, pairs: tuple[Pair, ...], station_limit: int 
             registry.get("first_test_season", pd.Series(np.full(len(ids), 1981))).to_numpy(),
             trailing=cfg.hedge.pit_trailing,
             min_oos=cfg.hedge.pit_min_oos,
+            seasons=seasons[first:],
         )
         nearest_station = nearest(
-            counties[["lon", "lat"]].to_numpy(), registry[["lon", "lat"]].to_numpy()
+            county_ordered[["lon", "lat"]].to_numpy(), registry[["lon", "lat"]].to_numpy()
+        )
+        train_choice = highest_train_corr(
+            np.sign(rolling.h) * np.sqrt(np.clip(rolling.train_r2, 0, 1))
         )
         rows = np.arange(len(exposure))[:, None]
         columns = np.arange(len(fips))[None, :]
@@ -321,51 +509,129 @@ def _atlas_from_indices(root: Path, pairs: tuple[Pair, ...], station_limit: int 
             np.nan,
         )
         near = rolling.resid[:, np.arange(len(fips)), nearest_station]
+        station_test_anomaly = station_anomaly[first:]
+        pit_station_anomaly = station_test_anomaly[
+            np.arange(len(exposure))[:, None], np.maximum(choices, 0)
+        ].astype(float, copy=False)
+        pit_station_anomaly[choices < 0] = np.nan
+        pit_h = np.where(
+            choices >= 0,
+            rolling.h[rows, columns, np.maximum(choices, 0)],
+            np.nan,
+        )
         boot = year_block_bootstrap(
             pit,
             near,
             rolling.resid,
             exposure,
             B=cfg.bootstrap.B,
-            seed=children[list(PAIRS).index(pair)],
+            seed=children[pair_position],
             level=cfg.bootstrap.level,
+            h_pit=pit_h,
+            h_station=rolling.h,
         )
         distance = np.empty((len(fips), len(ids)))
         for column, station in registry.reset_index(drop=True).iterrows():
             distance[:, column] = haversine_km(
-                counties.lat.to_numpy(),
-                counties.lon.to_numpy(),
+                county_ordered.lat.to_numpy(),
+                county_ordered.lon.to_numpy(),
                 np.full(len(fips), station.lat),
                 np.full(len(fips), station.lon),
             )
         payloads.append(
             PairAtlasInput(
-                pair.key,
+                pair_key,
                 seasons[first:],
                 fips,
                 ids,
                 exposure,
                 rolling.resid,
                 rolling.h,
-                np.sign(rolling.h) * np.sqrt(np.clip(rolling.train_r2, 0, 1)),
+                rolling.alpha,
+                rolling.train_r2,
                 nearest_station,
                 choices,
+                train_choice,
                 boot,
-                counties.get("pop2020", pd.Series(np.ones(len(fips)))).to_numpy(),
-                counties.get("confidence", pd.Series(["not_assessed"] * len(fips))).to_numpy(),
+                county_ordered.get("pop2020", pd.Series(np.ones(len(fips)))).to_numpy(),
+                county_ordered.get(
+                    "confidence", pd.Series(["not_assessed"] * len(fips))
+                ).to_numpy(),
                 distance,
                 registry.get("short_record", pd.Series([False] * len(ids))).to_numpy(),
             )
         )
+        if station_counties:
+            missing = [station_id for station_id in ids if station_id not in station_counties]
+            if missing:
+                raise ValueError(f"station_county.csv lacks CME station ids: {missing}")
+            own_fips = np.array([station_counties[station_id] for station_id in ids])
+            own_index = np.array([np.searchsorted(fips, code) for code in own_fips], dtype=int)
+            if not np.array_equal(fips[own_index], own_fips):
+                raise ValueError("station_county.csv references a county absent from atlas")
+        else:
+            # The synthetic fixture intentionally has no geocoder provenance;
+            # its station locations coincide with county centroids.
+            own_index = nearest(
+                registry[["lon", "lat"]].to_numpy(), county_ordered[["lon", "lat"]].to_numpy()
+            )
+        zero_tables.append(
+            station_own_county_table(
+                pair_key,
+                ids,
+                own_index,
+                rolling.resid,
+                exposure,
+                seasons[first:],
+                fips=fips,
+            )
+        )
+        if pair_key in monthly_keys:
+            pit_station_ids = np.empty(choices.shape, dtype=object)
+            pit_station_ids[:] = None
+            valid_choices = choices >= 0
+            pit_station_ids[valid_choices] = ids[choices[valid_choices]]
+            oos_tables.append(
+                pd.DataFrame(
+                    {
+                        "pair": pair_key,
+                        "fips": np.tile(fips, len(exposure)),
+                        "season": np.repeat(seasons[first:], len(fips)),
+                        "a_c": exposure.reshape(-1),
+                        "a_j_pit": pit_station_anomaly.reshape(-1),
+                        "a_j_nearest": station_test_anomaly[:, nearest_station].reshape(-1),
+                        "r_pit": pit.reshape(-1),
+                        "r_nearest": near.reshape(-1),
+                        "station_pit": pit_station_ids.reshape(-1),
+                        "station_nearest": np.tile(ids[nearest_station], len(exposure)),
+                    }
+                )
+            )
     cfg = load_config(root / "config/defaults.yaml")
+    primary = [item for item in payloads if item.pair in monthly_keys]
+    primary_zero = [item for item in zero_tables if str(item.pair.iloc[0]) in monthly_keys]
     run_atlas(
-        payloads,
+        primary,
         out_dir=root / "results/atlas",
+        zero_distance=pd.concat(primary_zero, ignore_index=True),
+        oos=pd.concat(oos_tables, ignore_index=True),
         eligible_min_test=cfg.hedge.eligible_min_test,
         stability_threshold=cfg.bootstrap.stability_threshold,
         hedgeable_he=cfg.hedge.hedgeable_he,
         hedgeable_lb=cfg.hedge.hedgeable_lb,
     )
+    strips = [item for item in payloads if item.pair in strip_keys]
+    if strips:
+        strip_pairs, strip_stations, strip_bootstrap = run_atlas(
+            strips,
+            eligible_min_test=cfg.hedge.eligible_min_test,
+            stability_threshold=cfg.bootstrap.stability_threshold,
+            hedgeable_he=cfg.hedge.hedgeable_he,
+            hedgeable_lb=cfg.hedge.hedgeable_lb,
+        )
+        write_parquet(strip_pairs, root / "results/atlas/strips.parquet")
+        write_parquet(strip_stations, root / "results/atlas/strip_stations.parquet")
+        write_parquet(strip_bootstrap, root / "results/atlas/strip_bootstrap.parquet")
     return 0
 
 
@@ -429,6 +695,11 @@ def _fixture_reproduce(out: Path) -> int:
         ]
     )
     registry.to_csv(out / "data/metadata/station_registry.csv", index=False)
+    # Keep the production payload contract intact even where the compact
+    # fixture deliberately has no historical station-change records.
+    pd.DataFrame(columns=["ghcnd_id", "event_date", "event_type"]).to_csv(
+        out / "data/metadata/station_events.csv", index=False
+    )
 
     cfg = load_config(config_path)
     build_panel(
@@ -518,6 +789,90 @@ def _fixture_reproduce(out: Path) -> int:
     return 0
 
 
+def _snapshot_reproduce(root: Path, snapshot: Path, out: Path) -> int:
+    """Rebuild a standalone checkout from a frozen raw-data snapshot.
+
+    The command deliberately refuses an existing destination.  A release
+    reproduction must never overwrite a user's checkout or silently reuse
+    stale derived panels.  The copied tree supplies the frozen code/config;
+    raw inputs are supplied *only* by the snapshot and are re-hashed on
+    import before any derived command runs.
+    """
+
+    from weather_basis.ingest.migrate import import_snapshot
+    from weather_basis.manifest_stage import write_reproduction_manifest
+
+    root, snapshot, out = root.resolve(), snapshot.resolve(), out.resolve()
+    if not snapshot.is_file():
+        raise FileNotFoundError(snapshot)
+    if out.exists():
+        raise FileExistsError(f"reproduction destination already exists: {out}")
+
+    def ignore(directory: str, names: list[str]) -> set[str]:
+        relative = Path(directory).resolve().relative_to(root)
+        excluded = {".git", ".venv", "__pycache__", ".pytest_cache", ".ruff_cache"}
+        if relative == Path("."):
+            excluded.update({"site", "artifacts"})
+        if relative in {Path("data"), Path("results")}:
+            excluded.update(
+                {
+                    "raw",
+                    "panel",
+                    "draws",
+                    "models",
+                    "atlas",
+                    "tournament",
+                    "quotes",
+                    "qc",
+                    "nebraska",
+                    "indices",
+                    "manifests",
+                }
+            )
+        return excluded.intersection(names)
+
+    shutil.copytree(root, out, ignore=ignore)
+    report = import_snapshot(snapshot, out)
+    if not report.ok:
+        raise RuntimeError(f"snapshot checksum verification failed: {', '.join(report.drift)}")
+
+    commands = (
+        ("data", "verify"),
+        ("data", "panel", "--variable", "tavg"),
+        ("data", "panel", "--variable", "stations"),
+        ("data", "qc"),
+        ("contracts", "check"),
+        ("indices", "build"),
+        ("atlas", "run"),
+        ("atlas", "headline"),
+        ("models", "fit", "--origins", "1991-2022"),
+        ("models", "tournament"),
+        ("models", "simulate", "--as-of", "site"),
+        ("quotes", "build"),
+        ("nebraska", "run"),
+        ("site", "build"),
+        ("site", "check"),
+    )
+    launcher = "from weather_basis.cli import main; raise SystemExit(main())"
+    for command in commands:
+        completed = subprocess.run([sys.executable, "-c", launcher, *command], cwd=out, check=False)
+        if completed.returncode:
+            raise RuntimeError(f"snapshot reproduction failed: wba {' '.join(command)}")
+    cfg = load_config(out / "config/defaults.yaml")
+    manifest = write_reproduction_manifest(
+        out,
+        cfg,
+        reference_root=root,
+        reproduced_root=out,
+        snapshot=snapshot,
+    )
+    equality = json.loads(manifest.read_text(encoding="utf-8"))["extra"]["hash_equality"]
+    if not all(equality.values()):
+        raise RuntimeError(f"snapshot reproduction hash mismatch: {equality}")
+    print(manifest)
+    return 0
+
+
 def _write_headline(root: Path) -> int:
     from weather_basis.hedge.atlas import headline, write_headline
     from weather_basis.manifest import git_commit
@@ -540,24 +895,6 @@ def _write_headline(root: Path) -> int:
         stations=stations,
     )
     write_headline(payload, root / "results/atlas/headline.json")
-    focal = {row["pair"]: row for row in payload["pairs"]}
-    hdd = 1.0 - float(focal["HDD-01"]["no_hedge_share_counties"])
-    cdd = 1.0 - float(focal["CDD-07"]["no_hedge_share_counties"])
-    readme = root / "README.md"
-    if not readme.exists():
-        return 0
-    text = readme.read_text(encoding="utf-8")
-    start, end = "<!-- atlas-headline:start -->", "<!-- atlas-headline:end -->"
-    rendered = (
-        f"{start}\nWeather Basis Atlas finds that {hdd:.1%} of counties meet the "
-        f"pre-registered January HDD hedgeability rule and {cdd:.1%} meet it "
-        f"for July CDD.\n{end}"
-    )
-    before, separator, remainder = text.partition(start)
-    if not separator or end not in remainder:
-        raise ValueError("README atlas headline markers are missing")
-    _, _, after = remainder.partition(end)
-    readme.write_text(before + rendered + after, encoding="utf-8")
     return 0
 
 
@@ -648,8 +985,23 @@ def main(argv: Sequence[str] | None = None) -> int:
                     started_at,
                 )
             else:
-                _write_stage(
-                    root, cfg, "data_qc", [root / "results/qc"], [root / "data/panel"], started_at
+                from weather_basis.manifest_stage import write_data_qc_manifest
+
+                write_data_qc_manifest(
+                    root,
+                    cfg,
+                    outputs=[
+                        root / "results/qc",
+                        root / "data/manifests/geography.json",
+                        root / "data/manifests/population.json",
+                    ],
+                    inputs=[
+                        root / "data/raw",
+                        root / "data/panel",
+                        root / "data/manifests",
+                        root / "data/metadata",
+                    ],
+                    started_at=started_at,
                 )
         return result
     if args.command == "contracts":
@@ -683,11 +1035,14 @@ def main(argv: Sequence[str] | None = None) -> int:
             else:
                 cfg = load_config(root / "config/defaults.yaml")
                 stage = f"site_{args.site_command}"
+                outputs = [output]
+                if args.site_command == "build":
+                    outputs.append(root / "README.md")
                 _write_stage(
                     root,
                     cfg,
                     stage,
-                    [output],
+                    outputs,
                     [root / "results"],
                     started_at,
                     manifest_path=root / f"results/manifests/site/{args.site_command}.json",
@@ -710,12 +1065,26 @@ def main(argv: Sequence[str] | None = None) -> int:
             )
             return 0
         if args.models_command == "tournament":
+            from weather_basis.manifest_stage import write_sensitivity_manifest
+            from weather_basis.models.sensitivity import run_sensitivities
+            from weather_basis.validation.atlas_sensitivity import run_atlas_anomaly_sensitivity
+
             print(run_tournament(root, cfg))
+            sensitivity = run_sensitivities(root, cfg)
+            atlas_sensitivity = run_atlas_anomaly_sensitivity(root)
+            write_sensitivity_manifest(
+                root,
+                cfg,
+                outputs=[sensitivity, atlas_sensitivity],
+                inputs=[root / "results/indices", root / "data/panel", root / "data/metadata"],
+                started_at=started_at,
+            )
+            print({"sensitivities": sensitivity, "atlas_anomaly_sensitivities": atlas_sensitivity})
             _write_stage(
                 root,
                 cfg,
                 "tournament",
-                [root / "results/tournament"],
+                [root / "results/tournament", root / "results/models/params"],
                 [root / "results/indices", root / "data/panel"],
                 started_at,
                 holdout_unlocked=os.environ.get("WBA_UNLOCK_HOLDOUT") == "1",
@@ -732,6 +1101,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 [
                     root / "results/draws/R2j",
                     root / "results/draws/R2j_aligned",
+                    root / "results/draws/R2j_aligned_seed2",
                     root / "results/models",
                     root / "results/tournament/calibration.parquet",
                     root / "results/tournament/joint_check.parquet",
@@ -766,8 +1136,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             started_at,
         )
         return result
-    if args.command == "reproduce" and args.fixture:
-        return _fixture_reproduce(args.out)
+    if args.command == "reproduce":
+        if args.fixture == bool(args.snapshot):
+            raise ValueError("choose exactly one of --fixture or --snapshot")
+        if args.fixture:
+            return _fixture_reproduce(args.out)
+        return _snapshot_reproduce(root, args.snapshot, args.out)
     if args.command == "gate":
         return subprocess.run(
             ["pytest", "-o", "addopts=", "-m", "data", f"tests/gates/test_phase{args.number}.py"],

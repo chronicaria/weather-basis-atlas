@@ -1,0 +1,17 @@
+{
+  "canonical_counties": {
+    "bytes": 269896,
+    "path": "data/metadata/counties.csv",
+    "sha256": "7c445120c7bda71752ad4fbb68467e87d4cac41313c0fb865263e40f48d20045"
+  },
+  "source": {
+    "bytes": 645814,
+    "etag": null,
+    "last_modified": "Thu, 24 Mar 2022 12:55:50 GMT",
+    "path": "data/raw/census/co-est2021-alldata.csv",
+    "retrieved_at_utc": "2026-09-02T15:45:36.551550Z",
+    "sha256": "684883133405a88edbd43156382ccd7771fe1d6608b7ea1b992cb28bb6d31c83",
+    "url": "https://www2.census.gov/programs-surveys/popest/datasets/2020-2021/counties/totals/co-est2021-alldata.csv"
+  },
+  "vintage": "population_2020"
+}

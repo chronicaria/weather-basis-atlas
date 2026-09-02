@@ -12,6 +12,7 @@ from weather_basis.indices.county import monthly_indices as county_monthly_indic
 from weather_basis.indices.seasons import seasons_for_pair
 from weather_basis.indices.station import build_station_frame
 from weather_basis.indices.station import monthly_indices as station_monthly_indices
+from weather_basis.indices.strips import build_strip_frame
 
 
 def test_county_january_hdd_matches_days_times_difference() -> None:
@@ -89,3 +90,27 @@ def test_station_frame_accepts_one_pass_identifier_iterable() -> None:
     values = np.full((dates.size, 1), 40.0)
     frame = build_station_frame(values, dates, (x for x in ["USW00000001"]), "HDD-01")
     assert frame.ghcnd_id.unique().tolist() == ["USW00000001"]
+
+
+def test_hdd_november_to_march_strip_uses_prior_year_components() -> None:
+    """Plan Section 5.2: Nov--Mar HDD strips are labelled by the March year."""
+    def component(key: str, seasons: list[int], value: float) -> pd.DataFrame:
+        return pd.DataFrame(
+            {"pair": key, "fips": ["00001"] * len(seasons), "season": seasons, "index": value}
+        )
+
+    strip = build_strip_frame(
+        (
+            (component("HDD-11", [2019, 2020], 1), -1),
+            (component("HDD-12", [2019, 2020], 2), -1),
+            (component("HDD-01", [2020, 2021], 3), 0),
+            (component("HDD-02", [2020, 2021], 4), 0),
+            (component("HDD-03", [2020, 2021], 5), 0),
+        ),
+        strip="HDD-X",
+        identifier_name="fips",
+        window=30,
+        min_prior=1,
+    )
+    assert strip.season.tolist() == [2020, 2021]
+    assert strip["index"].tolist() == [15, 15]

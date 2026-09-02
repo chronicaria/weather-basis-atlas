@@ -49,6 +49,7 @@ class Quote:
     h: float
     station: str
     station_model: str
+    hedge_source: str
 
 
 def _setting(cfg: Any, name: str, default: float) -> float:
@@ -81,9 +82,7 @@ def loaded_quote(
         else np.maximum(x.strike - county, 0.0)
     )
     station = (
-        None
-        if joint.station is None
-        else np.asarray(joint.station, dtype=np.float64).reshape(-1)
+        None if joint.station is None else np.asarray(joint.station, dtype=np.float64).reshape(-1)
     )
     use_station = hedge.station_model != "unavailable" and station is not None
     if use_station:
@@ -91,13 +90,28 @@ def loaded_quote(
             raise ValueError("station draws must be finite and aligned with county draws")
         futures_payoff = multiplier * station
         variance = float(np.mean((futures_payoff - futures_payoff.mean()) ** 2))
-        h = 0.0 if variance == 0.0 else float(
-            np.mean((payoff - payoff.mean()) * (futures_payoff - futures_payoff.mean())) / variance
+        h = (
+            0.0
+            if variance == 0.0
+            else float(
+                np.mean((payoff - payoff.mean()) * (futures_payoff - futures_payoff.mean()))
+                / variance
+            )
         )
         residual = payoff - h * (futures_payoff - futures_payoff.mean())
+        hedge_source = "joint_station"
     else:
-        h = float(hedge.atlas_h or 0.0)
-        residual = payoff
+        # D-71's fallback is deliberately not an unhedged quote.  A station
+        # without a daily model cannot supply aligned station paths, so the
+        # registered approximation applies the historical atlas ratio to the
+        # county's own simulated futures innovation.  This keeps the stated
+        # ratio, residual load, and friction internally consistent while
+        # retaining an explicit machine-readable warning for the UI.
+        atlas_h = hedge.atlas_h
+        h = 0.0 if atlas_h is None or not np.isfinite(atlas_h) else float(atlas_h)
+        county_futures = multiplier * county
+        residual = payoff - h * (county_futures - county_futures.mean())
+        hedge_source = "atlas_county_fallback"
     mid = float(payoff.mean())
     alpha = _setting(cfg, "alpha", 0.95)
     weight = _setting(cfg, "w", 0.5)
@@ -127,4 +141,5 @@ def loaded_quote(
         h=h,
         station=hedge.station,
         station_model=hedge.station_model,
+        hedge_source=hedge_source,
     )

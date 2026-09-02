@@ -1,0 +1,26 @@
+{
+  "canonical_counties": {
+    "bytes": 269896,
+    "path": "data/metadata/counties.csv",
+    "sha256": "7c445120c7bda71752ad4fbb68467e87d4cac41313c0fb865263e40f48d20045"
+  },
+  "source": {
+    "bytes": 141524,
+    "etag": null,
+    "last_modified": "Fri, 22 Jan 2021 14:23:58 GMT",
+    "path": "data/raw/geography/2020_Gaz_counties_national.zip",
+    "retrieved_at_utc": "2026-09-02T15:45:36.228728Z",
+    "sha256": "02ef546e4c4f9c032c19616eabb9526caa016f778f41ede3b8c9755dacce20ef",
+    "url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2020_Gazetteer/2020_Gaz_counties_national.zip"
+  },
+  "vendor_geometry": {
+    "bytes": 795405,
+    "etag": "W/\"c230d-c+Ji7y28hAp/7cG5ogMdmFhekUw\"",
+    "last_modified": null,
+    "path": "web/vendor/counties-albers-10m.json",
+    "retrieved_at_utc": "2026-09-02T15:45:36.794451Z",
+    "sha256": "a674dfa31b625e92635f32684a61ae135b05a91507f17f2d5164833237fecf46",
+    "url": "https://cdn.jsdelivr.net/npm/us-atlas@3/counties-albers-10m.json"
+  },
+  "vintage": "gazetteer_2020"
+}

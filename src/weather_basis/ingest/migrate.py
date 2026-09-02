@@ -69,13 +69,19 @@ def migrate_legacy(donor_root: Path, repo_root: Path, *, verify: bool = True) ->
 
 
 def export_snapshot(repo_root: Path, dest_tar: Path) -> Path:
-    """Archive raw data, provenance manifests, checksums, and the parse crosswalk."""
+    """Archive every frozen input needed by an offline reproduction.
+
+    Metadata is intentionally archived as a directory, rather than as the
+    one crosswalk used by the first implementation.  County dimensions,
+    station registries, and downloaded GHCN metadata are themselves frozen
+    inputs to the atlas and a snapshot missing them is not reproducible.
+    """
     repo_root = repo_root.resolve()
     write_sha256sums(repo_root)
     members = [
         repo_root / "data/raw",
         repo_root / "data/manifests",
-        repo_root / "data/metadata/us-state-codes_ncei-to-fips.csv",
+        repo_root / "data/metadata",
     ]
     dest_tar.parent.mkdir(parents=True, exist_ok=True)
     with tarfile.open(dest_tar, "w:gz") as archive:
@@ -96,8 +102,10 @@ def import_snapshot(src_tar: Path, repo_root: Path) -> MigrateReport:
     manifest = repo_root / "data/manifests/nclimgrid_tavg.csv"
     if not manifest.is_file():
         raise NClimGridError("Snapshot lacks data/manifests/nclimgrid_tavg.csv")
+    checksum_drift = verify_sha256sums(repo_root)
     report = verify_manifest(manifest, repo_root / "data/raw/nclimgrid_daily")
-    return MigrateReport(0, report.files_checked, report.drift, manifest)
+    drift = tuple(sorted(set(report.drift).union(checksum_drift)))
+    return MigrateReport(0, report.files_checked, drift, manifest)
 
 
 def write_sha256sums(repo_root: Path) -> Path:
@@ -109,6 +117,48 @@ def write_sha256sums(repo_root: Path) -> Path:
     path = raw / "SHA256SUMS"
     atomic_write_bytes(path, ("\n".join(lines) + "\n").encode())
     return path
+
+
+def verify_sha256sums(repo_root: Path) -> tuple[str, ...]:
+    """Re-hash every raw file attested by ``data/raw/SHA256SUMS``.
+
+    This check complements the nClimGrid manifest: snapshots include GHCN,
+    HOMR, and geometry inputs that do not share its two-column version-file
+    structure.  Missing checksum files are an error rather than an invitation
+    to trust archive metadata.
+    """
+
+    raw = Path(repo_root) / "data/raw"
+    checksum_file = raw / "SHA256SUMS"
+    if not checksum_file.is_file():
+        return ("missing data/raw/SHA256SUMS",)
+    expected: dict[str, str] = {}
+    drift: list[str] = []
+    for line_number, line in enumerate(checksum_file.read_text(encoding="utf-8").splitlines(), 1):
+        if not line:
+            continue
+        digest, separator, relative = line.partition("  ")
+        if not separator or len(digest) != 64 or not relative:
+            drift.append(f"invalid SHA256SUMS line {line_number}")
+            continue
+        if relative in expected:
+            drift.append(f"duplicate SHA256SUMS path {relative}")
+            continue
+        expected[relative] = digest
+    actual = {
+        path.relative_to(raw).as_posix(): path
+        for path in raw.rglob("*")
+        if path.is_file() and path.name != "SHA256SUMS"
+    }
+    for relative, digest in expected.items():
+        path = actual.get(relative)
+        if path is None:
+            drift.append(f"missing {relative}")
+        elif sha256(path) != digest:
+            drift.append(f"sha256 {relative}")
+    for relative in sorted(actual.keys() - expected.keys()):
+        drift.append(f"unlisted {relative}")
+    return tuple(sorted(drift))
 
 
 def _read_rows(path: Path) -> list[dict[str, str]]:

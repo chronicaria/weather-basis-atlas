@@ -1,6 +1,9 @@
 nclimgrid_tavg: {id: nclimgrid-daily_v1-0-0_snap2026-07-30, start: 1951-01, end: 2026-06, status: scaled}
 nclimgrid_tmax: {id: nclimgrid-daily_v1-0-0_snap2026-09-02, start: 2023-01, end: 2026-06, usable_through: 2025-12, status: scaled}
 nclimgrid_tmin: {id: nclimgrid-daily_v1-0-0_snap2026-09-02, start: 2023-01, end: 2026-06, usable_through: 2025-12, status: scaled}
-ghcnd: {id: null}
-ghcnd_meta: {id: null}
-homr: {id: null}
+# These snapshots are part of the reproducible release input.  Keep the
+# identifiers here (rather than only in defaults.yaml) so snapshot/rebuild
+# tooling has one explicit freeze ledger for every upstream source.
+ghcnd: {id: ghcnd_snap2026-09-02}
+ghcnd_meta: {id: ghcnd_meta_snap2026-09-02}
+homr: {id: homr_snap2026-09-02}

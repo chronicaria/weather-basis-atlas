@@ -18,6 +18,8 @@ class BootResult:
     rmse_pit: np.ndarray
     rmse_nearest: np.ndarray
     rmse_station: np.ndarray
+    h_pit: np.ndarray
+    h_station: np.ndarray
 
     def interval(self, values: np.ndarray, level: float = 0.90) -> tuple[np.ndarray, np.ndarray]:
         if not 0 < level < 1:
@@ -60,6 +62,16 @@ def _summary(
     )
 
 
+def _weighted_mean(weights: np.ndarray, values: np.ndarray) -> np.ndarray:
+    """Return one resampled mean per bootstrap draw without gathering seasons."""
+    finite = np.isfinite(values)
+    numerator = weights @ np.where(finite, values, 0.0)
+    denominator = weights @ finite.astype(np.float64)
+    return np.divide(
+        numerator, denominator, out=np.full_like(numerator, np.nan), where=denominator > 0
+    )
+
+
 def year_block_bootstrap(
     resid_pit: np.ndarray,
     resid_nearest: np.ndarray,
@@ -69,6 +81,8 @@ def year_block_bootstrap(
     B: int,
     seed: np.random.SeedSequence,
     level: float = 0.90,
+    h_pit: np.ndarray | None = None,
+    h_station: np.ndarray | None = None,
 ) -> BootResult:
     """Jointly resample seasons for point-in-time, nearest, and all stations.
 
@@ -94,6 +108,16 @@ def year_block_bootstrap(
         stations.reshape(stations.shape[0], -1),
         expanded_exposure.reshape(stations.shape[0], -1),
     )
+    pit_h = np.full_like(pit, np.nan) if h_pit is None else np.asarray(h_pit, dtype=float)
+    station_h = (
+        np.full_like(stations, np.nan) if h_station is None else np.asarray(h_station, dtype=float)
+    )
+    if pit_h.shape != pit.shape or station_h.shape != stations.shape:
+        raise ValueError("h_pit and h_station must match their residual tensors")
+    h_pit_boot = _weighted_mean(weights, pit_h)
+    h_station_boot = _weighted_mean(weights, station_h.reshape(station_h.shape[0], -1)).reshape(
+        B, *stations.shape[1:]
+    )
     return BootResult(
         weights,
         he_pit,
@@ -102,6 +126,8 @@ def year_block_bootstrap(
         rmse_pit,
         rmse_near,
         rmse_station.reshape(B, *stations.shape[1:]),
+        h_pit_boot,
+        h_station_boot,
     )
 
 

@@ -1,4 +1,7 @@
 .PHONY: env test test-data data contracts indices atlas models quotes nebraska site reproduce
+DATA_DONOR ?= $(HOME)/Desktop/Code/WeatherDerivativePricing
+SNAPSHOT ?= data/snapshots/weather-basis-atlas.tar
+REPRO_OUT ?= /tmp/weather-basis-atlas-reproduce
 env:
 	uv sync --frozen
 test:
@@ -6,6 +9,22 @@ test:
 	uv run pytest
 test-data:
 	uv run pytest -o addopts="" -m data tests/data
+data:
+	uv run wba data migrate --donor $(DATA_DONOR)
+	uv run wba data verify
+	uv run wba data fetch nclimgrid --variable tmax --start 2023-01 --end 2026-06
+	uv run wba data fetch nclimgrid --variable tmin --start 2023-01 --end 2026-06
+	uv run wba data fetch ghcnd
+	uv run wba data fetch homr
+	uv run wba data fetch geography
+	uv run wba data fetch population
+	uv run wba data fetch geocode
+	uv run wba data panel --variable tavg
+	uv run wba data panel --variable tmax
+	uv run wba data panel --variable tmin
+	uv run wba data panel --variable stations
+	uv run wba data panel --variable mean_blocks
+	uv run wba data qc
 contracts:
 	uv run wba contracts check
 indices:
@@ -24,7 +43,7 @@ site:
 	uv run wba site build
 	uv run wba site check
 reproduce:
-	uv run wba reproduce
+	uv run wba reproduce --snapshot $(SNAPSHOT) --out $(REPRO_OUT)
 
 gate-%:
 	uv run wba gate $*

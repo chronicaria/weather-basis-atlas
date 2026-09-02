@@ -8,6 +8,9 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
+from jsonschema import Draft202012Validator
+
+from weather_basis.io import sha256
 
 pytestmark = pytest.mark.data
 ROOT = Path(__file__).resolve().parents[2]
@@ -50,3 +53,22 @@ def test_phase3_headline_manifest_and_zero_distance() -> None:
     prereg_hash = hashlib.sha256((ROOT / "docs/preregistration.md").read_bytes()).hexdigest()
     assert manifest["prereg_sha256"] == prereg_hash
     assert manifest["holdout_unlocked"] is False
+    schema = json.loads((ROOT / "src/weather_basis/schemas/headline.schema.json").read_text())
+    Draft202012Validator(schema).validate(headline)
+    for relative, digest in manifest["sha256_out"].items():
+        path = ROOT / relative
+        assert path.is_file(), relative
+        assert sha256(path) == digest, relative
+
+
+def test_phase3_determinism_evidence_covers_every_committed_atlas_output() -> None:
+    """Plan Sections 6.8 and 10 Phase 3: two identical atlas runs are attested byte-for-byte."""
+    evidence = json.loads((ROOT / "results/qc/atlas_determinism.json").read_text(encoding="utf-8"))
+    compared = evidence["hash_equality"]
+    required = {
+        "results/atlas/pairs.parquet", "results/atlas/stations.parquet",
+        "results/atlas/bootstrap.parquet", "results/atlas/zero_distance.parquet",
+        "results/atlas/headline.json",
+    }
+    assert required.issubset(compared)
+    assert all(compared[name] is True for name in required)

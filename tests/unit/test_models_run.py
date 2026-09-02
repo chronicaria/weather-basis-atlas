@@ -5,11 +5,12 @@ from __future__ import annotations
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 
 from weather_basis.config import load_config
 from weather_basis.contracts.calendar import PAIRS
 from weather_basis.models.run import (
-    _draws_for_origin,
+    _index_comparator_draws,
     _pair_history,
     _score_frame,
     run_site_simulation,
@@ -43,6 +44,22 @@ def test_tournament_writes_scores_selection_and_manifest(tmp_path: Path) -> None
     assert result["selection"].is_file()
     assert (root / "results" / "tournament" / "scores" / "HDD-01.parquet").is_file()
     assert (root / "results" / "manifests" / "tournament.json").is_file()
+    selection = pd.read_parquet(result["selection"])
+    assert "n_counties" in selection
+    diagnostics = pd.read_parquet(root / "results/tournament/calibration_by_origin.parquet")
+    assert {
+        "skewness",
+        "excess_kurtosis",
+        "ljung_box_q10",
+        "mean_z2",
+        "variance_regime_ratio",
+        "diagnostic_basis",
+    }.issubset(diagnostics.columns)
+    assert diagnostics["diagnostic_basis"].eq("daily_R2_standardized_innovation").all()
+    assert (root / "results/tournament/determinism.json").is_file()
+    parameters = pd.read_parquet(root / "results/models/params/tournament_metadata.parquet")
+    assert {"z_sha256", "z_start", "z_end", "mean_path", "ar_path"}.issubset(parameters)
+    assert parameters["daily_model"].eq("R2").all()
 
 
 def test_site_simulation_writes_sorted_and_aligned_draws(tmp_path: Path) -> None:
@@ -67,9 +84,9 @@ def test_vectorized_origin_draws_and_scores_are_seed_deterministic(tmp_path: Pat
     labels = np.load(root / "data/panel/fips.npy")
     seasons, history = _pair_history(values, dates, PAIRS[0])
     origin = 1991
-    first = _draws_for_origin(history, seasons, origin, 24, np.random.SeedSequence(71), cfg)
-    second = _draws_for_origin(history, seasons, origin, 24, np.random.SeedSequence(71), cfg)
-    assert all(np.array_equal(first[rung], second[rung]) for rung in ("R0", "R1", "R2"))
+    first = _index_comparator_draws(history, seasons, origin, 24, np.random.SeedSequence(71), cfg)
+    second = _index_comparator_draws(history, seasons, origin, 24, np.random.SeedSequence(71), cfg)
+    assert all(np.array_equal(first[rung], second[rung]) for rung in ("R0", "R1"))
     frame = _score_frame(
         first,
         history[np.searchsorted(seasons, origin)],
@@ -77,5 +94,5 @@ def test_vectorized_origin_draws_and_scores_are_seed_deterministic(tmp_path: Pat
         PAIRS[0],
         origin,
     )
-    assert len(frame) == 2 * 3
+    assert len(frame) == 2 * 2
     assert frame["crps"].notna().all()

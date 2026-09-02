@@ -107,6 +107,14 @@ def test_qc_marks_recent_complete_months_provisional() -> None:
     assert qc.monthly.qc_status.tolist() == ["complete", "provisional", "provisional"]
 
 
+def test_qc_does_not_count_a_partial_final_month_as_provisional() -> None:
+    """Section 4.5: only complete source months enter the real-time lag rule."""
+
+    frame = _station_frame(pd.date_range("2014-01-01", "2014-03-15", freq="D"))
+    qc = qc_station(frame, _cfg(provisional_months=2))
+    assert qc.monthly.qc_status.tolist() == ["provisional", "provisional", "excluded"]
+
+
 def test_qc_does_not_treat_a_partial_boundary_month_as_complete() -> None:
     """Section 4.5: QC computes coverage against the calendar-month day count."""
     frame = _station_frame(pd.date_range("2014-01-15", "2014-02-28", freq="D"))

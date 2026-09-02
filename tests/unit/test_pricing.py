@@ -52,12 +52,18 @@ def test_loaded_quote_decomposes_and_uses_aligned_hedge() -> None:
 
 
 def test_unavailable_station_falls_back_without_station_draws() -> None:
+    county = np.array([1.0, 3.0, 5.0])
     q = loaded_quote(
         PayoffSpec(3),
-        JointDraws(np.array([1.0, 3.0, 5.0]), None),
+        JointDraws(county, None),
         HedgeSpec("ORD", station_model="unavailable", atlas_h=0.7),
         {"quotes": {}},
         0.0,
     )
     assert q.station_model == "unavailable"
     assert q.h == pytest.approx(0.7)
+    assert q.hedge_source == "atlas_county_fallback"
+    # The fallback applies the historical ratio to the county-futures paths;
+    # it must not quietly degrade into an unhedged quote while retaining h.
+    unhedged = 20 * np.maximum(county - 3, 0)
+    assert q.residual_load_ask != pytest.approx(0.5 * (40 - unhedged.mean()))

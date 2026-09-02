@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import io
 import json
+import zipfile
 from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
@@ -11,6 +13,7 @@ import numpy as np
 import pandas as pd
 
 from weather_basis.hedge.bootstrap import BootResult, stability
+from weather_basis.io import atomic_write_bytes, write_parquet
 
 
 @dataclass(frozen=True)
@@ -24,9 +27,11 @@ class PairAtlasInput:
     anomalies: np.ndarray
     residuals: np.ndarray
     h: np.ndarray
-    train_corr: np.ndarray
+    alpha: np.ndarray
+    train_r2: np.ndarray
     nearest_station: np.ndarray
     pit_station: np.ndarray
+    highest_train_station: np.ndarray
     bootstrap: BootResult
     population: np.ndarray | None = None
     confidence: np.ndarray | None = None
@@ -124,6 +129,7 @@ def summarize_pair(
     if seasons.shape != (r.shape[0],) or nearest.shape != (r.shape[1],):
         raise ValueError("season and county dimensions do not agree")
     pit_r = _chosen_residual(r, choices)
+    highest_train_r = _chosen_residual(r, data.highest_train_station)
     nearest_choice = np.broadcast_to(nearest, choices.shape)
     near_r = _chosen_residual(r, nearest_choice)
     lower, upper = data.bootstrap.interval(data.bootstrap.he_pit)
@@ -203,8 +209,16 @@ def summarize_pair(
                     and pit["he"] >= hedgeable_he
                     and lower[c] >= hedgeable_lb
                 ),
-                "corr_train_last": float(np.nanmax(data.train_corr[-1, c]))
-                if np.isfinite(data.train_corr[-1, c]).any()
+                "station_highest_train_corr": str(
+                    data.station_ids[data.highest_train_station[-1, c]]
+                )
+                if data.highest_train_station[-1, c] >= 0
+                else None,
+                "he_highest_train_corr": _metrics(highest_train_r[:, c], a[:, c], seasons)["he"],
+                "corr_train_last": float(
+                    np.nanmax(np.sqrt(np.clip(data.train_r2[-1, c], 0, 1)))
+                )
+                if np.isfinite(data.train_r2[-1, c]).any()
                 else np.nan,
                 "confidence": confidence[c],
                 "pop2020": population[c],
@@ -221,11 +235,12 @@ def summarize_pair(
                     "he_pooled": metric["he"],
                     "he_lb": lo,
                     "he_ub": hi,
-                    "h_mean": float(np.nanmean(h[:, c, j])),
+                    "h_mean": float(np.nanmean(data.bootstrap.h_station[:, c, j])),
                     "rmse": metric["rmse"],
                     "es90_upper": metric["es90_upper"],
                     "es90_lower": metric["es90_lower"],
                     "worst": metric["worst"],
+                    "worst_season": metric["worst_season"],
                     "n_test": metric["n_test"],
                     "distance_km": np.nan if data.distance_km is None else data.distance_km[c, j],
                     "eligible": bool(eligible[c, j]),
@@ -240,6 +255,7 @@ def summarize_pair(
             "replicate": b,
             "he_pit_mean": float(np.nanmean(data.bootstrap.he_pit[b])),
             "he_nearest_mean": float(np.nanmean(data.bootstrap.he_nearest[b])),
+            "h_pit_mean": float(np.nanmean(data.bootstrap.h_pit[b])),
         }
         for b in range(data.bootstrap.he_pit.shape[0])
     ]
@@ -362,17 +378,58 @@ def write_headline(payload: dict[str, object], path: Path) -> None:
     path.write_text(json.dumps(clean(payload), sort_keys=True, indent=2, allow_nan=False) + "\n")
 
 
+def _tensor_bytes(data: PairAtlasInput) -> bytes:
+    """Build a byte-stable NPZ of the registered rolling tensors."""
+    members = {
+        "alpha.npy": data.alpha.astype(np.float32, copy=False),
+        "h.npy": data.h.astype(np.float32, copy=False),
+        "resid.npy": data.residuals.astype(np.float32, copy=False),
+        "seasons.npy": np.asarray(data.seasons, dtype=np.int32),
+        "train_r2.npy": data.train_r2.astype(np.float32, copy=False),
+    }
+    archive = io.BytesIO()
+    with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as bundle:
+        for name in sorted(members):
+            payload = io.BytesIO()
+            np.save(payload, members[name], allow_pickle=False)
+            info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.external_attr = 0o600 << 16
+            bundle.writestr(
+                info,
+                payload.getvalue(),
+                compress_type=zipfile.ZIP_DEFLATED,
+                compresslevel=9,
+            )
+    return archive.getvalue()
+
+
 def run_atlas(
-    pairs: Iterable[PairAtlasInput], *, out_dir: Path | None = None, **kwargs: object
+    pairs: Iterable[PairAtlasInput],
+    *,
+    out_dir: Path | None = None,
+    zero_distance: pd.DataFrame | None = None,
+    oos: pd.DataFrame | None = None,
+    **kwargs: object,
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """Run the output layer for supplied rolling results and optionally persist it."""
-    tables = [summarize_pair(pair, **kwargs) for pair in pairs]
+    inputs = tuple(pairs)
+    tables = [summarize_pair(pair, **kwargs) for pair in inputs]
     pair_table = pd.concat([x[0] for x in tables], ignore_index=True)
     station_table = pd.concat([x[1] for x in tables], ignore_index=True)
     bootstrap_table = pd.concat([x[2] for x in tables], ignore_index=True)
     if out_dir is not None:
         out_dir.mkdir(parents=True, exist_ok=True)
-        pair_table.to_parquet(out_dir / "pairs.parquet", index=False)
-        station_table.to_parquet(out_dir / "stations.parquet", index=False)
-        bootstrap_table.to_parquet(out_dir / "bootstrap.parquet", index=False)
+        write_parquet(pair_table, out_dir / "pairs.parquet")
+        write_parquet(station_table, out_dir / "stations.parquet")
+        write_parquet(bootstrap_table, out_dir / "bootstrap.parquet")
+        if zero_distance is None:
+            raise ValueError("run_atlas requires a derived zero-distance table")
+        if oos is None:
+            raise ValueError("run_atlas requires realized OOS rows for the site")
+        write_parquet(zero_distance, out_dir / "zero_distance.parquet")
+        write_parquet(oos, out_dir / "oos.parquet")
+        tensors = out_dir / "tensors"
+        for pair in inputs:
+            atomic_write_bytes(tensors / f"{pair.pair}.npz", _tensor_bytes(pair))
     return pair_table, station_table, bootstrap_table

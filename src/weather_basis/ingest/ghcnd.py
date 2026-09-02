@@ -15,6 +15,8 @@ from typing import TYPE_CHECKING, Any
 import numpy as np
 import pandas as pd
 
+from weather_basis.io import atomic_write_bytes
+
 if TYPE_CHECKING:
     from weather_basis.config import Config
     from weather_basis.http import FetchResult
@@ -148,6 +150,7 @@ def qc_station(df: pd.DataFrame, cfg: Config) -> StationQC:
     if work["date"].duplicated().any():
         raise ValueError("station frame has duplicate dates")
     work = work.sort_values("date", kind="stable").set_index("date")
+    observed_dates = work.index.copy()
     # Include partial boundary months as missing.  This is what makes a
     # station's ``first_complete_month`` computable from QC rather than from
     # an assumption about the first row in a source file.
@@ -198,7 +201,11 @@ def qc_station(df: pd.DataFrame, cfg: Config) -> StationQC:
     )
     monthly = _monthly_qc(daily, max_gap=max_gap, max_missing_share=max_missing_share)
     if provisional_months:
-        provisional = _last_complete_months(daily["date"], provisional_months)
+        # ``daily`` has been reindexed to complete boundary months so QC can
+        # count absent days.  Provisional status instead depends on the raw
+        # snapshot's actually observed calendar coverage; otherwise a partial
+        # final month would be mistaken for a complete one.
+        provisional = _last_complete_months(pd.Series(observed_dates), provisional_months)
         monthly.loc[
             monthly[["year", "month"]].apply(tuple, axis=1).isin(provisional)
             & (monthly["qc_status"] != "excluded"),
@@ -210,6 +217,49 @@ def qc_station(df: pd.DataFrame, cfg: Config) -> StationQC:
         month_keys, monthly[["year", "month", "qc_status"]], on=["year", "month"], how="left"
     )["qc_status"].to_numpy()
     return StationQC(daily.loc[:, _DAILY_COLUMNS], monthly.loc[:, _MONTHLY_COLUMNS])
+
+
+def backfill_station_registry(root: Path) -> pd.DataFrame:
+    """Populate ``first_complete_month`` from the authoritative QC table.
+
+    The registry is metadata, but this field must not be hand-maintained: a
+    source revision or a QC-rule change can move the first usable month.  Both
+    ``complete`` and ``gap_filled`` months are usable by the registered index
+    convention.  The function atomically replaces only the derived registry
+    file and returns its updated frame for callers that want to validate it.
+    """
+
+    root = Path(root)
+    registry_path = root / "data/metadata/station_registry.csv"
+    qc_path = root / "data/panel/station_qc.parquet"
+    registry = pd.read_csv(registry_path, dtype={"ghcnd_id": "string"})
+    qc = pd.read_parquet(qc_path)
+    required_registry = {"ghcnd_id", "first_complete_month"}
+    required_qc = {"ghcnd_id", "year", "month", "qc_status"}
+    if missing := required_registry.difference(registry.columns):
+        raise ValueError(f"station registry lacks columns: {sorted(missing)}")
+    if missing := required_qc.difference(qc.columns):
+        raise ValueError(f"station QC lacks columns: {sorted(missing)}")
+
+    usable = qc.loc[qc["qc_status"].isin(("complete", "gap_filled"))].copy()
+    usable["year"] = pd.to_numeric(usable["year"], errors="raise").astype(int)
+    usable["month"] = pd.to_numeric(usable["month"], errors="raise").astype(int)
+    first = (
+        usable.sort_values(["ghcnd_id", "year", "month"], kind="stable")
+        .drop_duplicates("ghcnd_id", keep="first")
+        .set_index("ghcnd_id")
+    )
+    ids = registry["ghcnd_id"].astype(str)
+    missing_ids = sorted(set(ids).difference(first.index.astype(str)))
+    if missing_ids:
+        raise ValueError(f"station QC has no usable month for: {', '.join(missing_ids)}")
+    registry["first_complete_month"] = [
+        f"{int(first.loc[station_id, 'year']):04d}-{int(first.loc[station_id, 'month']):02d}"
+        for station_id in ids
+    ]
+    text = registry.to_csv(index=False, lineterminator="\n")
+    atomic_write_bytes(registry_path, text.encode("utf-8"))
+    return registry
 
 
 def _split_attributes(values: pd.Series) -> pd.DataFrame:

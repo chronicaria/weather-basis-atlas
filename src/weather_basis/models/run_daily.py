@@ -316,6 +316,25 @@ def _simulate_pair(
     return output
 
 
+def _seed_panel_positions(
+    root: Path, labels: np.ndarray, n_counties: int, count: int
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Return the registered 50-county panel and all listed-station positions."""
+
+    fips = np.asarray(labels[:n_counties]).astype("U5")
+    order = np.argsort(fips, kind="stable")
+    county_positions = order[np.linspace(0, len(order) - 1, count, dtype=np.intp)]
+    registry_path = root / "data/metadata/station_registry.csv"
+    if registry_path.exists():
+        registry = pd.read_csv(registry_path, dtype={"ghcnd_id": str})
+        cme_ids = registry.loc[registry["role"].eq("cme"), "ghcnd_id"].astype(str).to_numpy()
+    else:  # Fixture-only: no station table is available to price against.
+        cme_ids = np.asarray([], dtype="U")
+    index = {str(label): position for position, label in enumerate(labels)}
+    station_positions = np.asarray([index[item] for item in cme_ids], dtype=np.intp)
+    return county_positions, fips[county_positions], station_positions, cme_ids
+
+
 def run_site_daily(root: Path, cfg: Any) -> dict[str, Path]:
     """Fit R2 once and write deterministic aligned/sorted R2j site draws.
 
@@ -341,6 +360,12 @@ def run_site_daily(root: Path, cfg: Any) -> dict[str, Path]:
     aligned_dir = root / "results" / "draws" / "R2j_aligned"
     sorted_dir = root / "results" / "draws" / "R2j"
     params = root / "results" / "models" / "params"
+    seed_panel_dir = root / "results" / "draws" / "R2j_aligned_seed2"
+    panel_count = int(_value(cfg, "quotes", "seed_panel_counties", 50))
+    county_positions, panel_fips, station_positions, cme_ids = _seed_panel_positions(
+        root, labels, n_counties, panel_count
+    )
+    second_seed = np.random.SeedSequence([int(getattr(cfg, "seed", 20260901)), 2])
     for pair, child in zip(PAIRS, seed.spawn(len(PAIRS)), strict=True):
         target = _target_year(as_of, pair)
         draws = _simulate_pair(fit, history_dates, pair, target, cfg, child)
@@ -352,6 +377,17 @@ def run_site_daily(root: Path, cfg: Any) -> dict[str, Path]:
             coef=fit.ar.coef,
             order=fit.ar.order,
             bic=fit.ar.bic,
+        )
+    for pair, child in zip(PAIRS, second_seed.spawn(len(PAIRS)), strict=True):
+        target = _target_year(as_of, pair)
+        second = _simulate_pair(fit, history_dates, pair, target, cfg, child)
+        _save_npz(
+            seed_panel_dir / f"{pair.key}_site.npz",
+            fips=panel_fips,
+            station_ids=cme_ids,
+            county=second[county_positions],
+            station=second[station_positions],
+            seed=np.asarray([int(getattr(cfg, "seed", 20260901)), 2], dtype=np.int64),
         )
     _save_npy(sorted_dir / "series_labels.npy", labels)
     # The registered calibration table covers counties plus the 13 listed CME

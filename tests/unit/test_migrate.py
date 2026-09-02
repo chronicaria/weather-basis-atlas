@@ -5,7 +5,12 @@ from __future__ import annotations
 import csv
 from pathlib import Path
 
-from weather_basis.ingest.migrate import export_snapshot, import_snapshot, migrate_legacy
+from weather_basis.ingest.migrate import (
+    export_snapshot,
+    import_snapshot,
+    migrate_legacy,
+    verify_sha256sums,
+)
 from weather_basis.io import sha256
 
 
@@ -74,3 +79,23 @@ def test_snapshot_import_rehashes_contents(tmp_path: Path) -> None:
     assert (restored / "data/raw/SHA256SUMS").is_file()
     restored_raw = restored / "data/raw/nclimgrid_daily/averages/1951/tavg-195101-cty-scaled.csv"
     assert restored_raw.is_file()
+
+
+def test_snapshot_carries_full_metadata_and_rejects_raw_checksum_drift(tmp_path: Path) -> None:
+    """Section 4.9: snapshots preserve all frozen metadata and verify every raw byte."""
+    donor, source_repo, restored = tmp_path / "donor", tmp_path / "source", tmp_path / "restored"
+    _make_donor(donor)
+    migrate_legacy(donor, source_repo)
+    registry = source_repo / "data/metadata/station_registry.csv"
+    registry.write_text("ghcnd_id,first_test_season\nUSW00094846,1981\n", encoding="utf-8")
+    archive = export_snapshot(source_repo, tmp_path / "vintage.tar.gz")
+
+    report = import_snapshot(archive, restored)
+
+    assert report.ok
+    assert (restored / "data/metadata/station_registry.csv").read_bytes() == registry.read_bytes()
+    raw = restored / "data/raw/nclimgrid_daily/averages/1951/tavg-195101-cty-scaled.csv"
+    raw.write_text("tampered\n", encoding="utf-8")
+    assert verify_sha256sums(restored) == (
+        "sha256 nclimgrid_daily/averages/1951/tavg-195101-cty-scaled.csv",
+    )

@@ -1,11 +1,11 @@
 {
   "config_hash": "df45780d6e91803d",
-  "created_utc": "2026-09-02T18:59:03.764749+00:00",
+  "created_utc": "2026-09-02T19:03:33.510199+00:00",
   "extra": {
     "allow_dirty": false
   },
   "geography_vintage": "us-atlas@3",
-  "git_commit": "2875f411526f266d5559e653339b4070d9e8a952",
+  "git_commit": "babc93f9991dcb2e3b37d8f2e497015e07d18471",
   "holdout_unlocked": false,
   "paths_in": [
     "results"

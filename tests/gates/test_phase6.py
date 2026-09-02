@@ -45,3 +45,14 @@ def test_phase6_docs_and_payload_budget() -> None:
     cap = yaml.safe_load(config_text)["site"]["county_payload_max_kb_gz"] * 1024
     payloads = list((ROOT / "site/data/county").glob("*.json.gz"))
     assert payloads and max(path.stat().st_size for path in payloads) <= cap
+
+
+def test_phase6_quote_recomputation_and_seed_agreement_are_attested() -> None:
+    """Plan Sections 8.4 and 10 Phase 6: 50 recomputed quotes and independent seeds pass."""
+    recomputation = json.loads((ROOT / "results/quotes/recompute_50.json").read_text())
+    assert recomputation["n_quotes"] >= 50
+    assert float(recomputation["max_abs_error"]) <= 1e-6
+    seed = json.loads((ROOT / "results/quotes/seed_agreement.json").read_text())
+    assert seed["n_counties"] == 50
+    assert seed["sigma"] == 4
+    assert seed["violations"] == 0

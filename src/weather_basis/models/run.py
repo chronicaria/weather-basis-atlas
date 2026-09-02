@@ -10,6 +10,8 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import resource
+import sys
 import tempfile
 from calendar import monthrange
 from datetime import UTC, datetime
@@ -22,7 +24,10 @@ from scipy.special import gammaln
 
 from weather_basis.contracts.calendar import PAIRS, Pair
 
+from .residual import seasonal_sigma
+from .run_daily import _fit_site_daily, _load_or_build_blocks, _subset_blocks
 from .scoring import brier, coverage, crps_from_samples, pit
+from .seasonal_mean import elapsed_days, predict
 from .tournament import tournament_selection
 
 
@@ -100,14 +105,28 @@ def _calibration_rows(history: np.ndarray, seasons: np.ndarray, labels: np.ndarr
     return pd.DataFrame(rows)
 
 
-def _power_statement(n_origins: int, seed: int) -> dict[str, object]:
-    """Monte-Carlo 80% detectable paired unit skill under the equal-skill null."""
-    rng = np.random.default_rng(np.random.SeedSequence(seed).spawn(1)[0])
+def _power_statement(score_data: pd.DataFrame, n_origins: int, seed: int) -> dict[str, object]:
+    """Daily-R2 score-resampling power calculation under a centered null.
+
+    This retains the observed heteroskedasticity of the fitted daily R2
+    tournament rather than imposing a unit-variance normal approximation.
+    It resamples origin-level paired R2/R1 skills after centering within the
+    registered (pair, state) unit, which is the equal-skill null.
+    """
+
     n = max(int(n_origins), 2)
-    # Unit-scale CRPS differences are normalized to the lower-rung CRPS.  The
-    # simulation therefore reports a dimensionless skill, not an invented °F
-    # or degree-day effect size.
-    null = rng.normal(size=(80_000, n)).mean(axis=1)
+    table = score_data.pivot_table(
+        index=["pair", "state", "origin"], columns="rung", values="crps", aggfunc="sum"
+    )
+    if not {"R1", "R2"}.issubset(table.columns):
+        raise ValueError("daily R2 power requires paired R1/R2 score rows")
+    ratio = 1.0 - table["R2"] / table["R1"]
+    centered = ratio - ratio.groupby(level=[0, 1]).transform("mean")
+    innovations = centered[np.isfinite(centered)].to_numpy(dtype=float)
+    if innovations.size < n:
+        raise ValueError("insufficient paired daily-R2 origin scores for power calculation")
+    rng = np.random.default_rng(np.random.SeedSequence(seed).spawn(1)[0])
+    null = rng.choice(innovations, size=(80_000, n), replace=True).mean(axis=1)
     critical = float(np.quantile(null, 0.90))
     grid = np.linspace(0.0, 2.0, 2_001)
     # Under an additive equal-variance skill alternative, shifting the
@@ -119,7 +138,10 @@ def _power_statement(n_origins: int, seed: int) -> dict[str, object]:
         "power": 0.80,
         "alpha_one_sided": 0.10,
         "minimum_detectable_skill_80": float(grid[np.flatnonzero(power >= 0.80)[0]]),
-        "method": "Monte Carlo paired-origin mean CRPS difference under equal-skill null",
+        "method": (
+            "Monte Carlo origin bootstrap of centered fitted-daily-R2 paired CRPS skills "
+            "under equal-skill null"
+        ),
         "seed": seed,
     }
 
@@ -150,6 +172,22 @@ def _load_panel(root: Path) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     return np.asarray(values), np.asarray(dates), labels
 
 
+def _load_county_panel(root: Path) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Open the county panel without materializing the station columns.
+
+    Rolling score units are counties only.  Avoiding the county/station
+    concatenate here keeps the master fit's RSS below the single-process cap.
+    """
+
+    directory = Path(root) / "data" / "panel"
+    values = np.load(directory / "tavg_f32.npy", mmap_mode="r", allow_pickle=False)
+    dates = np.load(directory / "dates.npy", mmap_mode="r", allow_pickle=False)
+    fips = np.load(directory / "fips.npy", mmap_mode="r", allow_pickle=False).astype("U5")
+    if values.shape != (dates.size, fips.size):
+        raise ValueError("county panel dimensions are inconsistent")
+    return values, dates, fips
+
+
 def _pair_history(
     values: np.ndarray, dates: np.ndarray, pair: Pair
 ) -> tuple[np.ndarray, np.ndarray]:
@@ -171,59 +209,25 @@ def _pair_history(
     return seasons, output
 
 
-def _joint_empirical_site_draws(
-    history: np.ndarray,
-    seasons: np.ndarray,
-    *,
-    target: int,
-    M: int,
-    rng: np.random.Generator,
-    window: int = 40,
-) -> np.ndarray:
-    """Joint empirical-innovation fallback with shared sampled season rows.
-
-    Every path chooses one historical season for every included series.  Thus
-    the fallback preserves the observed cross-series innovation vector and is
-    materially different from independent per-county bootstrap streams.  A
-    small, vectorized linear trend supplies the target-season level.
-    """
-    stop = int(np.searchsorted(seasons, target))
-    train = np.asarray(history[max(0, stop - window) : stop], dtype=np.float64)
-    time = np.asarray(seasons[max(0, stop - window) : stop], dtype=np.float64)
-    if train.shape[0] < 3:
-        return np.full((history.shape[1], M), np.nan, dtype=np.float32)
-    valid = np.isfinite(train)
-    x = np.column_stack((np.ones(time.size), time))
-    gram = np.einsum("ti,tj,tn->nij", x, x, valid, optimize=True)
-    xty = np.einsum("ti,tn->ni", x, np.where(valid, train, 0.0), optimize=True)
-    coef = np.full((train.shape[1], 2), np.nan)
-    for column in range(train.shape[1]):
-        if valid[:, column].sum() >= 3 and np.linalg.matrix_rank(gram[column]) == 2:
-            coef[column] = np.linalg.solve(gram[column], xty[column])
-    fitted = x @ coef.T
-    innovations = train - fitted
-    # Complete-case rows over *modelled* series define common R2j weather
-    # scenarios.  A short-record station remains NaN rather than making every
-    # county ineligible for the joint simulation.
-    included = np.isfinite(coef).all(axis=1)
-    candidates = np.flatnonzero(np.isfinite(innovations[:, included]).all(axis=1))
-    if not candidates.size:
-        return np.full((history.shape[1], M), np.nan, dtype=np.float32)
-    selected = rng.choice(candidates, size=M, replace=True)
-    location = coef[:, 0] + coef[:, 1] * float(target)
-    output = np.full((history.shape[1], M), np.nan, dtype=np.float32)
-    output[included] = np.maximum(
-        location[included, None] + innovations[selected].T[included], 0.0
-    ).astype(np.float32)
-    return output
-
-
 def _save_npy(path: Path, values: np.ndarray) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     descriptor, temp = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
     try:
         with os.fdopen(descriptor, "wb") as stream:
             np.save(stream, values, allow_pickle=False)
+        os.replace(temp, path)
+    finally:
+        Path(temp).unlink(missing_ok=True)
+
+
+def _save_npz(path: Path, **arrays: np.ndarray) -> None:
+    """Atomically write compact parameter archives without pickle data."""
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temp = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".npz", dir=path.parent)
+    try:
+        with os.fdopen(descriptor, "wb") as stream:
+            np.savez(stream, **arrays)
         os.replace(temp, path)
     finally:
         Path(temp).unlink(missing_ok=True)
@@ -236,7 +240,7 @@ def _write_frame(frame: pd.DataFrame, path: Path) -> None:
     )
 
 
-def _draws_for_origin(
+def _index_comparator_draws(
     history: np.ndarray,
     seasons: np.ndarray,
     origin: int,
@@ -244,13 +248,14 @@ def _draws_for_origin(
     seed: np.random.SeedSequence,
     cfg: Any,
 ) -> dict[str, np.ndarray]:
-    """Build vectorized annual-fallback R0/R1/R2 samples for one origin.
+    """Build vectorized index-level R0/R1 comparator samples for one origin.
 
     The county panel has complete annual contract-month histories.  Taking
     advantage of that invariant turns the former 3,107 independent Python
     optimizations into one masked matrix likelihood calculation.  R1 still
-    maximizes the Student-t profile likelihood (scale and df jointly); R0 and
-    R2 retain their original empirical sampling laws.  The single origin
+    maximizes the Student-t profile likelihood (scale and df jointly).  R2 is
+    deliberately absent here: the production runner constructs it directly
+    from daily temperatures.  The single origin
     generator is intentionally deterministic and scoped by the registered
     pair/origin SeedSequence child.
     """
@@ -258,7 +263,6 @@ def _draws_for_origin(
     n = history.shape[1]
     r0 = np.full((n, M), np.nan, dtype=np.float32)
     r1 = np.full_like(r0, np.nan)
-    r2 = np.full_like(r0, np.nan)
     window = int(_value(cfg, "r1", "window_years", 40))
     train = np.asarray(history[max(0, stop - window) : stop], dtype=float)
     time = np.asarray(seasons[max(0, stop - window) : stop], dtype=float)
@@ -266,7 +270,7 @@ def _draws_for_origin(
     counts = valid.sum(axis=0)
     eligible = counts >= 3
     if not np.any(eligible):
-        return {"R0": r0, "R1": r1, "R2": r2}
+        return {"R0": r0, "R1": r1}
     # Closed-form masked OLS for every county.  The production panel is
     # complete, while the mask preserves fixture/partial-history behaviour.
     x = time[:, None]
@@ -338,14 +342,7 @@ def _draws_for_origin(
         + scale[eligible, None] * rng.standard_t(nu[eligible, None], size=(int(eligible.sum()), M)),
         0.0,
     ).astype(np.float32)
-    residual_ok = valid.all(axis=0) & eligible
-    residual_choices = rng.integers(0, residual.shape[0], size=(n, M))
-    r2[residual_ok] = np.maximum(
-        location[residual_ok, None]
-        + np.take_along_axis(residual[:, residual_ok].T, residual_choices[residual_ok], axis=1),
-        0.0,
-    ).astype(np.float32)
-    return {"R0": r0, "R1": r1, "R2": r2}
+    return {"R0": r0, "R1": r1}
 
 
 def _score_rows(
@@ -457,6 +454,237 @@ def _manifest(root: Path, cfg: Any, stage: str, outputs: list[Path], *, unlocked
     path.write_text(json.dumps(payload, sort_keys=True, indent=2) + "\n", encoding="utf-8")
 
 
+def _tournament_dates(
+    pair: Pair, origin: int
+) -> tuple[pd.Timestamp, pd.Timestamp, pd.DatetimeIndex, np.ndarray]:
+    """Registered origin convention: value one month before settlement month.
+
+    The daily fit ends on the last day two months before the contract month;
+    simulation begins on the next observed calendar day and only accumulates
+    degree days in the contract month.
+    """
+
+    target = pd.Timestamp(year=int(origin), month=int(pair.month), day=1)
+    as_of = target - pd.DateOffset(months=1)
+    through = as_of - pd.Timedelta(days=1)
+    horizon = pd.date_range(
+        through + pd.Timedelta(days=1), target + pd.offsets.MonthEnd(0), freq="D"
+    )
+    return as_of, through, horizon, horizon.month.to_numpy() == pair.month
+
+
+def _stationary_plan_indices(
+    rng: np.random.Generator, *, M: int, n_days: int, candidates: np.ndarray, mean_block: float
+) -> np.ndarray:
+    """Vectorized stationary-bootstrap plan for one marginal series.
+
+    This is algebraically the geometric-block construction: each day begins a
+    fresh block with probability ``1 / mean_block`` and otherwise advances one
+    calendar day within the candidate window.  It avoids Python loops over
+    paths while retaining a dedicated RNG stream for each county.
+    """
+
+    choices = np.asarray(candidates, dtype=np.int32)
+    if not choices.size:
+        raise ValueError("daily R2 simulation has no candidate innovation days")
+    if mean_block <= 0:
+        raise ValueError("simulate.mean_block must be positive")
+    p = 1.0 / float(mean_block)
+    restart = rng.random((M, n_days)) < p
+    restart[:, 0] = True
+    starts = rng.integers(0, choices.size, size=(M, n_days), dtype=np.int32)
+    positions = np.empty((M, n_days), dtype=np.int32)
+    positions[:, 0] = starts[:, 0]
+    for day in range(1, n_days):
+        positions[:, day] = np.where(
+            restart[:, day], starts[:, day], (positions[:, day - 1] + 1) % choices.size
+        )
+    return choices[positions]
+
+
+def _daily_r2_draws(
+    panel: np.ndarray,
+    dates: np.ndarray,
+    blocks: Any,
+    pair: Pair,
+    origin: int,
+    M: int,
+    cfg: Any,
+    seed: np.random.SeedSequence,
+) -> tuple[np.ndarray, Any]:
+    """Fit and simulate the registered daily R2 model for one pair/origin.
+
+    Counties receive independent ``SeedSequence`` children.  Work is bounded
+    by a county chunk: plans are ``(chunk, M, horizon)`` and the day loop keeps
+    only AR state and the monthly accumulator, never a path cube.
+    """
+
+    _, through, horizon, accumulate = _tournament_dates(pair, origin)
+    daily_panel = type("Panel", (), {"values": panel, "dates": dates})()
+    fit = _fit_site_daily(daily_panel, blocks, cfg, through)
+    history_dates = pd.DatetimeIndex(pd.to_datetime(dates))[fit.fit_mask]
+    target_day = int(pd.Timestamp(year=origin, month=pair.month, day=1).dayofyear)
+    doy = history_dates.dayofyear.to_numpy()
+    distance = np.abs(((doy - target_day + 182) % 365) - 182)
+    candidates = np.flatnonzero(distance <= int(_value(cfg, "simulate", "window_days", 45)))
+    valid = np.isfinite(fit.z)
+    if not np.all(valid[candidates]):
+        # County panels are complete, but keeping this check makes partial
+        # fixture inputs fail loudly rather than silently mixing candidate sets.
+        candidates = candidates[np.all(valid[candidates], axis=1)]
+    if not candidates.size:
+        raise ValueError(f"no complete daily innovation candidates for {pair.key} {origin}")
+
+    future_t = elapsed_days(horizon)
+    mean = predict(fit.mean_coef, future_t)
+    sigma = seasonal_sigma(fit.logvar, horizon.dayofyear.to_numpy())
+    values = np.asarray(panel, dtype=np.float64)
+    fit_values = values[fit.fit_mask]
+    fitted_history = predict(fit.mean_coef, elapsed_days(history_dates))
+    residual_history = fit_values - fitted_history
+    n_series = values.shape[1]
+    output = np.empty((n_series, M), dtype=np.float32)
+    chunk = int(_value(cfg, "simulate", "chunk_series", 200))
+    if chunk < 1:
+        raise ValueError("simulate.chunk_series must be positive")
+    children = seed.spawn(n_series)
+    index_is_hdd = pair.index == "HDD"
+    max_p = fit.ar.coef.shape[1]
+    for start in range(0, n_series, chunk):
+        stop = min(start + chunk, n_series)
+        width = stop - start
+        plans = np.stack(
+            [
+                _stationary_plan_indices(
+                    np.random.default_rng(child),
+                    M=M,
+                    n_days=len(horizon),
+                    candidates=candidates,
+                    mean_block=float(_value(cfg, "simulate", "mean_block", 7)),
+                )
+                for child in children[start:stop]
+            ],
+            axis=0,
+        )
+        state = np.zeros((max_p, M, width), dtype=np.float64)
+        for lag in range(max_p):
+            row = residual_history[-1 - lag, start:stop]
+            state[lag] = np.where(np.isfinite(row), row, 0.0)[None, :]
+        total = np.zeros((M, width), dtype=np.float64)
+        coef = fit.ar.coef[start:stop]
+        columns = np.arange(start, stop)
+        for day in range(len(horizon)):
+            source = plans[:, :, day].T
+            innovation = fit.z[source, columns[None, :]] * sigma[day, start:stop][None, :]
+            residual = innovation + np.einsum("pmc,cp->mc", state, coef, optimize=True)
+            if max_p:
+                state[1:] = state[:-1]
+                state[0] = residual
+            if accumulate[day]:
+                temperature = mean[day, start:stop][None, :] + residual
+                increment = (
+                    np.maximum(65.0 - temperature, 0.0)
+                    if index_is_hdd
+                    else np.maximum(temperature - 65.0, 0.0)
+                )
+                total += increment
+        output[start:stop] = total.T.astype(np.float32)
+    return output, fit
+
+
+def _daily_calibration_by_origin(
+    fit: Any, labels: np.ndarray, pair: Pair, origin: int
+) -> pd.DataFrame:
+    """The same daily-standardized diagnostic fields, summarized at an origin."""
+
+    z = np.asarray(fit.z, dtype=float)
+    rows: list[dict[str, object]] = []
+    for column, label in enumerate(labels):
+        values = z[:, column]
+        values = values[np.isfinite(values)]
+        if values.size < 12:
+            continue
+        centered = values - values.mean()
+        m2 = float(np.mean(centered * centered))
+        ac = [
+            float(np.corrcoef(centered[k:], centered[:-k])[0, 1])
+            if np.std(centered[k:]) > 0 and np.std(centered[:-k]) > 0
+            else 0.0
+            for k in range(1, 11)
+        ]
+        width = max(1, values.size // 3)
+        early = float(np.var(values[:width]))
+        rows.append(
+            {
+                "pair": pair.key,
+                "origin": int(origin),
+                "series": str(label),
+                "skewness": float(np.mean(centered**3) / m2**1.5) if m2 > 0 else np.nan,
+                "excess_kurtosis": float(np.mean(centered**4) / m2**2 - 3.0) if m2 > 0 else np.nan,
+                "ljung_box_q10": float(
+                    values.size
+                    * (values.size + 2)
+                    * sum(r * r / (values.size - i) for i, r in enumerate(ac, 1))
+                ),
+                "mean_z2": float(np.mean(values * values)),
+                "variance_regime_ratio": (
+                    float(np.var(values[-width:]) / early) if early > 0 else np.nan
+                ),
+                "diagnostic_basis": "daily_R2_standardized_innovation",
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def _r0_draws_from_anomalies(
+    root: Path,
+    pair: Pair,
+    origin: int,
+    labels: np.ndarray,
+    M: int,
+    seed: np.random.SeedSequence,
+    fallback_history: np.ndarray,
+    seasons: np.ndarray,
+) -> np.ndarray:
+    """R0: target trailing normal plus a sampled trailing-30 anomaly.
+
+    The fixture runner intentionally has no index parquet.  That narrow test
+    path falls back to its supplied history; production has to use the frozen
+    index-normal/anomaly table and fails if it is malformed.
+    """
+
+    path = Path(root) / "results" / "indices" / f"county_{pair.key}.parquet"
+    if not path.exists():
+        normal = np.nanmean(fallback_history[-30:], axis=0)
+        anomaly = fallback_history[-30:] - normal[None, :]
+    else:
+        table = pd.read_parquet(path, columns=["fips", "season", "normal", "anomaly"])
+        table["fips"] = table["fips"].astype(str).str.zfill(5)
+        table = table.loc[table["fips"].isin(labels) & (table["season"] <= int(origin))]
+        normal_frame = table.loc[table["season"].eq(int(origin))].set_index("fips")["normal"]
+        normals = normal_frame.reindex(labels)
+        if normals.isna().any():
+            raise ValueError(f"R0 missing target normal for {pair.key} {origin}")
+        normal = normals.to_numpy(dtype=float)
+        prior = table.loc[table["season"].lt(int(origin)) & table["season"].ge(int(origin) - 30)]
+        anomaly = (
+            prior.pivot(index="season", columns="fips", values="anomaly")
+            .reindex(columns=labels)
+            .to_numpy(dtype=float)
+        )
+    out = np.full((len(labels), M), np.nan, dtype=np.float32)
+    for column, child in enumerate(seed.spawn(len(labels))):
+        pool = anomaly[:, column]
+        pool = pool[np.isfinite(pool)]
+        if pool.size:
+            out[column] = np.maximum(
+                float(normal[column])
+                + np.random.default_rng(child).choice(pool, size=M, replace=True),
+                0.0,
+            ).astype(np.float32)
+    return out
+
+
 def _joint_check_from_site_draws(
     root: Path, values: np.ndarray, dates: np.ndarray, labels: np.ndarray, cfg: Any
 ) -> Path | None:
@@ -564,8 +792,14 @@ def run_tournament(root: Path, cfg: Any) -> dict[str, Path]:
     invocation cannot accidentally create selection results from holdout data.
     """
     root = Path(root)
-    values, dates, labels = _load_panel(root)
+    values, dates, labels = _load_county_panel(root)
     n_counties = _county_count(root)
+    # Tournament scoring is county-only.  The daily blocks are built once in
+    # the fixed D-61 basis and sliced without admitting Nebraska/check-only
+    # station rows into state-month inference units.
+    values = values[:, :n_counties]
+    labels = labels[:n_counties]
+    blocks = _subset_blocks(_load_or_build_blocks(root, cfg), np.arange(n_counties, dtype=np.intp))
     M = int(_value(cfg, "simulate", "M_tournament", 2000))
     start, end = tuple(_value(cfg, "tournament", "origins", (1991, 2022)))
     locked_start, locked_end = tuple(_value(cfg, "tournament", "holdout", (2023, 2025)))
@@ -574,6 +808,10 @@ def run_tournament(root: Path, cfg: Any) -> dict[str, Path]:
         raise PermissionError("selection origins overlap locked confirmation seasons")
     seed = np.random.SeedSequence(int(getattr(cfg, "seed", 20260901)))
     all_scores: list[pd.DataFrame] = []
+    origin_calibrations: list[pd.DataFrame] = []
+    parameter_rows: list[dict[str, object]] = []
+    parameter_outputs: list[Path] = []
+    determinism: dict[str, object] | None = None
     outputs: list[Path] = []
     for pair, pair_seed in zip(PAIRS, seed.spawn(len(PAIRS)), strict=True):
         seasons, history = _pair_history(values, dates, pair)
@@ -582,8 +820,69 @@ def run_tournament(root: Path, cfg: Any) -> dict[str, Path]:
             index = int(np.searchsorted(seasons, origin))
             if index >= seasons.size or seasons[index] != origin:
                 continue
-            draws = _draws_for_origin(
-                history[:, :n_counties], seasons, int(origin), M, origin_seed, cfg
+            # R0/R1 are index-level comparators.  R2 is always the registered
+            # daily AR/seasonal-variance simulation, never an annual-residual
+            # surrogate.  Separate child sequences make the provenance of the
+            # ladder explicit and leave county children stable if a rung grows.
+            comparator_seed, r2_seed = origin_seed.spawn(2)
+            draws = _index_comparator_draws(history, seasons, int(origin), M, comparator_seed, cfg)
+            draws["R0"] = _r0_draws_from_anomalies(
+                root, pair, int(origin), labels, M, comparator_seed, history, seasons
+            )
+            r2, daily_fit = _daily_r2_draws(
+                values, dates, blocks, pair, int(origin), M, cfg, r2_seed
+            )
+            draws["R2"] = r2
+            params_dir = root / "results" / "models" / "params"
+            mean_path = params_dir / f"mean_{pair.key}_{origin}.npy"
+            ar_path = params_dir / f"ar_{pair.key}_{origin}.npz"
+            _save_npy(mean_path, daily_fit.mean_coef)
+            _save_npz(
+                ar_path,
+                coef=daily_fit.ar.coef,
+                order=daily_fit.ar.order,
+                bic=daily_fit.ar.bic,
+            )
+            fit_dates = pd.DatetimeIndex(pd.to_datetime(dates))[daily_fit.fit_mask]
+            parameter_rows.append(
+                {
+                    "pair": pair.key,
+                    "origin": int(origin),
+                    "fit_through": str(fit_dates[-1].date()),
+                    "z_start": str(fit_dates[0].date()),
+                    "z_end": str(fit_dates[-1].date()),
+                    "z_n_days": int(daily_fit.z.shape[0]),
+                    "z_n_series": int(daily_fit.z.shape[1]),
+                    "z_sha256": hashlib.sha256(memoryview(daily_fit.z).cast("B")).hexdigest(),
+                    "mean_path": str(mean_path.relative_to(root)),
+                    "ar_path": str(ar_path.relative_to(root)),
+                    "daily_model": "R2",
+                }
+            )
+            parameter_outputs.extend((mean_path, ar_path))
+            if determinism is None:
+                replay_seed = np.random.SeedSequence(
+                    r2_seed.entropy, spawn_key=r2_seed.spawn_key, pool_size=r2_seed.pool_size
+                )
+                replay, _ = _daily_r2_draws(
+                    values, dates, blocks, pair, int(origin), M, cfg, replay_seed
+                )
+                first_bytes = r2.tobytes(order="C")
+                replay_bytes = replay.tobytes(order="C")
+                determinism = {
+                    "pair": pair.key,
+                    "origin": int(origin),
+                    "M": M,
+                    "n_counties": n_counties,
+                    "first_sha256": hashlib.sha256(first_bytes).hexdigest(),
+                    "replay_sha256": hashlib.sha256(replay_bytes).hexdigest(),
+                    "byte_equal": first_bytes == replay_bytes,
+                    "rung": "R2_daily",
+                }
+                if not determinism["byte_equal"]:
+                    raise RuntimeError("daily R2 replay was not byte-for-byte deterministic")
+            origin_calibrations.append(
+                _daily_calibration_by_origin(daily_fit, labels, pair, int(origin))
             )
             # Origin samples are evaluation scratch space.  Scores are the
             # durable audit artefact; retaining 448 large matrices offers no
@@ -613,9 +912,20 @@ def run_tournament(root: Path, cfg: Any) -> dict[str, Path]:
         selection["skill_r2_r1"],
         np.where(selection["rung_selected"].eq("R1"), selection["skill_r1_r0"], 0.0),
     )
+    selection["n_counties"] = [
+        int(
+            score_data.loc[
+                score_data["pair"].eq(pair) & score_data["state"].eq(state), "fips"
+            ].nunique()
+        )
+        for pair, state in zip(selection["pair"], selection["state"], strict=True)
+    ]
     selection_path = root / "results" / "tournament" / "selection.parquet"
     _write_frame(selection, selection_path)
     outputs.append(selection_path)
+    parameter_metadata_path = root / "results" / "models" / "params" / "tournament_metadata.parquet"
+    _write_frame(pd.DataFrame(parameter_rows), parameter_metadata_path)
+    parameter_outputs.append(parameter_metadata_path)
     # Section 7.3's site diagnostic covers counties plus the 13 listed CME
     # stations (not the five Nebraska check-only stations).
     calibration_path = root / "results" / "tournament" / "calibration.parquet"
@@ -637,19 +947,36 @@ def run_tournament(root: Path, cfg: Any) -> dict[str, Path]:
         )
         _write_frame(calibration, calibration_path)
     calibration_by_origin_path = root / "results" / "tournament" / "calibration_by_origin.parquet"
-    if score_data.empty:
-        calibration_by_origin = pd.DataFrame(columns=["pair", "origin", "n_scores", "mean_pit"])
-    else:
-        calibration_by_origin = (
-            score_data.groupby(["pair", "origin"], as_index=False)
-            .agg(
-                n_scores=("pit", "size"),
-                mean_pit=("pit", "mean"),
-                mean_crps=("crps", "mean"),
-                coverage80=("coverage80", "mean"),
-            )
-            .sort_values(["pair", "origin"], kind="stable")
+    calibration_detail = (
+        pd.concat(origin_calibrations, ignore_index=True)
+        if origin_calibrations
+        else pd.DataFrame(
+            columns=[
+                "pair",
+                "origin",
+                "series",
+                "skewness",
+                "excess_kurtosis",
+                "ljung_box_q10",
+                "mean_z2",
+                "variance_regime_ratio",
+                "diagnostic_basis",
+            ]
         )
+    )
+    calibration_by_origin = (
+        calibration_detail.groupby(["pair", "origin"], as_index=False)
+        .agg(
+            n_series=("series", "size"),
+            skewness=("skewness", "mean"),
+            excess_kurtosis=("excess_kurtosis", "mean"),
+            ljung_box_q10=("ljung_box_q10", "mean"),
+            mean_z2=("mean_z2", "mean"),
+            variance_regime_ratio=("variance_regime_ratio", "mean"),
+            diagnostic_basis=("diagnostic_basis", "first"),
+        )
+        .sort_values(["pair", "origin"], kind="stable")
+    )
     _write_frame(calibration_by_origin, calibration_by_origin_path)
     holdout_path = root / "results" / "tournament" / "holdout_check.json"
     holdout_path.parent.mkdir(parents=True, exist_ok=True)
@@ -670,7 +997,14 @@ def run_tournament(root: Path, cfg: Any) -> dict[str, Path]:
                 index = int(np.searchsorted(seasons, origin))
                 if index >= seasons.size or seasons[index] != origin:
                     continue
-                draws = _draws_for_origin(history, seasons, origin, M, child, cfg)
+                comparator_seed, r2_seed = child.spawn(2)
+                draws = _index_comparator_draws(history, seasons, origin, M, comparator_seed, cfg)
+                draws["R0"] = _r0_draws_from_anomalies(
+                    root, pair, origin, labels, M, comparator_seed, history, seasons
+                )
+                draws["R2"], _ = _daily_r2_draws(
+                    values, dates, blocks, pair, origin, M, cfg, r2_seed
+                )
                 for column, fips in enumerate(labels[:n_counties]):
                     rung = selected.get((pair.key, str(fips)[:2]), "R0")
                     y = history[index, column]
@@ -705,49 +1039,50 @@ def run_tournament(root: Path, cfg: Any) -> dict[str, Path]:
     power_path.parent.mkdir(parents=True, exist_ok=True)
     power_path.write_text(
         json.dumps(
-            _power_statement(len(origins), int(getattr(cfg, "seed", 20260901))), sort_keys=True
+            _power_statement(score_data, len(origins), int(getattr(cfg, "seed", 20260901))),
+            sort_keys=True,
         )
         + "\n"
     )
-    outputs.extend((calibration_path, calibration_by_origin_path, holdout_path, power_path))
+    determinism_path = root / "results" / "tournament" / "determinism.json"
+    determinism_path.write_text(
+        json.dumps(determinism or {"byte_equal": False}, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    peak_rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    peak_rss_bytes = peak_rss if sys.platform == "darwin" else peak_rss * 1024
+    benchmark_path = root / "results" / "tournament" / "benchmark.json"
+    benchmark_path.write_text(
+        json.dumps(
+            {
+                "workers_configured": int(_value(cfg, "simulate", "workers", 8)),
+                "workers_effective": 1,
+                "peak_rss_bytes": int(peak_rss_bytes),
+                "max_rss_gb": float(_value(cfg, "simulate", "max_rss_gb", 12)),
+                "execution": "serial daily fits; model state is not duplicated across workers",
+            },
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    outputs.extend(
+        (
+            calibration_path,
+            calibration_by_origin_path,
+            holdout_path,
+            power_path,
+            determinism_path,
+            benchmark_path,
+        )
+    )
+    outputs.extend(parameter_outputs)
     _manifest(root, cfg, "tournament", outputs, unlocked=unlocked)
     return {"selection": selection_path, "calibration": calibration_path, "power": power_path}
 
 
 def run_site_simulation(root: Path, cfg: Any) -> dict[str, Path]:
-    """Produce aligned R2j and sorted marginal site draws for every contract pair."""
-    root = Path(root)
-    values, dates, labels = _load_panel(root)
-    as_of = pd.Timestamp(_value(cfg, "site", "as_of", "2026-07-01"))
-    M = int(_value(cfg, "simulate", "M_site", 10000))
-    seed = np.random.SeedSequence(int(getattr(cfg, "seed", 20260901)))
-    outputs: list[Path] = []
-    for pair, child in zip(PAIRS, seed.spawn(len(PAIRS)), strict=True):
-        target = as_of.year if pair.month > as_of.month else as_of.year + 1
-        seasons, history = _pair_history(values, dates, pair)
-        # The shared season-index stream preserves empirical spatial dependence
-        # while avoiding a redundant R0/R1 fit for every site series.
-        aligned = _joint_empirical_site_draws(
-            history,
-            seasons,
-            target=target,
-            M=M,
-            rng=np.random.default_rng(child),
-            window=int(_value(cfg, "r1", "window_years", 40)),
-        )
-        aligned_path = root / "results" / "draws" / "R2j_aligned" / f"{pair.key}_site.npy"
-        sorted_path = root / "results" / "draws" / "R2j" / f"{pair.key}_site.npy"
-        _save_npy(aligned_path, aligned)
-        _save_npy(sorted_path, np.sort(aligned, axis=1))
-        outputs.extend((aligned_path, sorted_path))
-    metadata = root / "results" / "draws" / "R2j" / "series_labels.npy"
-    _save_npy(metadata, labels)
-    outputs.append(metadata)
-    joint = _joint_check_from_site_draws(root, values, dates, labels, cfg)
-    if joint is not None:
-        outputs.append(joint)
-    _manifest(root, cfg, "models_simulate", outputs, unlocked=False)
-    return {
-        "draws": root / "results" / "draws" / "R2j",
-        "aligned": root / "results" / "draws" / "R2j_aligned",
-    }
+    """Compatibility wrapper for the registered production daily R2j path."""
+
+    from .run_daily import run_site_daily
+
+    return run_site_daily(Path(root), cfg)

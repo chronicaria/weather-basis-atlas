@@ -11,6 +11,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from weather_basis.io import sha256
+
 pytestmark = pytest.mark.data
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -56,7 +58,27 @@ def test_phase0_vendor_and_ci_contracts() -> None:
     assert len(assets) == 5
     rows = assets.values() if isinstance(assets, dict) else assets
     assert all(isinstance(row, dict) and row.get("sha256") for row in rows)
+    for row in rows:
+        asset = ROOT / "web/vendor" / row["name"]
+        assert asset.is_file(), asset
+        assert sha256(asset) == row["sha256"]
 
     import yaml
 
     assert yaml.safe_load((ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8"))
+
+
+def test_phase0_prescribed_layout_and_qc_are_present() -> None:
+    """Plan Sections 2, 4.6, and 10 Phase 0: layout and every initial QC report exist."""
+    for relative in (
+        "src/weather_basis/schemas", "src/weather_basis/ingest", "src/weather_basis/contracts",
+        "src/weather_basis/indices", "src/weather_basis/hedge", "src/weather_basis/models",
+        "src/weather_basis/pricing", "src/weather_basis/site", "src/weather_basis/validation",
+        "data/contracts", "data/manifests", "data/metadata", "results/manifests", "tests/data",
+    ):
+        assert (ROOT / relative).is_dir(), relative
+    for relative in (
+        "results/qc/panel_tavg.json", "results/qc/panel_consistency.json",
+        "results/qc/stations.json", "results/qc/geography.json", "results/qc/confidence.json",
+    ):
+        assert (ROOT / relative).is_file(), relative

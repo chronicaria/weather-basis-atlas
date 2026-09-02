@@ -1,110 +1,956 @@
 {
   "USW00003927": {
-    "excluded_months": 64,
+    "coverage_by_decade": {
+      "1950": {
+        "excluded_months": 28,
+        "months": 108,
+        "usable_months": 80
+      },
+      "1960": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1970": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1980": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1990": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2000": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2010": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2020": {
+        "excluded_months": 0,
+        "months": 78,
+        "usable_months": 78
+      }
+    },
+    "excluded_months": 65,
+    "first_complete_month": "1953-05",
+    "first_test_season": 1981,
     "gap_filled_days": 1,
-    "integer_f_deviation_flag_rate": 0.010301743639717397,
+    "integer_f_deviation_element_rate": 0.005524449421425905,
+    "integer_f_deviation_flag_rate": 0.01031322950419846,
+    "integer_f_flagged_elements": 296,
+    "integer_f_observed_elements": 53580,
     "provisional_months": 2
   },
   "USW00012960": {
-    "excluded_months": 0,
+    "coverage_by_decade": {
+      "1950": {
+        "excluded_months": 0,
+        "months": 108,
+        "usable_months": 0
+      },
+      "1960": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 7
+      },
+      "1970": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1980": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1990": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2000": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2010": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2020": {
+        "excluded_months": 0,
+        "months": 78,
+        "usable_months": 78
+      }
+    },
+    "excluded_months": 1,
+    "first_complete_month": "1969-06",
+    "first_test_season": 1989,
     "gap_filled_days": 1,
-    "integer_f_deviation_flag_rate": 0.0037779159294151405,
+    "integer_f_deviation_element_rate": 0.0018890483022477283,
+    "integer_f_deviation_flag_rate": 0.0037780966044954566,
+    "integer_f_flagged_elements": 79,
+    "integer_f_observed_elements": 41820,
     "provisional_months": 2
   },
   "USW00013739": {
-    "excluded_months": 6,
+    "coverage_by_decade": {
+      "1950": {
+        "excluded_months": 0,
+        "months": 108,
+        "usable_months": 108
+      },
+      "1960": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1970": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1980": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1990": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2000": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2010": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2020": {
+        "excluded_months": 0,
+        "months": 78,
+        "usable_months": 78
+      }
+    },
+    "excluded_months": 7,
+    "first_complete_month": "1951-01",
+    "first_test_season": 1981,
     "gap_filled_days": 0,
-    "integer_f_deviation_flag_rate": 0.027325008737648142,
+    "integer_f_deviation_element_rate": 0.013733192807639488,
+    "integer_f_deviation_flag_rate": 0.027466385615278976,
+    "integer_f_flagged_elements": 860,
+    "integer_f_observed_elements": 62622,
     "provisional_months": 2
   },
   "USW00013874": {
-    "excluded_months": 0,
+    "coverage_by_decade": {
+      "1950": {
+        "excluded_months": 0,
+        "months": 108,
+        "usable_months": 108
+      },
+      "1960": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1970": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1980": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1990": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2000": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2010": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2020": {
+        "excluded_months": 0,
+        "months": 78,
+        "usable_months": 78
+      }
+    },
+    "excluded_months": 1,
+    "first_complete_month": "1951-01",
+    "first_test_season": 1981,
     "gap_filled_days": 2,
-    "integer_f_deviation_flag_rate": 0.008270314668479339,
+    "integer_f_deviation_element_rate": 0.004135391587593826,
+    "integer_f_deviation_flag_rate": 0.008270783175187651,
+    "integer_f_flagged_elements": 292,
+    "integer_f_observed_elements": 70610,
     "provisional_months": 2
   },
   "USW00014732": {
-    "excluded_months": 2,
+    "coverage_by_decade": {
+      "1950": {
+        "excluded_months": 0,
+        "months": 108,
+        "usable_months": 108
+      },
+      "1960": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1970": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1980": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1990": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2000": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2010": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2020": {
+        "excluded_months": 0,
+        "months": 78,
+        "usable_months": 78
+      }
+    },
+    "excluded_months": 3,
+    "first_complete_month": "1951-01",
+    "first_test_season": 1981,
     "gap_filled_days": 4,
-    "integer_f_deviation_flag_rate": 0.022458815006142312,
+    "integer_f_deviation_element_rate": 0.011231884057971014,
+    "integer_f_deviation_flag_rate": 0.02246376811594203,
+    "integer_f_flagged_elements": 713,
+    "integer_f_observed_elements": 63480,
     "provisional_months": 2
   },
   "USW00014739": {
-    "excluded_months": 2,
+    "coverage_by_decade": {
+      "1950": {
+        "excluded_months": 0,
+        "months": 108,
+        "usable_months": 108
+      },
+      "1960": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1970": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1980": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1990": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2000": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2010": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2020": {
+        "excluded_months": 0,
+        "months": 78,
+        "usable_months": 78
+      }
+    },
+    "excluded_months": 3,
+    "first_complete_month": "1951-01",
+    "first_test_season": 1981,
     "gap_filled_days": 7,
-    "integer_f_deviation_flag_rate": 0.035602125860611185,
+    "integer_f_deviation_element_rate": 0.017801600483164728,
+    "integer_f_deviation_flag_rate": 0.035603200966329455,
+    "integer_f_flagged_elements": 1179,
+    "integer_f_observed_elements": 66230,
     "provisional_months": 2
   },
   "USW00014922": {
-    "excluded_months": 1,
+    "coverage_by_decade": {
+      "1950": {
+        "excluded_months": 0,
+        "months": 108,
+        "usable_months": 108
+      },
+      "1960": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1970": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1980": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1990": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2000": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2010": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2020": {
+        "excluded_months": 0,
+        "months": 78,
+        "usable_months": 78
+      }
+    },
+    "excluded_months": 2,
+    "first_complete_month": "1951-01",
+    "first_test_season": 1981,
     "gap_filled_days": 2,
-    "integer_f_deviation_flag_rate": 0.07406719306394179,
+    "integer_f_deviation_element_rate": 0.037044493658143746,
+    "integer_f_deviation_flag_rate": 0.07408783993062008,
+    "integer_f_flagged_elements": 2392,
+    "integer_f_observed_elements": 64571,
     "provisional_months": 2
   },
   "USW00014935": {
-    "excluded_months": 1,
+    "coverage_by_decade": {
+      "1950": {
+        "excluded_months": 0,
+        "months": 108,
+        "usable_months": 108
+      },
+      "1960": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1970": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1980": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1990": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2000": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2010": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2020": {
+        "excluded_months": 0,
+        "months": 78,
+        "usable_months": 78
+      }
+    },
+    "excluded_months": 2,
+    "first_complete_month": "1951-01",
+    "first_test_season": 1981,
     "gap_filled_days": 1,
-    "integer_f_deviation_flag_rate": 0.061900637257934786,
+    "integer_f_deviation_element_rate": 0.03097283491989784,
+    "integer_f_deviation_flag_rate": 0.06194087602538307,
+    "integer_f_flagged_elements": 2001,
+    "integer_f_observed_elements": 64605,
     "provisional_months": 2
   },
   "USW00014939": {
-    "excluded_months": 281,
+    "coverage_by_decade": {
+      "1950": {
+        "excluded_months": 66,
+        "months": 108,
+        "usable_months": 42
+      },
+      "1960": {
+        "excluded_months": 120,
+        "months": 120,
+        "usable_months": 0
+      },
+      "1970": {
+        "excluded_months": 32,
+        "months": 120,
+        "usable_months": 88
+      },
+      "1980": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1990": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2000": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2010": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2020": {
+        "excluded_months": 0,
+        "months": 78,
+        "usable_months": 78
+      }
+    },
+    "excluded_months": 282,
+    "first_complete_month": "1951-01",
+    "first_test_season": 1981,
     "gap_filled_days": 0,
-    "integer_f_deviation_flag_rate": 0.0641088382108251,
+    "integer_f_deviation_element_rate": 0.04446707399864223,
+    "integer_f_deviation_flag_rate": 0.07335921750167998,
+    "integer_f_flagged_elements": 1965,
+    "integer_f_observed_elements": 44190,
     "provisional_months": 2
   },
   "USW00014942": {
-    "excluded_months": 5,
+    "coverage_by_decade": {
+      "1950": {
+        "excluded_months": 0,
+        "months": 108,
+        "usable_months": 108
+      },
+      "1960": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1970": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1980": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1990": {
+        "excluded_months": 6,
+        "months": 120,
+        "usable_months": 114
+      },
+      "2000": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2010": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2020": {
+        "excluded_months": 0,
+        "months": 78,
+        "usable_months": 78
+      }
+    },
+    "excluded_months": 7,
+    "first_complete_month": "1951-01",
+    "first_test_season": 1981,
     "gap_filled_days": 2,
-    "integer_f_deviation_flag_rate": 0.06619566352277868,
+    "integer_f_deviation_element_rate": 0.03327676400090977,
+    "integer_f_deviation_flag_rate": 0.06619796742308227,
+    "integer_f_flagged_elements": 1902,
+    "integer_f_observed_elements": 57157,
     "provisional_months": 2
   },
   "USW00023152": {
-    "excluded_months": 11,
+    "coverage_by_decade": {
+      "1950": {
+        "excluded_months": 0,
+        "months": 108,
+        "usable_months": 0
+      },
+      "1960": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 0
+      },
+      "1970": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 0
+      },
+      "1980": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 0
+      },
+      "1990": {
+        "excluded_months": 2,
+        "months": 120,
+        "usable_months": 18
+      },
+      "2000": {
+        "excluded_months": 7,
+        "months": 120,
+        "usable_months": 113
+      },
+      "2010": {
+        "excluded_months": 1,
+        "months": 120,
+        "usable_months": 119
+      },
+      "2020": {
+        "excluded_months": 1,
+        "months": 78,
+        "usable_months": 77
+      }
+    },
+    "excluded_months": 12,
+    "first_complete_month": "1998-07",
+    "first_test_season": 2018,
     "gap_filled_days": 24,
-    "integer_f_deviation_flag_rate": 0.0004830917874396135,
+    "integer_f_deviation_element_rate": 0.0002434037581540259,
+    "integer_f_deviation_flag_rate": 0.00048567265662943174,
+    "integer_f_flagged_elements": 5,
+    "integer_f_observed_elements": 20542,
     "provisional_months": 2
   },
   "USW00023169": {
-    "excluded_months": 2,
+    "coverage_by_decade": {
+      "1950": {
+        "excluded_months": 0,
+        "months": 108,
+        "usable_months": 108
+      },
+      "1960": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1970": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1980": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1990": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2000": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2010": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2020": {
+        "excluded_months": 0,
+        "months": 78,
+        "usable_months": 78
+      }
+    },
+    "excluded_months": 3,
+    "first_complete_month": "1951-01",
+    "first_test_season": 1981,
     "gap_filled_days": 0,
-    "integer_f_deviation_flag_rate": 0.0012285443504510512,
+    "integer_f_deviation_element_rate": 0.000614487868253801,
+    "integer_f_deviation_flag_rate": 0.001228975736507602,
+    "integer_f_flagged_elements": 35,
+    "integer_f_observed_elements": 56958,
     "provisional_months": 2
   },
   "USW00023232": {
-    "excluded_months": 42,
+    "coverage_by_decade": {
+      "1950": {
+        "excluded_months": 0,
+        "months": 108,
+        "usable_months": 108
+      },
+      "1960": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1970": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1980": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1990": {
+        "excluded_months": 2,
+        "months": 120,
+        "usable_months": 118
+      },
+      "2000": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2010": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2020": {
+        "excluded_months": 1,
+        "months": 78,
+        "usable_months": 77
+      }
+    },
+    "excluded_months": 43,
+    "first_complete_month": "1951-01",
+    "first_test_season": 1981,
     "gap_filled_days": 6,
-    "integer_f_deviation_flag_rate": 0.0034210101662094563,
-    "provisional_months": 2
+    "integer_f_deviation_element_rate": 0.0017789413620649145,
+    "integer_f_deviation_flag_rate": 0.0035554959245966524,
+    "integer_f_flagged_elements": 106,
+    "integer_f_observed_elements": 59586,
+    "provisional_months": 1
   },
   "USW00024023": {
-    "excluded_months": 0,
+    "coverage_by_decade": {
+      "1950": {
+        "excluded_months": 0,
+        "months": 108,
+        "usable_months": 108
+      },
+      "1960": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1970": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1980": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1990": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2000": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2010": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2020": {
+        "excluded_months": 0,
+        "months": 78,
+        "usable_months": 78
+      }
+    },
+    "excluded_months": 1,
+    "first_complete_month": "1951-01",
+    "first_test_season": 1981,
     "gap_filled_days": 0,
-    "integer_f_deviation_flag_rate": 0.08182229492221488,
+    "integer_f_deviation_element_rate": 0.04091257134901852,
+    "integer_f_deviation_flag_rate": 0.08182514269803703,
+    "integer_f_flagged_elements": 2351,
+    "integer_f_observed_elements": 57464,
     "provisional_months": 2
   },
   "USW00024028": {
+    "coverage_by_decade": {
+      "1950": {
+        "excluded_months": 0,
+        "months": 108,
+        "usable_months": 108
+      },
+      "1960": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1970": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1980": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1990": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2000": {
+        "excluded_months": 1,
+        "months": 120,
+        "usable_months": 119
+      },
+      "2010": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2020": {
+        "excluded_months": 0,
+        "months": 78,
+        "usable_months": 78
+      }
+    },
     "excluded_months": 123,
+    "first_complete_month": "1951-01",
+    "first_test_season": 1981,
     "gap_filled_days": 405,
-    "integer_f_deviation_flag_rate": 0.046640721015977056,
-    "provisional_months": 1
+    "integer_f_deviation_element_rate": 0.02368396417761413,
+    "integer_f_deviation_flag_rate": 0.04697557352698465,
+    "integer_f_flagged_elements": 2277,
+    "integer_f_observed_elements": 96141,
+    "provisional_months": 2
   },
   "USW00024229": {
-    "excluded_months": 23,
+    "coverage_by_decade": {
+      "1950": {
+        "excluded_months": 0,
+        "months": 108,
+        "usable_months": 108
+      },
+      "1960": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1970": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1980": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1990": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2000": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2010": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2020": {
+        "excluded_months": 0,
+        "months": 78,
+        "usable_months": 78
+      }
+    },
+    "excluded_months": 24,
+    "first_complete_month": "1951-01",
+    "first_test_season": 1981,
     "gap_filled_days": 0,
-    "integer_f_deviation_flag_rate": 0.009455978178511897,
+    "integer_f_deviation_element_rate": 0.004830618690778473,
+    "integer_f_deviation_flag_rate": 0.009477233376871905,
+    "integer_f_flagged_elements": 312,
+    "integer_f_observed_elements": 64588,
     "provisional_months": 2
   },
   "USW00093814": {
-    "excluded_months": 1,
+    "coverage_by_decade": {
+      "1950": {
+        "excluded_months": 0,
+        "months": 108,
+        "usable_months": 108
+      },
+      "1960": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1970": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1980": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1990": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2000": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2010": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2020": {
+        "excluded_months": 0,
+        "months": 78,
+        "usable_months": 78
+      }
+    },
+    "excluded_months": 2,
+    "first_complete_month": "1951-01",
+    "first_test_season": 1981,
     "gap_filled_days": 3,
-    "integer_f_deviation_flag_rate": 0.042390282949918215,
+    "integer_f_deviation_element_rate": 0.021201044386422976,
+    "integer_f_deviation_flag_rate": 0.04240208877284595,
+    "integer_f_flagged_elements": 1218,
+    "integer_f_observed_elements": 57450,
     "provisional_months": 2
   },
   "USW00094846": {
-    "excluded_months": 145,
+    "coverage_by_decade": {
+      "1950": {
+        "excluded_months": 94,
+        "months": 108,
+        "usable_months": 14
+      },
+      "1960": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1970": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1980": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "1990": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2000": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2010": {
+        "excluded_months": 0,
+        "months": 120,
+        "usable_months": 120
+      },
+      "2020": {
+        "excluded_months": 0,
+        "months": 78,
+        "usable_months": 78
+      }
+    },
+    "excluded_months": 146,
+    "first_complete_month": "1958-11",
+    "first_test_season": 1981,
     "gap_filled_days": 0,
-    "integer_f_deviation_flag_rate": 0.0565604659129839,
+    "integer_f_deviation_element_rate": 0.033319878910191725,
+    "integer_f_deviation_flag_rate": 0.05658566679233643,
+    "integer_f_flagged_elements": 1651,
+    "integer_f_observed_elements": 49550,
     "provisional_months": 2
   }
 }

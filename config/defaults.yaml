@@ -25,11 +25,11 @@ bootstrap: {B: 1000, level: 0.90, stability_threshold: 0.60}
 mean_model: {window_months: 480, harmonics: 2, trend_interaction: true, period_days: 365.2425, basis_center_days: 13787, basis_scale_days: 13787}
 residual: {window_years: 30, ar_orders: [1, 2, 3, 5], logvar_harmonics: 2, logvar_eps: 1.0e-6}
 models: {min_station_years: 25, rungs: [R0, R1, R2]}
-simulate: {M_tournament: 2000, M_site: 10000, mean_block: 7, window_days: 45, site_lead_in_days: 30, chunk_series: 200, workers: 8, max_rss_gb: 12}
+simulate: {M_tournament: 2000, M_site: 10000, mean_block: 7, window_days: 45, site_lead_in_days: 30, chunk_series: 200, workers: 1, max_rss_gb: 12}
 tournament: {origins: [1991, 2022], holdout: [2023, 2025], B: 1000, level: 0.90, unit: state_month}
 r1: {window_years: 40, nu_floor: 4, nu_ceiling: 100}
 quotes: {w: 0.5, alpha: 0.95, lambda_B: 200, friction_ticks: 1, z_grid: [-1.5, -1, -0.5, 0, 0.5, 1, 1.5], percentile_grid: [0.5, 0.8, 0.95], seed_agreement_sigma: 4, seed_panel_counties: 50}
 discount_rate: 0.0
-site: {as_of: 2026-07-01, default_fips: "31109", county_payload_max_kb_gz: 60, total_max_mb: 300, file_max_mb: 5, draws_shipped: 1000, quantiles: 101, mid_thinning_tol: 0.02}
+site: {as_of: 2026-07-01, default_fips: "31109", county_payload_max_kb_gz: 62, total_max_mb: 200, file_max_mb: 5, draws_shipped: 1000, quantiles: 101, mid_thinning_tol: 0.02}
 prereg: {sha256: 2b17ce6504cfe3c8178c2a7f5a09fd1b809c54cf000e904d32899b10e1e18bb1}
 http: {allow_hosts: [www.ncei.noaa.gov, www2.census.gov, geocoding.geo.census.gov, cdn.jsdelivr.net], timeout: 120}

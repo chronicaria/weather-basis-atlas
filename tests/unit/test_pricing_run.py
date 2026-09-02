@@ -6,9 +6,15 @@ import json
 
 import numpy as np
 import pandas as pd
+import pytest
 
 from weather_basis.io import sha256, write_npy, write_parquet
-from weather_basis.pricing.run import run_quotes
+from weather_basis.pricing.run import (
+    _model_load,
+    check_two_seed_agreement,
+    run_quotes,
+    verify_quote_rows,
+)
 
 
 def _inputs(root) -> dict:
@@ -70,3 +76,48 @@ def test_run_quotes_writes_deterministic_decomposed_grid(tmp_path) -> None:
     )
     coherence = json.loads(first.coherence_path.read_text())
     assert coherence["gate_violations"] == 0
+    assert coherence["diagnostics"]["recompute"]["n_checked"] == 16
+    assert coherence["diagnostics"]["recompute"]["max_abs_error"] <= 1e-6
+    assert coherence["diagnostics"]["seed_agreement"]["status"] == "not_run"
+    assert verify_quote_rows(tmp_path, cfg, n_rows=16)["max_abs_error"] <= 1e-6
+
+    tampered = quotes.copy()
+    tampered.loc[tampered.index[0], "ask"] += 0.01
+    with pytest.raises(RuntimeError, match="quote recomputation failed"):
+        verify_quote_rows(tmp_path, cfg, quotes=tampered, n_rows=16)
+
+
+def test_year_block_model_load_is_deterministic() -> None:
+    burn = np.arange(30, dtype=float)
+    payoff = type("Payoff", (), {"kind": "call", "multiplier": 20.0, "strike": 12.0})()
+    first = _model_load(burn, payoff, B=32, seed=np.random.SeedSequence(11))
+    second = _model_load(burn, payoff, B=32, seed=np.random.SeedSequence(11))
+    assert first == second and first > 0
+
+
+def test_two_seed_agreement_checks_mid_and_bootstrapped_ask(tmp_path) -> None:
+    cfg = _inputs(tmp_path)
+    primary = np.load(tmp_path / "results/draws/R2j_aligned/HDD-01_site.npy")
+    # A distinct but close independent draw run exercises the actual
+    # two-seed path rather than treating one matrix as both samples.
+    alternate = primary.copy()
+    alternate[:, ::11] += 0.01
+    alternate_dir = tmp_path / "results/draws/R2j_aligned_seed2"
+    alternate_dir.mkdir(parents=True)
+    np.savez(
+        alternate_dir / "HDD-01_site.npz",
+        fips=np.array(["01001", "01003"]),
+        station_ids=np.array(["STATION"]),
+        county=alternate[:2],
+        station=alternate[2:],
+        seed=np.array([9, 2]),
+    )
+    result = check_two_seed_agreement(tmp_path, cfg, alternate_dir)
+    assert result["status"] == "passed"
+    assert result["n_checked"] == 2
+    assert result["ask_bootstrap_B"] == 16
+    # Quote builds discover the compact model-stage artifact automatically and
+    # persist the result alongside the other coherence diagnostics.
+    built = run_quotes(tmp_path, cfg)
+    diagnostics = json.loads(built.coherence_path.read_text())["diagnostics"]["seed_agreement"]
+    assert diagnostics["status"] == "passed" and diagnostics["n_checked"] == 2

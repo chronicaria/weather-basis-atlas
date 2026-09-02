@@ -36,6 +36,14 @@ def test_phase7_reproduction_manifest_records_hash_equality() -> None:
     compared = manifest.get("hash_equality", manifest.get("extra", {}).get("hash_equality", {}))
     for filename in ("headline.json", "pairs.parquet", "quotes.parquet"):
         assert compared.get(filename) is True
+    parquet = manifest.get(
+        "parquet_hash_equality", manifest.get("extra", {}).get("parquet_hash_equality", {})
+    )
+    assert parquet and all(parquet.values())
+    assert (
+        manifest.get("fresh_clone") is True
+        or manifest.get("extra", {}).get("fresh_clone") is True
+    )
 
 
 def test_phase7_live_release_serves_required_payloads() -> None:
@@ -45,3 +53,6 @@ def test_phase7_live_release_serves_required_payloads() -> None:
     for suffix in ("index.html", "data/meta.json", "data/county/31109.json.gz"):
         with urlopen(f"{base_url}/{suffix}", timeout=30) as response:  # noqa: S310
             assert response.status == 200
+    smoke = release.get("live_smoke", {})
+    assert smoke.get("passed") is True
+    assert smoke.get("external_requests") == 0

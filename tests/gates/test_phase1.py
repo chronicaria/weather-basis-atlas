@@ -57,3 +57,25 @@ def test_phase1_station_indices_are_half_degree_multiples() -> None:
     for path in sorted((ROOT / "results/indices").glob("station_*.parquet")):
         values = pd.read_parquet(path)["index"].dropna().to_numpy()
         assert np.allclose(values * 2, np.rint(values * 2))
+
+
+def test_phase1_registered_record_lengths_are_exact() -> None:
+    """Plan Sections 4.5, 6.2, and 10 Phase 1: starts and first test seasons match D-41."""
+    registry = pd.read_csv(ROOT / "data/metadata/station_registry.csv", dtype={"ghcnd_id": str})
+    expected = {
+        "USW00013874": (1930, 1981), "USW00014739": (1936, 1981),
+        "USW00023152": (1998, 2018), "USW00094846": (1958, 1981),
+        "USW00093814": (1948, 1981), "USW00003927": (1953, 1981),
+        "USW00012960": (1969, 1989), "USW00023169": (1948, 1981),
+        "USW00014922": (1938, 1981), "USW00014732": (1939, 1981),
+        "USW00013739": (1940, 1981), "USW00024229": (1938, 1981),
+        "USW00023232": (1941, 1981),
+    }
+    cme = registry.loc[registry["role"].eq("cme")].set_index("ghcnd_id")
+    assert set(cme.index) == set(expected)
+    for station, (start, first_test) in expected.items():
+        row = cme.loc[station]
+        assert (int(row.tmax_start), int(row.tmin_start), int(row.first_test_season)) == (
+            start, start, first_test,
+        )
+    assert bool(cme.loc["USW00023152", "short_record"])

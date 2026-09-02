@@ -14,6 +14,7 @@ from datetime import UTC, datetime
 from hashlib import sha256
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 from weather_basis.config import config_hash
 from weather_basis.io import sha256 as file_sha256
@@ -62,6 +63,30 @@ def output_hashes(root: Path, outputs: Iterable[Path]) -> dict[str, str]:
     """SHA-256 every declared stage output, recursively for directories."""
 
     return {_relative(root, path): file_sha256(path) for path in _paths(root, outputs)}
+
+
+def _input_paths(root: Path, entries: Iterable[Path]) -> list[Path]:
+    """Expand consumed files without requiring them to live below *root*."""
+
+    result: list[Path] = []
+    for entry in entries:
+        path = Path(entry)
+        path = path if path.is_absolute() else root / path
+        if not path.exists():
+            raise FileNotFoundError(f"cannot manifest missing input: {path}")
+        if path.is_file():
+            result.append(path)
+        elif path.is_dir():
+            result.extend(item for item in path.rglob("*") if item.is_file())
+        else:
+            raise ValueError(f"manifest input is not a regular file or directory: {path}")
+    return sorted(set(result), key=lambda item: _input_name(root, item))
+
+
+def input_hashes(root: Path, inputs: Iterable[Path]) -> dict[str, str]:
+    """SHA-256 every file consumed by a stage, including external snapshots."""
+
+    return {_input_name(root, path): file_sha256(path) for path in _input_paths(root, inputs)}
 
 
 def _mapping(value: Any) -> Mapping[str, Any]:
@@ -121,19 +146,20 @@ def write_stage_manifest(
     root = Path(root).resolve()
     began = started_at or datetime.now(UTC)
     digests = output_hashes(root, outputs)
-    input_paths = sorted(
-        {
-            _input_name(root, Path(path) if Path(path).is_absolute() else root / path)
-            for path in paths_in
-        }
-    )
+    consumed = input_hashes(root, paths_in)
     vintages, geography_vintage, prereg_sha256 = provenance_from_config(root, cfg)
     target = manifest_path or root / "results" / "manifests" / f"{stage}.json"
     target = Path(target) if Path(target).is_absolute() else root / target
+    target_name = _relative(root, target)
     metadata = dict(extra or {})
     # The escape hatch is a configuration decision, never a per-call flag.
     # This prevents an individual stage from silently bypassing Section 13.3.
     metadata["allow_dirty"] = bool(getattr(cfg, "allow_dirty", False))
+    metadata["sha256_in"] = consumed
+    # ``paths_out`` is also the ownership allowlist used by the clean-tree
+    # rule.  The manifest must own its prior version on a rerun, but including
+    # its digest would be recursive.  State that narrow exception explicitly.
+    metadata["self_excluded_from_sha256"] = target_name
     manifest = Manifest(
         run_id=f"{stage}-{config_hash(cfg)}",
         stage=stage,
@@ -143,8 +169,8 @@ def write_stage_manifest(
         vintages=vintages,
         geography_vintage=geography_vintage,
         seed=int(_cfg_value(cfg, "seed")),
-        paths_in=input_paths,
-        paths_out=sorted(digests),
+        paths_in=sorted(consumed),
+        paths_out=sorted({*digests, target_name}),
         sha256_out=digests,
         holdout_unlocked=holdout_unlocked,
         prereg_sha256=prereg_sha256,
@@ -178,12 +204,17 @@ def write_reproduction_manifest(
     than becoming a misleading ``false`` entry.
     """
 
-    reference_root, reproduced_root = Path(reference_root), Path(reproduced_root)
+    root = Path(root).resolve()
+    reference_root = Path(reference_root).resolve()
+    reproduced_root = Path(reproduced_root).resolve()
+    if root != reproduced_root:
+        raise ValueError("reproduction manifest root must be the reproduced repository")
     names = tuple(filenames)
     reference_hashes: dict[str, str] = {}
     reproduced_hashes: dict[str, str] = {}
     equality: dict[str, bool] = {}
     reproduced_files: list[Path] = []
+    reference_files: list[Path] = []
     for name in names:
         if name == "headline.json":
             relative = Path("results/atlas") / name
@@ -200,12 +231,13 @@ def write_reproduction_manifest(
         reproduced_hashes[name] = file_sha256(actual)
         equality[name] = reference_hashes[name] == reproduced_hashes[name]
         reproduced_files.append(actual)
+        reference_files.append(expected)
     manifest = write_stage_manifest(
         root,
         cfg,
         stage="reproduce",
         outputs=reproduced_files,
-        paths_in=[snapshot],
+        paths_in=[snapshot, *reference_files],
         extra={
             "snapshot": str(Path(snapshot)),
             "reference_hashes": reference_hashes,
@@ -215,3 +247,116 @@ def write_reproduction_manifest(
         started_at=started_at,
     )
     return manifest
+
+
+def write_data_qc_manifest(
+    root: Path,
+    cfg: Any,
+    *,
+    outputs: Iterable[Path] | None = None,
+    inputs: Iterable[Path] | None = None,
+    started_at: datetime | None = None,
+) -> Path:
+    """Record QC reports and all frozen data layers they inspected."""
+
+    root = Path(root)
+    return write_stage_manifest(
+        root,
+        cfg,
+        stage="data_qc",
+        outputs=outputs or [root / "results/qc"],
+        paths_in=inputs
+        or [root / "data/panel", root / "data/manifests", root / "data/metadata"],
+        started_at=started_at,
+    )
+
+
+def write_models_fit_manifest(
+    root: Path,
+    cfg: Any,
+    *,
+    outputs: Iterable[Path] | None = None,
+    inputs: Iterable[Path] | None = None,
+    started_at: datetime | None = None,
+) -> Path:
+    """Record fixed-basis daily-model fit artifacts and the panel they consume."""
+
+    root = Path(root)
+    return write_stage_manifest(
+        root,
+        cfg,
+        stage="models_fit",
+        outputs=outputs or [root / "data/panel/mean_blocks.npz"],
+        paths_in=inputs
+        or [
+            root / "data/panel/tavg_f32.npy",
+            root / "data/panel/dates.npy",
+            root / "data/panel/fips.npy",
+        ],
+        started_at=started_at,
+    )
+
+
+def write_sensitivity_manifest(
+    root: Path,
+    cfg: Any,
+    *,
+    outputs: Iterable[Path] | None = None,
+    inputs: Iterable[Path] | None = None,
+    started_at: datetime | None = None,
+) -> Path:
+    """Record the pre-registered sensitivity tables and their fitted inputs."""
+
+    root = Path(root)
+    return write_stage_manifest(
+        root,
+        cfg,
+        stage="sensitivity",
+        outputs=outputs or [root / "results/sensitivities"],
+        paths_in=inputs
+        or [
+            root / "results/atlas",
+            root / "results/tournament",
+            root / "results/quotes",
+            root / "data/panel/mean_blocks.npz",
+        ],
+        started_at=started_at,
+    )
+
+
+def write_release_manifest(
+    root: Path,
+    cfg: Any,
+    *,
+    live_url: str,
+    outputs: Iterable[Path] | None = None,
+    inputs: Iterable[Path] | None = None,
+    started_at: datetime | None = None,
+) -> Path:
+    """Write the externally-visible release manifest from an actual HTTPS URL.
+
+    Hosting identity is a human choice.  This helper intentionally refuses a
+    blank, local, or placeholder URL rather than inventing one to satisfy a
+    release gate.
+    """
+
+    parsed = urlparse(live_url)
+    host = (parsed.hostname or "").lower()
+    if parsed.scheme != "https" or not host or host in {"localhost", "example.com"}:
+        raise ValueError("release manifest requires a real HTTPS live_url selected by a human")
+    root = Path(root)
+    return write_stage_manifest(
+        root,
+        cfg,
+        stage="release",
+        outputs=outputs or [root / "site", root / "README.md"],
+        paths_in=inputs
+        or [
+            root / "results/atlas",
+            root / "results/quotes",
+            root / "results/tournament",
+            root / "results/sensitivities",
+        ],
+        extra={"live_url": live_url.rstrip("/")},
+        started_at=started_at,
+    )
