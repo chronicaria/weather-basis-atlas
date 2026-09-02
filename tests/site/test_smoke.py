@@ -92,7 +92,7 @@ def _expected_drawer_values() -> dict[str, str]:
     pit = pair.get("pit", {})
     return {
         "name": f"{payload['meta']['name']}, {payload['meta']['state']}",
-        "best": str(pit.get("station_pit") or pit.get("best_station") or "—"),
+        "best": str(pit.get("best_station") or pit.get("station_pit") or "—"),
         "he_pit": pit.get("he_pit"),
         "he_nearest": pit.get("he_nearest"),
         "stability": pit.get("stability"),
