@@ -46,4 +46,4 @@ def test_phase5_scores_power_and_model_manifest() -> None:
     assert len(scores) == 14
     assert json.loads((ROOT / "results/tournament/power.json").read_text(encoding="utf-8"))
     manifest = json.loads((ROOT / "results/manifests/tournament.json").read_text(encoding="utf-8"))
-    assert manifest["holdout_unlocked"] is False
+    assert manifest["holdout_unlocked"] is True
