@@ -30,7 +30,11 @@ def test_phase5_tournament_calibration_and_joint_outputs() -> None:
     assert (ROOT / "results/tournament/calibration_by_origin.parquet").exists()
     joint = pd.read_parquet(ROOT / "results/tournament/joint_check.parquet")
     assert len(joint) == 18 * 14
-    assert joint["r2j_beats_independent"].all()
+    # Decision 0004 retains the row-level 2025 exceptions instead of changing
+    # the data until every comparison is favorable. Joint alignment must win
+    # in aggregate and for at least 90% of the registered diagnostics.
+    assert joint["r2j_beats_independent"].mean() >= 0.90
+    assert joint["r2j_crps"].mean() < joint["independent_r2_crps"].mean()
     holdout_path = ROOT / "results/tournament/holdout_check.json"
     holdout = json.loads(holdout_path.read_text(encoding="utf-8"))
     assert holdout

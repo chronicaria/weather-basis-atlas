@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import gzip
+import hashlib
 import json
 import shutil
 from pathlib import Path
@@ -15,7 +17,7 @@ from weather_basis.io import atomic_write_bytes, gzip_bytes
 from weather_basis.site.payloads import build_payloads
 from weather_basis.site.provenance import validate_provenance
 
-PAGES = ("index", "methodology", "about", "nebraska", "404")
+PAGES = ("index", "methodology", "model_card", "about", "nebraska", "404")
 
 
 def _metric_from_results(root: Path, dotted: str, fmt: str | None = None) -> str:
@@ -35,6 +37,8 @@ def _metric_from_results(root: Path, dotted: str, fmt: str | None = None) -> str
 
 def build_site(root: Path, out: Path, config: Any | None = None) -> dict[str, Any]:
     root, out = Path(root), Path(out)
+    if not (root / "results/manifests/atlas.json").is_file():
+        raise FileNotFoundError("site build requires results/manifests/atlas.json")
     if out.exists():
         shutil.rmtree(out)
     out.mkdir(parents=True)
@@ -96,6 +100,11 @@ def validate_payload_schemas(out: Path) -> None:
         validator = Draft202012Validator(json.loads(summary_schema.read_text()))
         for payload in (out / "data/summary").glob("*.json"):
             validator.validate(json.loads(payload.read_text()))
+    county_schema = out / "schema/county.schema.json"
+    if county_schema.exists():
+        validator = Draft202012Validator(json.loads(county_schema.read_text()))
+        for payload in (out / "data/county").glob("*.json.gz"):
+            validator.validate(json.loads(gzip.decompress(payload.read_bytes())))
 
 
 def check_site(
@@ -114,9 +123,38 @@ def check_site(
     for path in out.rglob("*"):
         if path.is_file() and path.stat().st_size > int(maximum * 1024 * 1024):
             errors.append(f"oversize file: {path}")
+    total_max = (
+        getattr(site_cfg, "total_max_mb", 300)
+        if not isinstance(site_cfg, dict)
+        else site_cfg.get("total_max_mb", 300)
+    )
+    total = sum(path.stat().st_size for path in out.rglob("*") if path.is_file())
+    if total > int(total_max * 1024 * 1024):
+        errors.append(f"site exceeds total budget: {total} bytes")
+    county_max = (
+        getattr(site_cfg, "county_payload_max_kb_gz", 60)
+        if not isinstance(site_cfg, dict)
+        else site_cfg.get("county_payload_max_kb_gz", 60)
+    )
+    for path in (out / "data/county").glob("*.json.gz"):
+        if path.stat().st_size > int(county_max * 1024):
+            errors.append(f"oversize county payload: {path}")
     counties = out / "data/counties.json"
     if counties.exists():
         for row in json.loads(counties.read_text()):
             if not (out / f"data/county/{row['fips']}.json.gz").exists():
                 errors.append(f"missing county payload: {row['fips']}")
+    vendor_manifest = out / "assets/vendor/VENDOR.json"
+    if vendor_manifest.exists():
+        assets = json.loads(vendor_manifest.read_text()).get("assets", [])
+        for item in assets:
+            path = out / "assets/vendor" / item["name"]
+            if not path.is_file():
+                errors.append(f"missing vendor asset: {item['name']}")
+            elif hashlib.sha256(path.read_bytes()).hexdigest() != item["sha256"]:
+                errors.append(f"vendor hash mismatch: {item['name']}")
+    try:
+        validate_payload_schemas(out)
+    except Exception as exc:  # schema diagnostics belong in the check report
+        errors.append(f"payload schema failure: {exc}")
     return errors
