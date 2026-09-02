@@ -1,0 +1,35 @@
+{
+  "config_hash": "df45780d6e91803d",
+  "created_utc": "2026-09-02T16:36:26.059779+00:00",
+  "extra": {
+    "allow_dirty": false
+  },
+  "geography_vintage": "us-atlas@3",
+  "git_commit": "eff213fd17c67691b021421d92a3456307e8c244",
+  "holdout_unlocked": false,
+  "paths_in": [
+    "data/contracts/station_county.csv",
+    "results/atlas"
+  ],
+  "paths_out": [
+    "results/nebraska/basis.parquet"
+  ],
+  "prereg_sha256": "2b17ce6504cfe3c8178c2a7f5a09fd1b809c54cf000e904d32899b10e1e18bb1",
+  "run_id": "nebraska-df45780d6e91803d",
+  "seed": 20260901,
+  "sha256_out": {
+    "results/nebraska/basis.parquet": "7ca78fa7dfdcca6c731c022531c6a383d65f9bae4b8d8fb558a6c3527363b9b6"
+  },
+  "stage": "nebraska",
+  "vintages": {
+    "gazetteer": "census_2020",
+    "geography": "us-atlas@3",
+    "ghcnd": "ghcnd_snap2026-09-02",
+    "ghcnd_meta": "ghcnd_meta_snap2026-09-02",
+    "homr": "homr_snap2026-09-02",
+    "nclimgrid_tavg": "nclimgrid-daily_v1-0-0_snap2026-07-30",
+    "nclimgrid_tmax": "nclimgrid-daily_v1-0-0_snap2026-09-02",
+    "nclimgrid_tmin": "nclimgrid-daily_v1-0-0_snap2026-09-02",
+    "population": "co-est2021-alldata"
+  }
+}

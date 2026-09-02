@@ -1,0 +1,2655 @@
+{
+  "atlas_run_id": "atlas-df45780d6e91803d",
+  "bootstrap_B": 1000,
+  "config_hash": "df45780d6e91803d",
+  "git_commit": "2b709e63f4b3b8af5a4f0e99f207eab4d8f0b861",
+  "pairs": [
+    {
+      "atlas_run_id": "atlas-df45780d6e91803d",
+      "best_ne_nearest_share": 0.37753459929192146,
+      "bootstrap_B": 1000,
+      "config_hash": "df45780d6e91803d",
+      "git_commit": "2b709e63f4b3b8af5a4f0e99f207eab4d8f0b861",
+      "n_counties": 3107,
+      "n_stations_effective": 13,
+      "n_test_seasons_max": 46,
+      "n_test_seasons_min": 46,
+      "no_hedge_share_counties": 0.14901834567106534,
+      "no_hedge_share_population": 0.11887304224205068,
+      "no_stable_proxy_share": 0.1364660444158352,
+      "pair": "HDD-01",
+      "seed": 20260901,
+      "switch_gain_he_median": -0.015048167598952,
+      "threshold_shares": {
+        "0.25": {
+          "counties": 0.9597682652075957,
+          "population": 0.9682609135241396
+        },
+        "0.50": {
+          "counties": 0.8574187318957194,
+          "population": 0.8846003233767246
+        },
+        "0.75": {
+          "counties": 0.664306404892179,
+          "population": 0.6967095246882025
+        }
+      },
+      "zero_distance": [
+        {
+          "es90_lower": -13.56604290008545,
+          "es90_upper": 69.98811340332031,
+          "fips": "06037",
+          "he_pooled": 0.7607039015273596,
+          "n_test": 8,
+          "pair": "HDD-01",
+          "rmse": 28.970792883551276,
+          "station": "USW00023152",
+          "status": "evaluated",
+          "worst": 69.98811340332031
+        },
+        {
+          "es90_lower": -35.11431045532227,
+          "es90_upper": 32.25352897644043,
+          "fips": "06067",
+          "he_pooled": 0.8994196866862664,
+          "n_test": 46,
+          "pair": "HDD-01",
+          "rmse": 20.45634854518203,
+          "station": "USW00023232",
+          "status": "evaluated",
+          "worst": 53.37339782714844
+        },
+        {
+          "es90_lower": -34.1360595703125,
+          "es90_upper": 40.91448554992676,
+          "fips": "13063",
+          "he_pooled": 0.9672703903398087,
+          "n_test": 46,
+          "pair": "HDD-01",
+          "rmse": 21.91687734941379,
+          "station": "USW00013874",
+          "status": "evaluated",
+          "worst": 58.141685485839844
+        },
+        {
+          "es90_lower": -84.48411254882812,
+          "es90_upper": 24.525290870666502,
+          "fips": "17043",
+          "he_pooled": 0.9537209163046284,
+          "n_test": 46,
+          "pair": "HDD-01",
+          "rmse": 35.51121093811135,
+          "station": "USW00094846",
+          "status": "evaluated",
+          "worst": 102.0452651977539
+        },
+        {
+          "es90_lower": -26.319068908691406,
+          "es90_upper": 55.31332588195801,
+          "fips": "21015",
+          "he_pooled": 0.9728489562374153,
+          "n_test": 46,
+          "pair": "HDD-01",
+          "rmse": 26.210799067199357,
+          "station": "USW00093814",
+          "status": "evaluated",
+          "worst": 135.83901977539062
+        },
+        {
+          "es90_lower": -45.47550048828125,
+          "es90_upper": 28.193988227844237,
+          "fips": "25025",
+          "he_pooled": 0.9655295628281264,
+          "n_test": 46,
+          "pair": "HDD-01",
+          "rmse": 25.411414544652807,
+          "station": "USW00014739",
+          "status": "evaluated",
+          "worst": 66.70176696777344
+        },
+        {
+          "es90_lower": -17.431004333496094,
+          "es90_upper": 26.368349456787108,
+          "fips": "27053",
+          "he_pooled": 0.993968170299043,
+          "n_test": 46,
+          "pair": "HDD-01",
+          "rmse": 14.122291228245075,
+          "station": "USW00014922",
+          "status": "evaluated",
+          "worst": 35.8751106262207
+        },
+        {
+          "es90_lower": -23.663094139099123,
+          "es90_upper": 46.048249053955075,
+          "fips": "32003",
+          "he_pooled": 0.9125334912173427,
+          "n_test": 46,
+          "pair": "HDD-01",
+          "rmse": 23.66649156029456,
+          "station": "USW00023169",
+          "status": "evaluated",
+          "worst": 65.42988586425781
+        },
+        {
+          "es90_lower": -24.51485252380371,
+          "es90_upper": 34.07314033508301,
+          "fips": "36081",
+          "he_pooled": 0.9828570596962045,
+          "n_test": 46,
+          "pair": "HDD-01",
+          "rmse": 17.936083865741864,
+          "station": "USW00014732",
+          "status": "evaluated",
+          "worst": 52.631744384765625
+        },
+        {
+          "es90_lower": -34.45264015197754,
+          "es90_upper": 35.83701019287109,
+          "fips": "41051",
+          "he_pooled": 0.9337939561252953,
+          "n_test": 46,
+          "pair": "HDD-01",
+          "rmse": 21.071252860829414,
+          "station": "USW00024229",
+          "status": "evaluated",
+          "worst": 46.6312255859375
+        },
+        {
+          "es90_lower": -30.533144378662108,
+          "es90_upper": 38.47101821899414,
+          "fips": "42045",
+          "he_pooled": 0.9791973615638639,
+          "n_test": 46,
+          "pair": "HDD-01",
+          "rmse": 20.4672944184186,
+          "station": "USW00013739",
+          "status": "evaluated",
+          "worst": 48.9636344909668
+        },
+        {
+          "es90_lower": -47.16799697875977,
+          "es90_upper": 31.66142120361328,
+          "fips": "48113",
+          "he_pooled": 0.938909533634212,
+          "n_test": 46,
+          "pair": "HDD-01",
+          "rmse": 26.555107338391437,
+          "station": "USW00003927",
+          "status": "evaluated",
+          "worst": 54.35625076293945
+        },
+        {
+          "es90_lower": -39.99485206604004,
+          "es90_upper": 14.580896735191345,
+          "fips": "48201",
+          "he_pooled": 0.9699681805582854,
+          "n_test": 37,
+          "pair": "HDD-01",
+          "rmse": 17.64589864223795,
+          "station": "USW00012960",
+          "status": "evaluated",
+          "worst": 46.14719772338867
+        }
+      ]
+    },
+    {
+      "atlas_run_id": "atlas-df45780d6e91803d",
+      "best_ne_nearest_share": 0.45703250724171224,
+      "bootstrap_B": 1000,
+      "config_hash": "df45780d6e91803d",
+      "git_commit": "2b709e63f4b3b8af5a4f0e99f207eab4d8f0b861",
+      "n_counties": 3107,
+      "n_stations_effective": 13,
+      "n_test_seasons_max": 45,
+      "n_test_seasons_min": 0,
+      "no_hedge_share_counties": 0.4760218860637271,
+      "no_hedge_share_population": 0.4158215458249197,
+      "no_stable_proxy_share": 0.12809784357901513,
+      "pair": "CDD-07",
+      "seed": 20260901,
+      "switch_gain_he_median": -0.0708677074769396,
+      "threshold_shares": {
+        "0.25": {
+          "counties": 0.8081750885098166,
+          "population": 0.8261943771027621
+        },
+        "0.50": {
+          "counties": 0.5597038944319279,
+          "population": 0.6198880891395103
+        },
+        "0.75": {
+          "counties": 0.1525587383327969,
+          "population": 0.24334797716002138
+        }
+      },
+      "zero_distance": [
+        {
+          "es90_lower": -27.50436019897461,
+          "es90_upper": 48.016178131103516,
+          "fips": "06037",
+          "he_pooled": 0.8843455156380303,
+          "n_test": 8,
+          "pair": "CDD-07",
+          "rmse": 25.05182714160079,
+          "station": "USW00023152",
+          "status": "evaluated",
+          "worst": 48.016178131103516
+        },
+        {
+          "es90_lower": -26.01201286315918,
+          "es90_upper": 46.53304672241211,
+          "fips": "06067",
+          "he_pooled": 0.8720938132489298,
+          "n_test": 45,
+          "pair": "CDD-07",
+          "rmse": 24.772649695640208,
+          "station": "USW00023232",
+          "status": "evaluated",
+          "worst": 67.14576721191406
+        },
+        {
+          "es90_lower": -31.218788146972656,
+          "es90_upper": 42.478135681152345,
+          "fips": "13063",
+          "he_pooled": 0.8084452975553438,
+          "n_test": 45,
+          "pair": "CDD-07",
+          "rmse": 23.11463302930355,
+          "station": "USW00013874",
+          "status": "evaluated",
+          "worst": 60.77996826171875
+        },
+        {
+          "es90_lower": -30.731171798706054,
+          "es90_upper": 53.403612518310545,
+          "fips": "17043",
+          "he_pooled": 0.8860396979359967,
+          "n_test": 45,
+          "pair": "CDD-07",
+          "rmse": 26.062302979830612,
+          "station": "USW00094846",
+          "status": "evaluated",
+          "worst": 75.37423706054688
+        },
+        {
+          "es90_lower": -19.76945381164551,
+          "es90_upper": 27.778837966918946,
+          "fips": "21015",
+          "he_pooled": 0.9600803983313219,
+          "n_test": 45,
+          "pair": "CDD-07",
+          "rmse": 14.446571475301546,
+          "station": "USW00093814",
+          "status": "evaluated",
+          "worst": 41.20582580566406
+        },
+        {
+          "es90_lower": -33.98693008422852,
+          "es90_upper": 42.70928115844727,
+          "fips": "25025",
+          "he_pooled": 0.837870878196761,
+          "n_test": 45,
+          "pair": "CDD-07",
+          "rmse": 24.30574611669485,
+          "station": "USW00014739",
+          "status": "evaluated",
+          "worst": 47.89653396606445
+        },
+        {
+          "es90_lower": -35.11762313842773,
+          "es90_upper": 15.474585723876952,
+          "fips": "27053",
+          "he_pooled": 0.9349144492428207,
+          "n_test": 45,
+          "pair": "CDD-07",
+          "rmse": 18.436896924539155,
+          "station": "USW00014922",
+          "status": "evaluated",
+          "worst": 38.69731140136719
+        },
+        {
+          "es90_lower": -49.480980682373044,
+          "es90_upper": 27.719622802734374,
+          "fips": "32003",
+          "he_pooled": 0.857444616074367,
+          "n_test": 45,
+          "pair": "CDD-07",
+          "rmse": 24.922088651965982,
+          "station": "USW00023169",
+          "status": "evaluated",
+          "worst": 56.095340728759766
+        },
+        {
+          "es90_lower": -48.49459457397461,
+          "es90_upper": 34.38559417724609,
+          "fips": "36081",
+          "he_pooled": 0.8440197249632259,
+          "n_test": 45,
+          "pair": "CDD-07",
+          "rmse": 25.067957872541612,
+          "station": "USW00014732",
+          "status": "evaluated",
+          "worst": 58.75437927246094
+        },
+        {
+          "es90_lower": -23.26812877655029,
+          "es90_upper": 28.44631423950195,
+          "fips": "41051",
+          "he_pooled": 0.8786157542647685,
+          "n_test": 45,
+          "pair": "CDD-07",
+          "rmse": 16.058523053414177,
+          "station": "USW00024229",
+          "status": "evaluated",
+          "worst": 42.99814987182617
+        },
+        {
+          "es90_lower": -34.71889457702637,
+          "es90_upper": 42.198326110839844,
+          "fips": "42045",
+          "he_pooled": 0.8247546807550679,
+          "n_test": 45,
+          "pair": "CDD-07",
+          "rmse": 24.571356287883578,
+          "station": "USW00013739",
+          "status": "evaluated",
+          "worst": 50.033573150634766
+        },
+        {
+          "es90_lower": -30.107455444335937,
+          "es90_upper": 37.447108840942384,
+          "fips": "48113",
+          "he_pooled": 0.9134544934006836,
+          "n_test": 45,
+          "pair": "CDD-07",
+          "rmse": 20.40366253151668,
+          "station": "USW00003927",
+          "status": "evaluated",
+          "worst": 55.98677444458008
+        },
+        {
+          "es90_lower": -21.865511894226074,
+          "es90_upper": 56.98696422576904,
+          "fips": "48201",
+          "he_pooled": 0.6696586471214453,
+          "n_test": 37,
+          "pair": "CDD-07",
+          "rmse": 24.944104221914284,
+          "station": "USW00012960",
+          "status": "evaluated",
+          "worst": 73.36486053466797
+        }
+      ]
+    },
+    {
+      "atlas_run_id": "atlas-df45780d6e91803d",
+      "best_ne_nearest_share": 0.2777598970067589,
+      "bootstrap_B": 1000,
+      "config_hash": "df45780d6e91803d",
+      "git_commit": "2b709e63f4b3b8af5a4f0e99f207eab4d8f0b861",
+      "n_counties": 3107,
+      "n_stations_effective": 13,
+      "n_test_seasons_max": 45,
+      "n_test_seasons_min": 38,
+      "no_hedge_share_counties": 0.23881557772771161,
+      "no_hedge_share_population": 0.23465005396216806,
+      "no_stable_proxy_share": 0.13389121338912133,
+      "pair": "HDD-10",
+      "seed": 20260901,
+      "switch_gain_he_median": -0.029613128456673743,
+      "threshold_shares": {
+        "0.25": {
+          "counties": 0.9629868039909881,
+          "population": 0.9211095558868245
+        },
+        "0.50": {
+          "counties": 0.7808175088509817,
+          "population": 0.7763203642385992
+        },
+        "0.75": {
+          "counties": 0.3057611844222723,
+          "population": 0.4315352508217841
+        }
+      },
+      "zero_distance": [
+        {
+          "es90_lower": -41.49824142456055,
+          "es90_upper": 7.574560165405273,
+          "fips": "06037",
+          "he_pooled": 0.6110333616997854,
+          "n_test": 7,
+          "pair": "HDD-10",
+          "rmse": 20.46221847480022,
+          "station": "USW00023152",
+          "status": "evaluated",
+          "worst": 41.49824142456055
+        },
+        {
+          "es90_lower": -33.12824401855469,
+          "es90_upper": 22.177629661560058,
+          "fips": "06067",
+          "he_pooled": 0.8033061764162178,
+          "n_test": 43,
+          "pair": "HDD-10",
+          "rmse": 17.431260863705734,
+          "station": "USW00023232",
+          "status": "evaluated",
+          "worst": 51.181278228759766
+        },
+        {
+          "es90_lower": -31.76368522644043,
+          "es90_upper": 36.665198135375974,
+          "fips": "13063",
+          "he_pooled": 0.8291583076490597,
+          "n_test": 45,
+          "pair": "HDD-10",
+          "rmse": 19.55319098802017,
+          "station": "USW00013874",
+          "status": "evaluated",
+          "worst": 57.083553314208984
+        },
+        {
+          "es90_lower": -38.73110847473144,
+          "es90_upper": 35.95223960876465,
+          "fips": "17043",
+          "he_pooled": 0.9236073084683329,
+          "n_test": 45,
+          "pair": "HDD-10",
+          "rmse": 22.01383356889208,
+          "station": "USW00094846",
+          "status": "evaluated",
+          "worst": 47.51527786254883
+        },
+        {
+          "es90_lower": -25.204218673706055,
+          "es90_upper": 26.50890007019043,
+          "fips": "21015",
+          "he_pooled": 0.9560923883210132,
+          "n_test": 45,
+          "pair": "HDD-10",
+          "rmse": 15.445063689524833,
+          "station": "USW00093814",
+          "status": "evaluated",
+          "worst": 31.810897827148438
+        },
+        {
+          "es90_lower": -51.433789825439455,
+          "es90_upper": 26.855697250366212,
+          "fips": "25025",
+          "he_pooled": 0.8619761879783439,
+          "n_test": 45,
+          "pair": "HDD-10",
+          "rmse": 25.505173227715538,
+          "station": "USW00014739",
+          "status": "evaluated",
+          "worst": 93.33999633789062
+        },
+        {
+          "es90_lower": -16.84383487701416,
+          "es90_upper": 28.570018768310547,
+          "fips": "27053",
+          "he_pooled": 0.9726473390548396,
+          "n_test": 45,
+          "pair": "HDD-10",
+          "rmse": 16.542289460589778,
+          "station": "USW00014922",
+          "status": "evaluated",
+          "worst": 32.1330680847168
+        },
+        {
+          "es90_lower": -32.761853790283205,
+          "es90_upper": 29.72045135498047,
+          "fips": "32003",
+          "he_pooled": 0.8233804298507461,
+          "n_test": 45,
+          "pair": "HDD-10",
+          "rmse": 19.642901347355988,
+          "station": "USW00023169",
+          "status": "evaluated",
+          "worst": 43.91786575317383
+        },
+        {
+          "es90_lower": -25.068078231811523,
+          "es90_upper": 31.182119369506836,
+          "fips": "36081",
+          "he_pooled": 0.9204555696906245,
+          "n_test": 45,
+          "pair": "HDD-10",
+          "rmse": 17.670828909843365,
+          "station": "USW00014732",
+          "status": "evaluated",
+          "worst": 36.06377410888672
+        },
+        {
+          "es90_lower": -29.052749633789062,
+          "es90_upper": 32.036909866333005,
+          "fips": "41051",
+          "he_pooled": 0.9195277841252798,
+          "n_test": 45,
+          "pair": "HDD-10",
+          "rmse": 18.920161843648643,
+          "station": "USW00024229",
+          "status": "evaluated",
+          "worst": 34.33502197265625
+        },
+        {
+          "es90_lower": -41.034368896484374,
+          "es90_upper": 36.217444229125974,
+          "fips": "42045",
+          "he_pooled": 0.8637342131336428,
+          "n_test": 45,
+          "pair": "HDD-10",
+          "rmse": 24.672948461425886,
+          "station": "USW00013739",
+          "status": "evaluated",
+          "worst": 57.655487060546875
+        },
+        {
+          "es90_lower": -21.25391540527344,
+          "es90_upper": 20.494484901428223,
+          "fips": "48113",
+          "he_pooled": 0.9021586030337841,
+          "n_test": 45,
+          "pair": "HDD-10",
+          "rmse": 11.688523543292069,
+          "station": "USW00003927",
+          "status": "evaluated",
+          "worst": 40.641822814941406
+        },
+        {
+          "es90_lower": -18.218618392944336,
+          "es90_upper": 7.647511839866638,
+          "fips": "48201",
+          "he_pooled": 0.823081091038714,
+          "n_test": 37,
+          "pair": "HDD-10",
+          "rmse": 8.203720646318375,
+          "station": "USW00012960",
+          "status": "evaluated",
+          "worst": 21.69514274597168
+        }
+      ]
+    },
+    {
+      "atlas_run_id": "atlas-df45780d6e91803d",
+      "best_ne_nearest_share": 0.37817830704859995,
+      "bootstrap_B": 1000,
+      "config_hash": "df45780d6e91803d",
+      "git_commit": "2b709e63f4b3b8af5a4f0e99f207eab4d8f0b861",
+      "n_counties": 3107,
+      "n_stations_effective": 13,
+      "n_test_seasons_max": 45,
+      "n_test_seasons_min": 45,
+      "no_hedge_share_counties": 0.07788863855809462,
+      "no_hedge_share_population": 0.10630097533045024,
+      "no_stable_proxy_share": 0.10492436433859029,
+      "pair": "HDD-11",
+      "seed": 20260901,
+      "switch_gain_he_median": -0.02323420696972256,
+      "threshold_shares": {
+        "0.25": {
+          "counties": 0.9913099452848407,
+          "population": 0.9531857478171403
+        },
+        "0.50": {
+          "counties": 0.9285484390086901,
+          "population": 0.9041808567787228
+        },
+        "0.75": {
+          "counties": 0.6633408432571613,
+          "population": 0.7440557993156679
+        }
+      },
+      "zero_distance": [
+        {
+          "es90_lower": -35.13188171386719,
+          "es90_upper": 65.52332305908203,
+          "fips": "06037",
+          "he_pooled": 0.5513065120180868,
+          "n_test": 6,
+          "pair": "HDD-11",
+          "rmse": 37.95230462410202,
+          "station": "USW00023152",
+          "status": "evaluated",
+          "worst": 65.52332305908203
+        },
+        {
+          "es90_lower": -45.46197357177734,
+          "es90_upper": 44.771222305297854,
+          "fips": "06067",
+          "he_pooled": 0.8561963574716744,
+          "n_test": 45,
+          "pair": "HDD-11",
+          "rmse": 26.99466947622039,
+          "station": "USW00023232",
+          "status": "evaluated",
+          "worst": 77.72261047363281
+        },
+        {
+          "es90_lower": -39.74533920288086,
+          "es90_upper": 39.300590133666994,
+          "fips": "13063",
+          "he_pooled": 0.9295728213309196,
+          "n_test": 45,
+          "pair": "HDD-11",
+          "rmse": 24.302999634609762,
+          "station": "USW00013874",
+          "status": "evaluated",
+          "worst": 58.33552932739258
+        },
+        {
+          "es90_lower": -49.97011299133301,
+          "es90_upper": 40.71867370605469,
+          "fips": "17043",
+          "he_pooled": 0.95048887210848,
+          "n_test": 45,
+          "pair": "HDD-11",
+          "rmse": 26.478655314113027,
+          "station": "USW00094846",
+          "status": "evaluated",
+          "worst": 62.11724853515625
+        },
+        {
+          "es90_lower": -17.12855052947998,
+          "es90_upper": 26.822302627563477,
+          "fips": "21015",
+          "he_pooled": 0.9818330367303499,
+          "n_test": 45,
+          "pair": "HDD-11",
+          "rmse": 13.767847077980464,
+          "station": "USW00093814",
+          "status": "evaluated",
+          "worst": 34.34291076660156
+        },
+        {
+          "es90_lower": -38.525366973876956,
+          "es90_upper": 26.19694538116455,
+          "fips": "25025",
+          "he_pooled": 0.928229653498315,
+          "n_test": 45,
+          "pair": "HDD-11",
+          "rmse": 21.428813370852453,
+          "station": "USW00014739",
+          "status": "evaluated",
+          "worst": 49.84890365600586
+        },
+        {
+          "es90_lower": -18.245396041870116,
+          "es90_upper": 29.592018127441406,
+          "fips": "27053",
+          "he_pooled": 0.9906187380859354,
+          "n_test": 45,
+          "pair": "HDD-11",
+          "rmse": 14.470127287053515,
+          "station": "USW00014922",
+          "status": "evaluated",
+          "worst": 38.617767333984375
+        },
+        {
+          "es90_lower": -32.13065872192383,
+          "es90_upper": 40.80108642578125,
+          "fips": "32003",
+          "he_pooled": 0.9423803123265337,
+          "n_test": 45,
+          "pair": "HDD-11",
+          "rmse": 22.641903567988322,
+          "station": "USW00023169",
+          "status": "evaluated",
+          "worst": 49.99319839477539
+        },
+        {
+          "es90_lower": -20.328395462036134,
+          "es90_upper": 34.80211143493652,
+          "fips": "36081",
+          "he_pooled": 0.9433479433120381,
+          "n_test": 45,
+          "pair": "HDD-11",
+          "rmse": 19.03975694967749,
+          "station": "USW00014732",
+          "status": "evaluated",
+          "worst": 42.48122787475586
+        },
+        {
+          "es90_lower": -39.38951416015625,
+          "es90_upper": 35.84411125183105,
+          "fips": "41051",
+          "he_pooled": 0.9223371654531702,
+          "n_test": 45,
+          "pair": "HDD-11",
+          "rmse": 22.43258460202138,
+          "station": "USW00024229",
+          "status": "evaluated",
+          "worst": 46.9184684753418
+        },
+        {
+          "es90_lower": -41.95349960327148,
+          "es90_upper": 26.58235969543457,
+          "fips": "42045",
+          "he_pooled": 0.9320519170371032,
+          "n_test": 45,
+          "pair": "HDD-11",
+          "rmse": 22.061700531644455,
+          "station": "USW00013739",
+          "status": "evaluated",
+          "worst": 48.47651672363281
+        },
+        {
+          "es90_lower": -23.520977020263672,
+          "es90_upper": 36.183156967163086,
+          "fips": "48113",
+          "he_pooled": 0.9532793506648308,
+          "n_test": 45,
+          "pair": "HDD-11",
+          "rmse": 18.244234511142388,
+          "station": "USW00003927",
+          "status": "evaluated",
+          "worst": 54.950382232666016
+        },
+        {
+          "es90_lower": -36.84954357147217,
+          "es90_upper": 11.154225826263428,
+          "fips": "48201",
+          "he_pooled": 0.9475193679674105,
+          "n_test": 37,
+          "pair": "HDD-11",
+          "rmse": 16.237614058209225,
+          "station": "USW00012960",
+          "status": "evaluated",
+          "worst": 50.01340866088867
+        }
+      ]
+    },
+    {
+      "atlas_run_id": "atlas-df45780d6e91803d",
+      "best_ne_nearest_share": 0.2909559060186675,
+      "bootstrap_B": 1000,
+      "config_hash": "df45780d6e91803d",
+      "git_commit": "2b709e63f4b3b8af5a4f0e99f207eab4d8f0b861",
+      "n_counties": 3107,
+      "n_stations_effective": 13,
+      "n_test_seasons_max": 45,
+      "n_test_seasons_min": 45,
+      "no_hedge_share_counties": 0.11297071129707113,
+      "no_hedge_share_population": 0.0848807860534446,
+      "no_stable_proxy_share": 0.10556807209526875,
+      "pair": "HDD-12",
+      "seed": 20260901,
+      "switch_gain_he_median": -0.010884078471504244,
+      "threshold_shares": {
+        "0.25": {
+          "counties": 0.9620212423559704,
+          "population": 0.9766336622959899
+        },
+        "0.50": {
+          "counties": 0.8931445123913743,
+          "population": 0.916470681532139
+        },
+        "0.75": {
+          "counties": 0.7167685870614741,
+          "population": 0.724288693659123
+        }
+      },
+      "zero_distance": [
+        {
+          "es90_lower": -68.33732604980469,
+          "es90_upper": 16.40703010559082,
+          "fips": "06037",
+          "he_pooled": 0.8084486294829707,
+          "n_test": 5,
+          "pair": "HDD-12",
+          "rmse": 35.76878415793616,
+          "station": "USW00023152",
+          "status": "evaluated",
+          "worst": 68.33732604980469
+        },
+        {
+          "es90_lower": -43.69881362915039,
+          "es90_upper": 37.16638259887695,
+          "fips": "06067",
+          "he_pooled": 0.8981718455761619,
+          "n_test": 45,
+          "pair": "HDD-12",
+          "rmse": 22.80805104160536,
+          "station": "USW00023232",
+          "status": "evaluated",
+          "worst": 74.1795883178711
+        },
+        {
+          "es90_lower": -36.44489364624023,
+          "es90_upper": 41.87584762573242,
+          "fips": "13063",
+          "he_pooled": 0.9653205803653976,
+          "n_test": 45,
+          "pair": "HDD-12",
+          "rmse": 23.61875095558188,
+          "station": "USW00013874",
+          "status": "evaluated",
+          "worst": 71.3992919921875
+        },
+        {
+          "es90_lower": -67.47256774902344,
+          "es90_upper": 22.907483673095705,
+          "fips": "17043",
+          "he_pooled": 0.9631435302976734,
+          "n_test": 45,
+          "pair": "HDD-12",
+          "rmse": 32.741050526022185,
+          "station": "USW00094846",
+          "status": "evaluated",
+          "worst": 83.18006896972656
+        },
+        {
+          "es90_lower": -13.462878608703614,
+          "es90_upper": 29.785235595703124,
+          "fips": "21015",
+          "he_pooled": 0.9909778171691156,
+          "n_test": 45,
+          "pair": "HDD-12",
+          "rmse": 14.756536278605392,
+          "station": "USW00093814",
+          "status": "evaluated",
+          "worst": 48.64453887939453
+        },
+        {
+          "es90_lower": -41.942568969726565,
+          "es90_upper": 21.814554691314697,
+          "fips": "25025",
+          "he_pooled": 0.9654191707098253,
+          "n_test": 45,
+          "pair": "HDD-12",
+          "rmse": 23.22430898246001,
+          "station": "USW00014739",
+          "status": "evaluated",
+          "worst": 55.82086944580078
+        },
+        {
+          "es90_lower": -18.232752895355226,
+          "es90_upper": 21.771802520751955,
+          "fips": "27053",
+          "he_pooled": 0.9958317193057464,
+          "n_test": 45,
+          "pair": "HDD-12",
+          "rmse": 12.219151330207426,
+          "station": "USW00014922",
+          "status": "evaluated",
+          "worst": 32.02145767211914
+        },
+        {
+          "es90_lower": -28.73312911987305,
+          "es90_upper": 40.37132720947265,
+          "fips": "32003",
+          "he_pooled": 0.9014329056303282,
+          "n_test": 45,
+          "pair": "HDD-12",
+          "rmse": 23.840145637958383,
+          "station": "USW00023169",
+          "status": "evaluated",
+          "worst": 46.90816116333008
+        },
+        {
+          "es90_lower": -23.033105278015135,
+          "es90_upper": 30.621656799316405,
+          "fips": "36081",
+          "he_pooled": 0.9820554688913075,
+          "n_test": 45,
+          "pair": "HDD-12",
+          "rmse": 16.801451081842806,
+          "station": "USW00014732",
+          "status": "evaluated",
+          "worst": 38.85200500488281
+        },
+        {
+          "es90_lower": -41.17521781921387,
+          "es90_upper": 33.738223266601565,
+          "fips": "41051",
+          "he_pooled": 0.9304783159840957,
+          "n_test": 45,
+          "pair": "HDD-12",
+          "rmse": 21.944821909201178,
+          "station": "USW00024229",
+          "status": "evaluated",
+          "worst": 59.384403228759766
+        },
+        {
+          "es90_lower": -31.1703239440918,
+          "es90_upper": 39.43776626586914,
+          "fips": "42045",
+          "he_pooled": 0.9752226088587838,
+          "n_test": 45,
+          "pair": "HDD-12",
+          "rmse": 20.439191654338526,
+          "station": "USW00013739",
+          "status": "evaluated",
+          "worst": 50.45348358154297
+        },
+        {
+          "es90_lower": -30.81520767211914,
+          "es90_upper": 33.97256965637207,
+          "fips": "48113",
+          "he_pooled": 0.972673049150264,
+          "n_test": 45,
+          "pair": "HDD-12",
+          "rmse": 19.155451722948484,
+          "station": "USW00003927",
+          "status": "evaluated",
+          "worst": 48.69293975830078
+        },
+        {
+          "es90_lower": -21.84769868850708,
+          "es90_upper": 25.79289484024048,
+          "fips": "48201",
+          "he_pooled": 0.9725700732311402,
+          "n_test": 37,
+          "pair": "HDD-12",
+          "rmse": 15.378293754264213,
+          "station": "USW00012960",
+          "status": "evaluated",
+          "worst": 30.614818572998047
+        }
+      ]
+    },
+    {
+      "atlas_run_id": "atlas-df45780d6e91803d",
+      "best_ne_nearest_share": 0.23720630833601544,
+      "bootstrap_B": 1000,
+      "config_hash": "df45780d6e91803d",
+      "git_commit": "2b709e63f4b3b8af5a4f0e99f207eab4d8f0b861",
+      "n_counties": 3107,
+      "n_stations_effective": 13,
+      "n_test_seasons_max": 46,
+      "n_test_seasons_min": 46,
+      "no_hedge_share_counties": 0.09494689411007402,
+      "no_hedge_share_population": 0.09995444557818063,
+      "no_stable_proxy_share": 0.08175088509816543,
+      "pair": "HDD-02",
+      "seed": 20260901,
+      "switch_gain_he_median": -0.023832727351422278,
+      "threshold_shares": {
+        "0.25": {
+          "counties": 0.9874476987447699,
+          "population": 0.9541322861965547
+        },
+        "0.50": {
+          "counties": 0.9127775989700676,
+          "population": 0.9041689530801905
+        },
+        "0.75": {
+          "counties": 0.6620534277438043,
+          "population": 0.7067792580421668
+        }
+      },
+      "zero_distance": [
+        {
+          "es90_lower": -36.02796173095703,
+          "es90_upper": 60.62092590332031,
+          "fips": "06037",
+          "he_pooled": 0.8237366256829688,
+          "n_test": 7,
+          "pair": "HDD-02",
+          "rmse": 32.29246484350865,
+          "station": "USW00023152",
+          "status": "evaluated",
+          "worst": 60.62092590332031
+        },
+        {
+          "es90_lower": -30.430216598510743,
+          "es90_upper": 27.005509185791016,
+          "fips": "06067",
+          "he_pooled": 0.9167983205839009,
+          "n_test": 46,
+          "pair": "HDD-02",
+          "rmse": 17.736875162294268,
+          "station": "USW00023232",
+          "status": "evaluated",
+          "worst": 49.57948303222656
+        },
+        {
+          "es90_lower": -38.69684181213379,
+          "es90_upper": 35.107634735107425,
+          "fips": "13063",
+          "he_pooled": 0.9491061771674547,
+          "n_test": 46,
+          "pair": "HDD-02",
+          "rmse": 21.70949225189811,
+          "station": "USW00013874",
+          "status": "evaluated",
+          "worst": 50.43948745727539
+        },
+        {
+          "es90_lower": -70.20978775024415,
+          "es90_upper": 33.4028018951416,
+          "fips": "17043",
+          "he_pooled": 0.9526654319630756,
+          "n_test": 46,
+          "pair": "HDD-02",
+          "rmse": 35.09285972264066,
+          "station": "USW00094846",
+          "status": "evaluated",
+          "worst": 90.21913146972656
+        },
+        {
+          "es90_lower": -16.874604606628417,
+          "es90_upper": 27.256885147094728,
+          "fips": "21015",
+          "he_pooled": 0.9897218233409597,
+          "n_test": 46,
+          "pair": "HDD-02",
+          "rmse": 13.944628242787223,
+          "station": "USW00093814",
+          "status": "evaluated",
+          "worst": 33.32541275024414
+        },
+        {
+          "es90_lower": -38.98739891052246,
+          "es90_upper": 30.12154197692871,
+          "fips": "25025",
+          "he_pooled": 0.9541959453818581,
+          "n_test": 46,
+          "pair": "HDD-02",
+          "rmse": 23.140809867884702,
+          "station": "USW00014739",
+          "status": "evaluated",
+          "worst": 49.398345947265625
+        },
+        {
+          "es90_lower": -26.853495788574218,
+          "es90_upper": 23.216641235351563,
+          "fips": "27053",
+          "he_pooled": 0.9936960324275649,
+          "n_test": 46,
+          "pair": "HDD-02",
+          "rmse": 15.244784241690743,
+          "station": "USW00014922",
+          "status": "evaluated",
+          "worst": 31.155668258666992
+        },
+        {
+          "es90_lower": -21.554058074951172,
+          "es90_upper": 38.29005889892578,
+          "fips": "32003",
+          "he_pooled": 0.9385202760500825,
+          "n_test": 46,
+          "pair": "HDD-02",
+          "rmse": 20.45673287336227,
+          "station": "USW00023169",
+          "status": "evaluated",
+          "worst": 46.95567321777344
+        },
+        {
+          "es90_lower": -19.488700485229494,
+          "es90_upper": 22.54583625793457,
+          "fips": "36081",
+          "he_pooled": 0.9873508001699226,
+          "n_test": 46,
+          "pair": "HDD-02",
+          "rmse": 11.825630034905734,
+          "station": "USW00014732",
+          "status": "evaluated",
+          "worst": 29.48413848876953
+        },
+        {
+          "es90_lower": -27.171415710449217,
+          "es90_upper": 32.806081771850586,
+          "fips": "41051",
+          "he_pooled": 0.9482528407076884,
+          "n_test": 46,
+          "pair": "HDD-02",
+          "rmse": 18.16626088179223,
+          "station": "USW00024229",
+          "status": "evaluated",
+          "worst": 39.17264938354492
+        },
+        {
+          "es90_lower": -23.962080001831055,
+          "es90_upper": 32.98868865966797,
+          "fips": "42045",
+          "he_pooled": 0.9728468476699886,
+          "n_test": 46,
+          "pair": "HDD-02",
+          "rmse": 17.673680557669467,
+          "station": "USW00013739",
+          "status": "evaluated",
+          "worst": 46.08073043823242
+        },
+        {
+          "es90_lower": -33.27436561584473,
+          "es90_upper": 22.785540771484374,
+          "fips": "48113",
+          "he_pooled": 0.9754358534765523,
+          "n_test": 46,
+          "pair": "HDD-02",
+          "rmse": 17.863820270084695,
+          "station": "USW00003927",
+          "status": "evaluated",
+          "worst": 45.32927322387695
+        },
+        {
+          "es90_lower": -28.395025730133057,
+          "es90_upper": 27.87025547027588,
+          "fips": "48201",
+          "he_pooled": 0.9672116031899762,
+          "n_test": 37,
+          "pair": "HDD-02",
+          "rmse": 17.205966379186485,
+          "station": "USW00012960",
+          "status": "evaluated",
+          "worst": 34.92815399169922
+        }
+      ]
+    },
+    {
+      "atlas_run_id": "atlas-df45780d6e91803d",
+      "best_ne_nearest_share": 0.2796910202767943,
+      "bootstrap_B": 1000,
+      "config_hash": "df45780d6e91803d",
+      "git_commit": "2b709e63f4b3b8af5a4f0e99f207eab4d8f0b861",
+      "n_counties": 3107,
+      "n_stations_effective": 13,
+      "n_test_seasons_max": 46,
+      "n_test_seasons_min": 46,
+      "no_hedge_share_counties": 0.11393627293208883,
+      "no_hedge_share_population": 0.11284461757645162,
+      "no_stable_proxy_share": 0.1335693595107821,
+      "pair": "HDD-03",
+      "seed": 20260901,
+      "switch_gain_he_median": -0.031115661809077877,
+      "threshold_shares": {
+        "0.25": {
+          "counties": 0.9571934341808819,
+          "population": 0.9416408061093546
+        },
+        "0.50": {
+          "counties": 0.8896041197296427,
+          "population": 0.8906823450522968
+        },
+        "0.75": {
+          "counties": 0.5754747344705504,
+          "population": 0.7190729484609482
+        }
+      },
+      "zero_distance": [
+        {
+          "es90_lower": -65.88934326171875,
+          "es90_upper": 49.92644119262695,
+          "fips": "06037",
+          "he_pooled": 0.9231713532881232,
+          "n_test": 8,
+          "pair": "HDD-03",
+          "rmse": 35.48160081747768,
+          "station": "USW00023152",
+          "status": "evaluated",
+          "worst": 65.88934326171875
+        },
+        {
+          "es90_lower": -25.53887176513672,
+          "es90_upper": 31.564521408081056,
+          "fips": "06067",
+          "he_pooled": 0.961208122200225,
+          "n_test": 46,
+          "pair": "HDD-03",
+          "rmse": 17.409109852708315,
+          "station": "USW00023232",
+          "status": "evaluated",
+          "worst": 44.309776306152344
+        },
+        {
+          "es90_lower": -36.54376754760742,
+          "es90_upper": 39.43865203857422,
+          "fips": "13063",
+          "he_pooled": 0.9457599933508885,
+          "n_test": 46,
+          "pair": "HDD-03",
+          "rmse": 21.777555498755564,
+          "station": "USW00013874",
+          "status": "evaluated",
+          "worst": 54.13045120239258
+        },
+        {
+          "es90_lower": -47.395175552368165,
+          "es90_upper": 46.84280548095703,
+          "fips": "17043",
+          "he_pooled": 0.9591504575606429,
+          "n_test": 46,
+          "pair": "HDD-03",
+          "rmse": 26.201454125206556,
+          "station": "USW00094846",
+          "status": "evaluated",
+          "worst": 68.00576782226562
+        },
+        {
+          "es90_lower": -29.097451400756835,
+          "es90_upper": 32.54173202514649,
+          "fips": "21015",
+          "he_pooled": 0.9778370479427352,
+          "n_test": 46,
+          "pair": "HDD-03",
+          "rmse": 17.83514411781876,
+          "station": "USW00093814",
+          "status": "evaluated",
+          "worst": 39.781585693359375
+        },
+        {
+          "es90_lower": -41.29383430480957,
+          "es90_upper": 31.277397537231444,
+          "fips": "25025",
+          "he_pooled": 0.9414600520581324,
+          "n_test": 46,
+          "pair": "HDD-03",
+          "rmse": 23.35364990793549,
+          "station": "USW00014739",
+          "status": "evaluated",
+          "worst": 65.3514404296875
+        },
+        {
+          "es90_lower": -18.229631614685058,
+          "es90_upper": 27.892314910888672,
+          "fips": "27053",
+          "he_pooled": 0.9921503176624368,
+          "n_test": 46,
+          "pair": "HDD-03",
+          "rmse": 14.238684586341986,
+          "station": "USW00014922",
+          "status": "evaluated",
+          "worst": 34.06658935546875
+        },
+        {
+          "es90_lower": -40.97336883544922,
+          "es90_upper": 52.21624526977539,
+          "fips": "32003",
+          "he_pooled": 0.9008310698772867,
+          "n_test": 46,
+          "pair": "HDD-03",
+          "rmse": 30.18642860279213,
+          "station": "USW00023169",
+          "status": "evaluated",
+          "worst": 72.89937591552734
+        },
+        {
+          "es90_lower": -20.16861801147461,
+          "es90_upper": 32.36705551147461,
+          "fips": "36081",
+          "he_pooled": 0.9669162228086663,
+          "n_test": 46,
+          "pair": "HDD-03",
+          "rmse": 16.978264183802107,
+          "station": "USW00014732",
+          "status": "evaluated",
+          "worst": 44.393497467041016
+        },
+        {
+          "es90_lower": -33.21446495056152,
+          "es90_upper": 37.02029724121094,
+          "fips": "41051",
+          "he_pooled": 0.9256755015444715,
+          "n_test": 46,
+          "pair": "HDD-03",
+          "rmse": 20.755774518012064,
+          "station": "USW00024229",
+          "status": "evaluated",
+          "worst": 55.34324264526367
+        },
+        {
+          "es90_lower": -32.942169189453125,
+          "es90_upper": 38.65642051696777,
+          "fips": "42045",
+          "he_pooled": 0.9586576376719772,
+          "n_test": 46,
+          "pair": "HDD-03",
+          "rmse": 20.77512485414312,
+          "station": "USW00013739",
+          "status": "evaluated",
+          "worst": 57.285579681396484
+        },
+        {
+          "es90_lower": -23.768429946899413,
+          "es90_upper": 24.41678066253662,
+          "fips": "48113",
+          "he_pooled": 0.9669142498310761,
+          "n_test": 46,
+          "pair": "HDD-03",
+          "rmse": 14.59587563568735,
+          "station": "USW00003927",
+          "status": "evaluated",
+          "worst": 49.24726486206055
+        },
+        {
+          "es90_lower": -10.78165888786316,
+          "es90_upper": 24.705349922180176,
+          "fips": "48201",
+          "he_pooled": 0.9503439735337091,
+          "n_test": 37,
+          "pair": "HDD-03",
+          "rmse": 13.005722985738705,
+          "station": "USW00012960",
+          "status": "evaluated",
+          "worst": 30.450542449951172
+        }
+      ]
+    },
+    {
+      "atlas_run_id": "atlas-df45780d6e91803d",
+      "best_ne_nearest_share": 0.34148696491792724,
+      "bootstrap_B": 1000,
+      "config_hash": "df45780d6e91803d",
+      "git_commit": "2b709e63f4b3b8af5a4f0e99f207eab4d8f0b861",
+      "n_counties": 3107,
+      "n_stations_effective": 13,
+      "n_test_seasons_max": 46,
+      "n_test_seasons_min": 46,
+      "no_hedge_share_counties": 0.18506598004505953,
+      "no_hedge_share_population": 0.14677333473748388,
+      "no_stable_proxy_share": 0.15094946894110073,
+      "pair": "HDD-04",
+      "seed": 20260901,
+      "switch_gain_he_median": -0.020462971048949452,
+      "threshold_shares": {
+        "0.25": {
+          "counties": 0.9349855165754747,
+          "population": 0.909498314829535
+        },
+        "0.50": {
+          "counties": 0.818474412616672,
+          "population": 0.8545643919716052
+        },
+        "0.75": {
+          "counties": 0.4261345349211458,
+          "population": 0.5384646685549516
+        }
+      },
+      "zero_distance": [
+        {
+          "es90_lower": -63.97374725341797,
+          "es90_upper": 20.582307815551758,
+          "fips": "06037",
+          "he_pooled": 0.36163816347984135,
+          "n_test": 7,
+          "pair": "HDD-04",
+          "rmse": 30.713932838785713,
+          "station": "USW00023152",
+          "status": "evaluated",
+          "worst": 63.97374725341797
+        },
+        {
+          "es90_lower": -24.041970825195314,
+          "es90_upper": 27.695537567138672,
+          "fips": "06067",
+          "he_pooled": 0.9301940378237257,
+          "n_test": 46,
+          "pair": "HDD-04",
+          "rmse": 15.61590900891375,
+          "station": "USW00023232",
+          "status": "evaluated",
+          "worst": 45.49848937988281
+        },
+        {
+          "es90_lower": -35.1807861328125,
+          "es90_upper": 25.747733688354494,
+          "fips": "13063",
+          "he_pooled": 0.9164476245187968,
+          "n_test": 46,
+          "pair": "HDD-04",
+          "rmse": 17.167672273412933,
+          "station": "USW00013874",
+          "status": "evaluated",
+          "worst": 49.536991119384766
+        },
+        {
+          "es90_lower": -47.35317459106445,
+          "es90_upper": 40.248810577392575,
+          "fips": "17043",
+          "he_pooled": 0.9151581716712,
+          "n_test": 46,
+          "pair": "HDD-04",
+          "rmse": 25.7032280079103,
+          "station": "USW00094846",
+          "status": "evaluated",
+          "worst": 58.691402435302734
+        },
+        {
+          "es90_lower": -24.984699630737303,
+          "es90_upper": 23.592579650878907,
+          "fips": "21015",
+          "he_pooled": 0.9671509410558654,
+          "n_test": 46,
+          "pair": "HDD-04",
+          "rmse": 13.972520976197707,
+          "station": "USW00093814",
+          "status": "evaluated",
+          "worst": 38.97832107543945
+        },
+        {
+          "es90_lower": -47.22392883300781,
+          "es90_upper": 22.974500370025634,
+          "fips": "25025",
+          "he_pooled": 0.8423549552436095,
+          "n_test": 46,
+          "pair": "HDD-04",
+          "rmse": 23.545462045079635,
+          "station": "USW00014739",
+          "status": "evaluated",
+          "worst": 67.2479248046875
+        },
+        {
+          "es90_lower": -18.60147933959961,
+          "es90_upper": 26.149239349365235,
+          "fips": "27053",
+          "he_pooled": 0.9857978023990348,
+          "n_test": 46,
+          "pair": "HDD-04",
+          "rmse": 13.501728597636186,
+          "station": "USW00014922",
+          "status": "evaluated",
+          "worst": 31.725969314575195
+        },
+        {
+          "es90_lower": -31.646250915527343,
+          "es90_upper": 38.736012649536136,
+          "fips": "32003",
+          "he_pooled": 0.8951177187030371,
+          "n_test": 46,
+          "pair": "HDD-04",
+          "rmse": 20.905428427787758,
+          "station": "USW00023169",
+          "status": "evaluated",
+          "worst": 57.23760223388672
+        },
+        {
+          "es90_lower": -19.898200225830077,
+          "es90_upper": 30.138254928588868,
+          "fips": "36081",
+          "he_pooled": 0.9146015676761747,
+          "n_test": 46,
+          "pair": "HDD-04",
+          "rmse": 15.750172497667723,
+          "station": "USW00014732",
+          "status": "evaluated",
+          "worst": 40.178890228271484
+        },
+        {
+          "es90_lower": -31.251789093017578,
+          "es90_upper": 28.328580474853517,
+          "fips": "41051",
+          "he_pooled": 0.9300554601659992,
+          "n_test": 46,
+          "pair": "HDD-04",
+          "rmse": 17.79346395603619,
+          "station": "USW00024229",
+          "status": "evaluated",
+          "worst": 48.885616302490234
+        },
+        {
+          "es90_lower": -28.527920532226563,
+          "es90_upper": 36.91913414001465,
+          "fips": "42045",
+          "he_pooled": 0.8852299457580907,
+          "n_test": 46,
+          "pair": "HDD-04",
+          "rmse": 19.2130304090521,
+          "station": "USW00013739",
+          "status": "evaluated",
+          "worst": 48.48984146118164
+        },
+        {
+          "es90_lower": -14.071960830688477,
+          "es90_upper": 18.8680757522583,
+          "fips": "48113",
+          "he_pooled": 0.9508330694562246,
+          "n_test": 46,
+          "pair": "HDD-04",
+          "rmse": 10.011450883956206,
+          "station": "USW00003927",
+          "status": "evaluated",
+          "worst": 25.910337448120117
+        },
+        {
+          "es90_lower": -19.94028091430664,
+          "es90_upper": 11.111467123031616,
+          "fips": "48201",
+          "he_pooled": 0.8145740016185903,
+          "n_test": 37,
+          "pair": "HDD-04",
+          "rmse": 9.240805899647063,
+          "station": "USW00012960",
+          "status": "evaluated",
+          "worst": 38.96247482299805
+        }
+      ]
+    },
+    {
+      "atlas_run_id": "atlas-df45780d6e91803d",
+      "best_ne_nearest_share": 0.5645317026070165,
+      "bootstrap_B": 1000,
+      "config_hash": "df45780d6e91803d",
+      "git_commit": "2b709e63f4b3b8af5a4f0e99f207eab4d8f0b861",
+      "n_counties": 3107,
+      "n_stations_effective": 13,
+      "n_test_seasons_max": 46,
+      "n_test_seasons_min": 0,
+      "no_hedge_share_counties": 0.6852269069842292,
+      "no_hedge_share_population": 0.6131693623153774,
+      "no_stable_proxy_share": 0.31766977792082396,
+      "pair": "CDD-04",
+      "seed": 20260901,
+      "switch_gain_he_median": -0.1069690100478003,
+      "threshold_shares": {
+        "0.25": {
+          "counties": 0.6540070807853234,
+          "population": 0.7085564407564843
+        },
+        "0.50": {
+          "counties": 0.3752816221435468,
+          "population": 0.45714883371919385
+        },
+        "0.75": {
+          "counties": 0.05889925973607982,
+          "population": 0.16255141384281405
+        }
+      },
+      "zero_distance": [
+        {
+          "es90_lower": -7.99043083190918,
+          "es90_upper": 20.05424690246582,
+          "fips": "06037",
+          "he_pooled": 0.573921698534408,
+          "n_test": 7,
+          "pair": "CDD-04",
+          "rmse": 9.457027616220456,
+          "station": "USW00023152",
+          "status": "evaluated",
+          "worst": 20.05424690246582
+        },
+        {
+          "es90_lower": -13.12958459854126,
+          "es90_upper": 9.549808597564697,
+          "fips": "06067",
+          "he_pooled": 0.8406355772204384,
+          "n_test": 46,
+          "pair": "CDD-04",
+          "rmse": 6.512745125616489,
+          "station": "USW00023232",
+          "status": "evaluated",
+          "worst": 25.26247787475586
+        },
+        {
+          "es90_lower": -17.354765129089355,
+          "es90_upper": 23.119838905334472,
+          "fips": "13063",
+          "he_pooled": 0.8258196240834739,
+          "n_test": 46,
+          "pair": "CDD-04",
+          "rmse": 11.728778467127523,
+          "station": "USW00013874",
+          "status": "evaluated",
+          "worst": 35.30767822265625
+        },
+        {
+          "es90_lower": -8.758118438720704,
+          "es90_upper": 5.6428498268127445,
+          "fips": "17043",
+          "he_pooled": 0.8607276786997395,
+          "n_test": 46,
+          "pair": "CDD-04",
+          "rmse": 4.123975047672606,
+          "station": "USW00094846",
+          "status": "evaluated",
+          "worst": 14.222376823425293
+        },
+        {
+          "es90_lower": -5.60906753540039,
+          "es90_upper": 10.310817432403564,
+          "fips": "21015",
+          "he_pooled": 0.8967669282228022,
+          "n_test": 46,
+          "pair": "CDD-04",
+          "rmse": 4.536703440334082,
+          "station": "USW00093814",
+          "status": "evaluated",
+          "worst": 14.577678680419922
+        },
+        {
+          "es90_lower": -2.0265253305435182,
+          "es90_upper": 3.996380877494812,
+          "fips": "25025",
+          "he_pooled": 0.6627910383781379,
+          "n_test": 46,
+          "pair": "CDD-04",
+          "rmse": 1.7348679046320037,
+          "station": "USW00014739",
+          "status": "evaluated",
+          "worst": 7.401839256286621
+        },
+        {
+          "es90_lower": -7.04150619506836,
+          "es90_upper": 5.039613866806031,
+          "fips": "27053",
+          "he_pooled": 0.7044143705084576,
+          "n_test": 46,
+          "pair": "CDD-04",
+          "rmse": 3.227028160385047,
+          "station": "USW00014922",
+          "status": "evaluated",
+          "worst": 10.182945251464844
+        },
+        {
+          "es90_lower": -23.9713134765625,
+          "es90_upper": 25.22427921295166,
+          "fips": "32003",
+          "he_pooled": 0.7833743461311019,
+          "n_test": 46,
+          "pair": "CDD-04",
+          "rmse": 14.919744887126212,
+          "station": "USW00023169",
+          "status": "evaluated",
+          "worst": 35.84324645996094
+        },
+        {
+          "es90_lower": -6.661139488220215,
+          "es90_upper": 5.353784656524658,
+          "fips": "36081",
+          "he_pooled": 0.8539243902141054,
+          "n_test": 46,
+          "pair": "CDD-04",
+          "rmse": 3.5275702318347557,
+          "station": "USW00014732",
+          "status": "evaluated",
+          "worst": 14.195521354675293
+        },
+        {
+          "es90_lower": -1.6861336946487426,
+          "es90_upper": 0.5361765623092651,
+          "fips": "41051",
+          "he_pooled": 0.5835072534897088,
+          "n_test": 46,
+          "pair": "CDD-04",
+          "rmse": 0.6815390724232625,
+          "station": "USW00024229",
+          "status": "evaluated",
+          "worst": 3.255162000656128
+        },
+        {
+          "es90_lower": -8.586653518676759,
+          "es90_upper": 6.8573685646057125,
+          "fips": "42045",
+          "he_pooled": 0.8976568545722714,
+          "n_test": 46,
+          "pair": "CDD-04",
+          "rmse": 4.263781361388365,
+          "station": "USW00013739",
+          "status": "evaluated",
+          "worst": 12.796929359436035
+        },
+        {
+          "es90_lower": -24.929899597167967,
+          "es90_upper": 13.75233097076416,
+          "fips": "48113",
+          "he_pooled": 0.9189860645874534,
+          "n_test": 46,
+          "pair": "CDD-04",
+          "rmse": 12.048806952521476,
+          "station": "USW00003927",
+          "status": "evaluated",
+          "worst": 28.272558212280273
+        },
+        {
+          "es90_lower": -8.04115617275238,
+          "es90_upper": 39.4495267868042,
+          "fips": "48201",
+          "he_pooled": 0.8720292336491209,
+          "n_test": 37,
+          "pair": "CDD-04",
+          "rmse": 20.557997066793213,
+          "station": "USW00012960",
+          "status": "evaluated",
+          "worst": 51.72597122192383
+        }
+      ]
+    },
+    {
+      "atlas_run_id": "atlas-df45780d6e91803d",
+      "best_ne_nearest_share": 0.37624718377856453,
+      "bootstrap_B": 1000,
+      "config_hash": "df45780d6e91803d",
+      "git_commit": "2b709e63f4b3b8af5a4f0e99f207eab4d8f0b861",
+      "n_counties": 3107,
+      "n_stations_effective": 13,
+      "n_test_seasons_max": 46,
+      "n_test_seasons_min": 0,
+      "no_hedge_share_counties": 0.4242034116511104,
+      "no_hedge_share_population": 0.3512009609564306,
+      "no_stable_proxy_share": 0.18056002574831026,
+      "pair": "CDD-05",
+      "seed": 20260901,
+      "switch_gain_he_median": -0.04828898984301799,
+      "threshold_shares": {
+        "0.25": {
+          "counties": 0.8307048599935629,
+          "population": 0.8531520667272753
+        },
+        "0.50": {
+          "counties": 0.5896363051174767,
+          "population": 0.6626577530435928
+        },
+        "0.75": {
+          "counties": 0.19279047312520114,
+          "population": 0.35015828199142135
+        }
+      },
+      "zero_distance": [
+        {
+          "es90_lower": -12.305962562561035,
+          "es90_upper": 20.441312789916992,
+          "fips": "06037",
+          "he_pooled": 0.8326799574952247,
+          "n_test": 7,
+          "pair": "CDD-05",
+          "rmse": 11.12545160892849,
+          "station": "USW00023152",
+          "status": "evaluated",
+          "worst": 20.441312789916992
+        },
+        {
+          "es90_lower": -19.794900321960448,
+          "es90_upper": 31.675805282592773,
+          "fips": "06067",
+          "he_pooled": 0.9227872538981401,
+          "n_test": 46,
+          "pair": "CDD-05",
+          "rmse": 15.41989163086987,
+          "station": "USW00023232",
+          "status": "evaluated",
+          "worst": 48.17051315307617
+        },
+        {
+          "es90_lower": -25.000232696533203,
+          "es90_upper": 41.19767684936524,
+          "fips": "13063",
+          "he_pooled": 0.8616945560651581,
+          "n_test": 46,
+          "pair": "CDD-05",
+          "rmse": 20.202017798463576,
+          "station": "USW00013874",
+          "status": "evaluated",
+          "worst": 66.1574935913086
+        },
+        {
+          "es90_lower": -21.25470886230469,
+          "es90_upper": 11.982748985290527,
+          "fips": "17043",
+          "he_pooled": 0.9107478732354836,
+          "n_test": 46,
+          "pair": "CDD-05",
+          "rmse": 10.453788745974931,
+          "station": "USW00094846",
+          "status": "evaluated",
+          "worst": 24.560131072998047
+        },
+        {
+          "es90_lower": -15.717669486999512,
+          "es90_upper": 14.948546218872071,
+          "fips": "21015",
+          "he_pooled": 0.9640676791863255,
+          "n_test": 46,
+          "pair": "CDD-05",
+          "rmse": 9.304571094866207,
+          "station": "USW00093814",
+          "status": "evaluated",
+          "worst": 30.978708267211914
+        },
+        {
+          "es90_lower": -9.867801094055176,
+          "es90_upper": 15.800856590270996,
+          "fips": "25025",
+          "he_pooled": 0.759006738828274,
+          "n_test": 46,
+          "pair": "CDD-05",
+          "rmse": 8.126255358791466,
+          "station": "USW00014739",
+          "status": "evaluated",
+          "worst": 22.22259521484375
+        },
+        {
+          "es90_lower": -17.148913955688478,
+          "es90_upper": 5.814038562774658,
+          "fips": "27053",
+          "he_pooled": 0.9253732819218433,
+          "n_test": 46,
+          "pair": "CDD-05",
+          "rmse": 7.884136416713523,
+          "station": "USW00014922",
+          "status": "evaluated",
+          "worst": 28.163537979125977
+        },
+        {
+          "es90_lower": -39.84614944458008,
+          "es90_upper": 25.690436935424806,
+          "fips": "32003",
+          "he_pooled": 0.9359677512796979,
+          "n_test": 46,
+          "pair": "CDD-05",
+          "rmse": 21.027679737947828,
+          "station": "USW00023169",
+          "status": "evaluated",
+          "worst": 50.11333465576172
+        },
+        {
+          "es90_lower": -17.904584312438963,
+          "es90_upper": 15.607167434692382,
+          "fips": "36081",
+          "he_pooled": 0.8711931378409785,
+          "n_test": 46,
+          "pair": "CDD-05",
+          "rmse": 10.29804543193526,
+          "station": "USW00014732",
+          "status": "evaluated",
+          "worst": 24.697277069091797
+        },
+        {
+          "es90_lower": -8.60850019454956,
+          "es90_upper": 6.585755157470703,
+          "fips": "41051",
+          "he_pooled": 0.8224941554904385,
+          "n_test": 46,
+          "pair": "CDD-05",
+          "rmse": 4.426735318617826,
+          "station": "USW00024229",
+          "status": "evaluated",
+          "worst": 12.45418930053711
+        },
+        {
+          "es90_lower": -18.631521034240723,
+          "es90_upper": 16.743251609802247,
+          "fips": "42045",
+          "he_pooled": 0.9305353645244105,
+          "n_test": 46,
+          "pair": "CDD-05",
+          "rmse": 10.495344258311377,
+          "station": "USW00013739",
+          "status": "evaluated",
+          "worst": 24.21664047241211
+        },
+        {
+          "es90_lower": -33.38328056335449,
+          "es90_upper": 36.08487777709961,
+          "fips": "48113",
+          "he_pooled": 0.8984202374880556,
+          "n_test": 46,
+          "pair": "CDD-05",
+          "rmse": 20.09673465729335,
+          "station": "USW00003927",
+          "status": "evaluated",
+          "worst": 52.30750274658203
+        },
+        {
+          "es90_lower": -10.835984945297241,
+          "es90_upper": 50.84348011016846,
+          "fips": "48201",
+          "he_pooled": 0.8018157789144119,
+          "n_test": 37,
+          "pair": "CDD-05",
+          "rmse": 24.392584729275253,
+          "station": "USW00012960",
+          "status": "evaluated",
+          "worst": 63.68391036987305
+        }
+      ]
+    },
+    {
+      "atlas_run_id": "atlas-df45780d6e91803d",
+      "best_ne_nearest_share": 0.34438364982298036,
+      "bootstrap_B": 1000,
+      "config_hash": "df45780d6e91803d",
+      "git_commit": "2b709e63f4b3b8af5a4f0e99f207eab4d8f0b861",
+      "n_counties": 3107,
+      "n_stations_effective": 13,
+      "n_test_seasons_max": 46,
+      "n_test_seasons_min": 0,
+      "no_hedge_share_counties": 0.5635661409719988,
+      "no_hedge_share_population": 0.416084013267583,
+      "no_stable_proxy_share": 0.16865143224975862,
+      "pair": "CDD-06",
+      "seed": 20260901,
+      "switch_gain_he_median": -0.06998500399781737,
+      "threshold_shares": {
+        "0.25": {
+          "counties": 0.799163179916318,
+          "population": 0.8357810419723347
+        },
+        "0.50": {
+          "counties": 0.4560669456066946,
+          "population": 0.6090686687472935
+        },
+        "0.75": {
+          "counties": 0.10267138719021564,
+          "population": 0.22091063202672173
+        }
+      },
+      "zero_distance": [
+        {
+          "es90_lower": -85.00398254394531,
+          "es90_upper": 42.17730712890625,
+          "fips": "06037",
+          "he_pooled": 0.6067654876840527,
+          "n_test": 8,
+          "pair": "CDD-06",
+          "rmse": 49.32912715742744,
+          "station": "USW00023152",
+          "status": "evaluated",
+          "worst": 85.00398254394531
+        },
+        {
+          "es90_lower": -27.888836288452147,
+          "es90_upper": 38.98855743408203,
+          "fips": "06067",
+          "he_pooled": 0.88445427757066,
+          "n_test": 45,
+          "pair": "CDD-06",
+          "rmse": 20.69395643789626,
+          "station": "USW00023232",
+          "status": "evaluated",
+          "worst": 77.74944305419922
+        },
+        {
+          "es90_lower": -31.15539131164551,
+          "es90_upper": 48.910430908203125,
+          "fips": "13063",
+          "he_pooled": 0.796585579456729,
+          "n_test": 46,
+          "pair": "CDD-06",
+          "rmse": 25.123538755871177,
+          "station": "USW00013874",
+          "status": "evaluated",
+          "worst": 72.99021911621094
+        },
+        {
+          "es90_lower": -30.552898406982422,
+          "es90_upper": 31.89545097351074,
+          "fips": "17043",
+          "he_pooled": 0.8813788573036879,
+          "n_test": 46,
+          "pair": "CDD-06",
+          "rmse": 17.666425838730454,
+          "station": "USW00094846",
+          "status": "evaluated",
+          "worst": 44.40766525268555
+        },
+        {
+          "es90_lower": -21.060760498046875,
+          "es90_upper": 24.45624237060547,
+          "fips": "21015",
+          "he_pooled": 0.9195521248507701,
+          "n_test": 46,
+          "pair": "CDD-06",
+          "rmse": 13.715493797316855,
+          "station": "USW00093814",
+          "status": "evaluated",
+          "worst": 29.498294830322266
+        },
+        {
+          "es90_lower": -17.31951026916504,
+          "es90_upper": 35.862158584594724,
+          "fips": "25025",
+          "he_pooled": 0.8266618431127302,
+          "n_test": 46,
+          "pair": "CDD-06",
+          "rmse": 16.444452066460236,
+          "station": "USW00014739",
+          "status": "evaluated",
+          "worst": 52.31627655029297
+        },
+        {
+          "es90_lower": -32.112483215332034,
+          "es90_upper": 12.415176677703858,
+          "fips": "27053",
+          "he_pooled": 0.922868516516141,
+          "n_test": 46,
+          "pair": "CDD-06",
+          "rmse": 15.774433192260759,
+          "station": "USW00014922",
+          "status": "evaluated",
+          "worst": 34.60425567626953
+        },
+        {
+          "es90_lower": -40.49178009033203,
+          "es90_upper": 24.034779357910157,
+          "fips": "32003",
+          "he_pooled": 0.931291282578102,
+          "n_test": 46,
+          "pair": "CDD-06",
+          "rmse": 21.859049212617826,
+          "station": "USW00023169",
+          "status": "evaluated",
+          "worst": 48.41761779785156
+        },
+        {
+          "es90_lower": -32.93055763244629,
+          "es90_upper": 32.69186630249023,
+          "fips": "36081",
+          "he_pooled": 0.8067889394396002,
+          "n_test": 46,
+          "pair": "CDD-06",
+          "rmse": 19.016288554451304,
+          "station": "USW00014732",
+          "status": "evaluated",
+          "worst": 52.85082244873047
+        },
+        {
+          "es90_lower": -11.064295959472656,
+          "es90_upper": 16.62890796661377,
+          "fips": "41051",
+          "he_pooled": 0.9267583070089657,
+          "n_test": 46,
+          "pair": "CDD-06",
+          "rmse": 7.686223580914188,
+          "station": "USW00024229",
+          "status": "evaluated",
+          "worst": 23.119937896728516
+        },
+        {
+          "es90_lower": -35.91248817443848,
+          "es90_upper": 27.433654022216796,
+          "fips": "42045",
+          "he_pooled": 0.8169076839504553,
+          "n_test": 46,
+          "pair": "CDD-06",
+          "rmse": 18.696557772172486,
+          "station": "USW00013739",
+          "status": "evaluated",
+          "worst": 44.466487884521484
+        },
+        {
+          "es90_lower": -26.038894844055175,
+          "es90_upper": 35.95969467163086,
+          "fips": "48113",
+          "he_pooled": 0.9035404871701214,
+          "n_test": 46,
+          "pair": "CDD-06",
+          "rmse": 19.779563962861026,
+          "station": "USW00003927",
+          "status": "evaluated",
+          "worst": 44.351707458496094
+        },
+        {
+          "es90_lower": -11.23794412612915,
+          "es90_upper": 53.71319103240967,
+          "fips": "48201",
+          "he_pooled": 0.7181877353510974,
+          "n_test": 38,
+          "pair": "CDD-06",
+          "rmse": 22.106747798006026,
+          "station": "USW00012960",
+          "status": "evaluated",
+          "worst": 59.95368957519531
+        }
+      ]
+    },
+    {
+      "atlas_run_id": "atlas-df45780d6e91803d",
+      "best_ne_nearest_share": 0.5027357579658834,
+      "bootstrap_B": 1000,
+      "config_hash": "df45780d6e91803d",
+      "git_commit": "2b709e63f4b3b8af5a4f0e99f207eab4d8f0b861",
+      "n_counties": 3107,
+      "n_stations_effective": 13,
+      "n_test_seasons_max": 45,
+      "n_test_seasons_min": 0,
+      "no_hedge_share_counties": 0.4757000321853878,
+      "no_hedge_share_population": 0.41072793803967006,
+      "no_stable_proxy_share": 0.26810428065658193,
+      "pair": "CDD-08",
+      "seed": 20260901,
+      "switch_gain_he_median": -0.06344416654334267,
+      "threshold_shares": {
+        "0.25": {
+          "counties": 0.797875764402961,
+          "population": 0.7715529997828942
+        },
+        "0.50": {
+          "counties": 0.5345992919214676,
+          "population": 0.6037858346685897
+        },
+        "0.75": {
+          "counties": 0.14515609913099453,
+          "population": 0.2331605490234769
+        }
+      },
+      "zero_distance": [
+        {
+          "es90_lower": -31.497270584106445,
+          "es90_upper": 27.30091094970703,
+          "fips": "06037",
+          "he_pooled": 0.7519625794747672,
+          "n_test": 8,
+          "pair": "CDD-08",
+          "rmse": 20.972091941439135,
+          "station": "USW00023152",
+          "status": "evaluated",
+          "worst": 31.497270584106445
+        },
+        {
+          "es90_lower": -19.818261337280273,
+          "es90_upper": 48.97680816650391,
+          "fips": "06067",
+          "he_pooled": 0.7763784619080905,
+          "n_test": 45,
+          "pair": "CDD-08",
+          "rmse": 23.42047625499887,
+          "station": "USW00023232",
+          "status": "evaluated",
+          "worst": 73.30908966064453
+        },
+        {
+          "es90_lower": -33.90798377990723,
+          "es90_upper": 47.1824836730957,
+          "fips": "13063",
+          "he_pooled": 0.8189826703847969,
+          "n_test": 45,
+          "pair": "CDD-08",
+          "rmse": 24.15829089752032,
+          "station": "USW00013874",
+          "status": "evaluated",
+          "worst": 56.93387222290039
+        },
+        {
+          "es90_lower": -42.90484504699707,
+          "es90_upper": 55.64087753295898,
+          "fips": "17043",
+          "he_pooled": 0.8160680578732697,
+          "n_test": 45,
+          "pair": "CDD-08",
+          "rmse": 29.196301673164054,
+          "station": "USW00094846",
+          "status": "evaluated",
+          "worst": 74.70097351074219
+        },
+        {
+          "es90_lower": -26.694948577880858,
+          "es90_upper": 18.16151714324951,
+          "fips": "21015",
+          "he_pooled": 0.9559110331056926,
+          "n_test": 45,
+          "pair": "CDD-08",
+          "rmse": 14.876869053967184,
+          "station": "USW00093814",
+          "status": "evaluated",
+          "worst": 33.591270446777344
+        },
+        {
+          "es90_lower": -27.500611877441408,
+          "es90_upper": 40.28627166748047,
+          "fips": "25025",
+          "he_pooled": 0.8675376454349571,
+          "n_test": 45,
+          "pair": "CDD-08",
+          "rmse": 21.050647093922674,
+          "station": "USW00014739",
+          "status": "evaluated",
+          "worst": 47.17685317993164
+        },
+        {
+          "es90_lower": -33.20036010742187,
+          "es90_upper": 16.72292766571045,
+          "fips": "27053",
+          "he_pooled": 0.9121832140939713,
+          "n_test": 45,
+          "pair": "CDD-08",
+          "rmse": 17.207885832565445,
+          "station": "USW00014922",
+          "status": "evaluated",
+          "worst": 39.11458206176758
+        },
+        {
+          "es90_lower": -37.73582992553711,
+          "es90_upper": 22.72932357788086,
+          "fips": "32003",
+          "he_pooled": 0.8693000527363078,
+          "n_test": 45,
+          "pair": "CDD-08",
+          "rmse": 19.171535923138453,
+          "station": "USW00023169",
+          "status": "evaluated",
+          "worst": 42.70167922973633
+        },
+        {
+          "es90_lower": -50.249585723876955,
+          "es90_upper": 23.185815048217773,
+          "fips": "36081",
+          "he_pooled": 0.8114098320480532,
+          "n_test": 45,
+          "pair": "CDD-08",
+          "rmse": 24.991214766573403,
+          "station": "USW00014732",
+          "status": "evaluated",
+          "worst": 71.95709991455078
+        },
+        {
+          "es90_lower": -25.079140853881835,
+          "es90_upper": 28.576618194580078,
+          "fips": "41051",
+          "he_pooled": 0.7867846825591982,
+          "n_test": 45,
+          "pair": "CDD-08",
+          "rmse": 16.28072588991393,
+          "station": "USW00024229",
+          "status": "evaluated",
+          "worst": 34.243263244628906
+        },
+        {
+          "es90_lower": -24.777024459838866,
+          "es90_upper": 48.00221176147461,
+          "fips": "42045",
+          "he_pooled": 0.8419755289117099,
+          "n_test": 45,
+          "pair": "CDD-08",
+          "rmse": 24.744536629784466,
+          "station": "USW00013739",
+          "status": "evaluated",
+          "worst": 57.22477340698242
+        },
+        {
+          "es90_lower": -33.77111587524414,
+          "es90_upper": 40.293768310546874,
+          "fips": "48113",
+          "he_pooled": 0.914196660405445,
+          "n_test": 45,
+          "pair": "CDD-08",
+          "rmse": 22.85361940380056,
+          "station": "USW00003927",
+          "status": "evaluated",
+          "worst": 51.36829376220703
+        },
+        {
+          "es90_lower": -21.997994899749756,
+          "es90_upper": 42.24631118774414,
+          "fips": "48201",
+          "he_pooled": 0.8281711974967197,
+          "n_test": 37,
+          "pair": "CDD-08",
+          "rmse": 20.43582211683548,
+          "station": "USW00012960",
+          "status": "evaluated",
+          "worst": 60.059295654296875
+        }
+      ]
+    },
+    {
+      "atlas_run_id": "atlas-df45780d6e91803d",
+      "best_ne_nearest_share": 0.4151915030576118,
+      "bootstrap_B": 1000,
+      "config_hash": "df45780d6e91803d",
+      "git_commit": "2b709e63f4b3b8af5a4f0e99f207eab4d8f0b861",
+      "n_counties": 3107,
+      "n_stations_effective": 13,
+      "n_test_seasons_max": 45,
+      "n_test_seasons_min": 0,
+      "no_hedge_share_counties": 0.6147409076279369,
+      "no_hedge_share_population": 0.5266560477780449,
+      "no_stable_proxy_share": 0.20212423559703893,
+      "pair": "CDD-09",
+      "seed": 20260901,
+      "switch_gain_he_median": -0.0482279174977312,
+      "threshold_shares": {
+        "0.25": {
+          "counties": 0.8094625040231734,
+          "population": 0.8384227338292165
+        },
+        "0.50": {
+          "counties": 0.42742195043450276,
+          "population": 0.5193061121559491
+        },
+        "0.75": {
+          "counties": 0.0823945928548439,
+          "population": 0.15999871731575
+        }
+      },
+      "zero_distance": [
+        {
+          "es90_lower": -70.40505981445312,
+          "es90_upper": 59.07789611816406,
+          "fips": "06037",
+          "he_pooled": 0.61250346554484,
+          "n_test": 8,
+          "pair": "CDD-09",
+          "rmse": 43.99681919228299,
+          "station": "USW00023152",
+          "status": "evaluated",
+          "worst": 70.40505981445312
+        },
+        {
+          "es90_lower": -32.04581565856934,
+          "es90_upper": 35.279410934448244,
+          "fips": "06067",
+          "he_pooled": 0.8609838562001224,
+          "n_test": 45,
+          "pair": "CDD-09",
+          "rmse": 20.16365837818841,
+          "station": "USW00023232",
+          "status": "evaluated",
+          "worst": 56.05139923095703
+        },
+        {
+          "es90_lower": -27.260420989990234,
+          "es90_upper": 32.7549015045166,
+          "fips": "13063",
+          "he_pooled": 0.9035841718201922,
+          "n_test": 45,
+          "pair": "CDD-09",
+          "rmse": 18.091947375350625,
+          "station": "USW00013874",
+          "status": "evaluated",
+          "worst": 50.453189849853516
+        },
+        {
+          "es90_lower": -32.71591987609863,
+          "es90_upper": 18.407145309448243,
+          "fips": "17043",
+          "he_pooled": 0.810434114053725,
+          "n_test": 45,
+          "pair": "CDD-09",
+          "rmse": 15.859304784676292,
+          "station": "USW00094846",
+          "status": "evaluated",
+          "worst": 46.576480865478516
+        },
+        {
+          "es90_lower": -13.843816566467286,
+          "es90_upper": 11.500066566467286,
+          "fips": "21015",
+          "he_pooled": 0.9764134200315314,
+          "n_test": 45,
+          "pair": "CDD-09",
+          "rmse": 7.677738579000374,
+          "station": "USW00093814",
+          "status": "evaluated",
+          "worst": 18.46504783630371
+        },
+        {
+          "es90_lower": -27.426275062561036,
+          "es90_upper": 24.277860641479492,
+          "fips": "25025",
+          "he_pooled": 0.7566432835160257,
+          "n_test": 45,
+          "pair": "CDD-09",
+          "rmse": 15.741891670748261,
+          "station": "USW00014739",
+          "status": "evaluated",
+          "worst": 40.28023910522461
+        },
+        {
+          "es90_lower": -16.077743530273438,
+          "es90_upper": 10.79715051651001,
+          "fips": "27053",
+          "he_pooled": 0.9260147931251009,
+          "n_test": 45,
+          "pair": "CDD-09",
+          "rmse": 8.192634011834164,
+          "station": "USW00014922",
+          "status": "evaluated",
+          "worst": 20.157642364501953
+        },
+        {
+          "es90_lower": -36.17416152954102,
+          "es90_upper": 20.31483860015869,
+          "fips": "32003",
+          "he_pooled": 0.8975966659105437,
+          "n_test": 45,
+          "pair": "CDD-09",
+          "rmse": 18.956265132533485,
+          "station": "USW00023169",
+          "status": "evaluated",
+          "worst": 57.38796615600586
+        },
+        {
+          "es90_lower": -27.23358497619629,
+          "es90_upper": 26.45006694793701,
+          "fips": "36081",
+          "he_pooled": 0.8181477760572629,
+          "n_test": 45,
+          "pair": "CDD-09",
+          "rmse": 16.49981147383627,
+          "station": "USW00014732",
+          "status": "evaluated",
+          "worst": 42.96165084838867
+        },
+        {
+          "es90_lower": -15.350844764709473,
+          "es90_upper": 17.07870864868164,
+          "fips": "41051",
+          "he_pooled": 0.7988808722575358,
+          "n_test": 45,
+          "pair": "CDD-09",
+          "rmse": 9.43081625405803,
+          "station": "USW00024229",
+          "status": "evaluated",
+          "worst": 22.650304794311523
+        },
+        {
+          "es90_lower": -22.638886642456054,
+          "es90_upper": 32.41676254272461,
+          "fips": "42045",
+          "he_pooled": 0.81285659960709,
+          "n_test": 45,
+          "pair": "CDD-09",
+          "rmse": 18.49468340723288,
+          "station": "USW00013739",
+          "status": "evaluated",
+          "worst": 38.896976470947266
+        },
+        {
+          "es90_lower": -37.015673828125,
+          "es90_upper": 29.557902526855468,
+          "fips": "48113",
+          "he_pooled": 0.9196311178077186,
+          "n_test": 45,
+          "pair": "CDD-09",
+          "rmse": 20.031098356235894,
+          "station": "USW00003927",
+          "status": "evaluated",
+          "worst": 66.93207550048828
+        },
+        {
+          "es90_lower": -11.736594676971436,
+          "es90_upper": 48.849080085754395,
+          "fips": "48201",
+          "he_pooled": 0.7792802465933584,
+          "n_test": 37,
+          "pair": "CDD-09",
+          "rmse": 23.26329796223612,
+          "station": "USW00012960",
+          "status": "evaluated",
+          "worst": 61.761756896972656
+        }
+      ]
+    },
+    {
+      "atlas_run_id": "atlas-df45780d6e91803d",
+      "best_ne_nearest_share": 0.35822336659156745,
+      "bootstrap_B": 1000,
+      "config_hash": "df45780d6e91803d",
+      "git_commit": "2b709e63f4b3b8af5a4f0e99f207eab4d8f0b861",
+      "n_counties": 3107,
+      "n_stations_effective": 13,
+      "n_test_seasons_max": 45,
+      "n_test_seasons_min": 0,
+      "no_hedge_share_counties": 0.6385580946250402,
+      "no_hedge_share_population": 0.4510041415001754,
+      "no_stable_proxy_share": 0.16253620856131315,
+      "pair": "CDD-10",
+      "seed": 20260901,
+      "switch_gain_he_median": -0.05555042717806136,
+      "threshold_shares": {
+        "0.25": {
+          "counties": 0.7454135822336659,
+          "population": 0.805436983938039
+        },
+        "0.50": {
+          "counties": 0.4145477953009334,
+          "population": 0.5778881451051133
+        },
+        "0.75": {
+          "counties": 0.0965561635017702,
+          "population": 0.24890890532236984
+        }
+      },
+      "zero_distance": [
+        {
+          "es90_lower": -19.11933135986328,
+          "es90_upper": 69.083984375,
+          "fips": "06037",
+          "he_pooled": 0.6135315115081732,
+          "n_test": 7,
+          "pair": "CDD-10",
+          "rmse": 32.42584739336913,
+          "station": "USW00023152",
+          "status": "evaluated",
+          "worst": 69.083984375
+        },
+        {
+          "es90_lower": -17.52477111816406,
+          "es90_upper": 18.873228454589842,
+          "fips": "06067",
+          "he_pooled": 0.9469176027356251,
+          "n_test": 43,
+          "pair": "CDD-10",
+          "rmse": 11.387962038241263,
+          "station": "USW00023232",
+          "status": "evaluated",
+          "worst": 26.775697708129883
+        },
+        {
+          "es90_lower": -19.908918571472167,
+          "es90_upper": 22.325448989868164,
+          "fips": "13063",
+          "he_pooled": 0.8733045350976502,
+          "n_test": 45,
+          "pair": "CDD-10",
+          "rmse": 12.702938920476758,
+          "station": "USW00013874",
+          "status": "evaluated",
+          "worst": 28.26246452331543
+        },
+        {
+          "es90_lower": -7.141978073120117,
+          "es90_upper": 9.980888175964356,
+          "fips": "17043",
+          "he_pooled": 0.8717058769915158,
+          "n_test": 45,
+          "pair": "CDD-10",
+          "rmse": 4.901676619290176,
+          "station": "USW00094846",
+          "status": "evaluated",
+          "worst": 18.943225860595703
+        },
+        {
+          "es90_lower": -8.752293682098388,
+          "es90_upper": 9.216864013671875,
+          "fips": "21015",
+          "he_pooled": 0.9414460435945592,
+          "n_test": 45,
+          "pair": "CDD-10",
+          "rmse": 5.453682172801354,
+          "station": "USW00093814",
+          "status": "evaluated",
+          "worst": 14.796996116638184
+        },
+        {
+          "es90_lower": -3.848502254486084,
+          "es90_upper": 8.01741533279419,
+          "fips": "25025",
+          "he_pooled": 0.6253007170592721,
+          "n_test": 45,
+          "pair": "CDD-10",
+          "rmse": 3.347748366913812,
+          "station": "USW00014739",
+          "status": "evaluated",
+          "worst": 10.051351547241211
+        },
+        {
+          "es90_lower": -3.572147846221924,
+          "es90_upper": 9.491671514511108,
+          "fips": "27053",
+          "he_pooled": 0.8414094197617964,
+          "n_test": 45,
+          "pair": "CDD-10",
+          "rmse": 4.1019755777767,
+          "station": "USW00014922",
+          "status": "evaluated",
+          "worst": 18.811918258666992
+        },
+        {
+          "es90_lower": -39.604505157470705,
+          "es90_upper": 26.527568435668947,
+          "fips": "32003",
+          "he_pooled": 0.9034456785618721,
+          "n_test": 45,
+          "pair": "CDD-10",
+          "rmse": 19.698300031292078,
+          "station": "USW00023169",
+          "status": "evaluated",
+          "worst": 43.367977142333984
+        },
+        {
+          "es90_lower": -9.056194686889649,
+          "es90_upper": 12.270321273803711,
+          "fips": "36081",
+          "he_pooled": 0.8809006038036871,
+          "n_test": 45,
+          "pair": "CDD-10",
+          "rmse": 6.007785997762521,
+          "station": "USW00014732",
+          "status": "evaluated",
+          "worst": 18.580881118774414
+        },
+        {
+          "es90_lower": -1.7778035998344421,
+          "es90_upper": 2.4101014137268066,
+          "fips": "41051",
+          "he_pooled": 0.7530806530758642,
+          "n_test": 45,
+          "pair": "CDD-10",
+          "rmse": 1.2538074317384016,
+          "station": "USW00024229",
+          "status": "evaluated",
+          "worst": 5.435626029968262
+        },
+        {
+          "es90_lower": -6.142877197265625,
+          "es90_upper": 15.606346321105956,
+          "fips": "42045",
+          "he_pooled": 0.905259081157747,
+          "n_test": 45,
+          "pair": "CDD-10",
+          "rmse": 6.2584478285449645,
+          "station": "USW00013739",
+          "status": "evaluated",
+          "worst": 18.775859832763672
+        },
+        {
+          "es90_lower": -26.054961013793946,
+          "es90_upper": 28.24222526550293,
+          "fips": "48113",
+          "he_pooled": 0.8952352955415674,
+          "n_test": 45,
+          "pair": "CDD-10",
+          "rmse": 14.899553484464223,
+          "station": "USW00003927",
+          "status": "evaluated",
+          "worst": 45.45081329345703
+        },
+        {
+          "es90_lower": -6.696460604667664,
+          "es90_upper": 31.279696941375732,
+          "fips": "48201",
+          "he_pooled": 0.8750025882837735,
+          "n_test": 37,
+          "pair": "CDD-10",
+          "rmse": 16.959372445970313,
+          "station": "USW00012960",
+          "status": "evaluated",
+          "worst": 33.590641021728516
+        }
+      ]
+    }
+  ],
+  "seed": 20260901
+}

@@ -1,0 +1,112 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>Model card · Weather Basis Atlas</title><link rel="stylesheet" href="assets/static/site.css"><style>@media(max-width:760px){.masthead{grid-template-columns:1fr}.masthead nav{flex-wrap:wrap;margin-top:.8rem}.map-stage{width:100vw}}</style></head><body><a class="skip" href="#main">Skip to content</a><header class="masthead"><a class="wordmark" href="index.html">Weather<br><em>Basis Atlas</em></a><nav aria-label="Primary"><a href="index.html">Atlas</a><a href="methodology.html">Method</a><a href="model_card.html">Model card</a><a href="about.html">Provenance</a><a href="nebraska.html">Nebraska</a></nav><span class="issue">research instrument / v1</span></header><main id="main"><article class="reading"><h1>Model card</h1><h1>Model card</h1>
+<h2>Intended use</h2>
+<p>Weather Basis Atlas is a historical basis-risk research tool. It compares a
+county degree-day exposure with weather-station degree-day indexes under a
+rolling, out-of-sample protocol. The accompanying distribution and quote
+panels are climatological model indications at a fixed valuation convention.
+They are intended to make model assumptions inspectable, not to provide a
+market price.</p>
+<h2>Primary claims</h2>
+<p>The atlas estimates historical terminal-payoff hedge performance for the
+specified county and station index definitions. It reports a point-in-time
+proxy choice, a nearest-station comparison, bootstrap uncertainty, and
+diagnostic confidence flags. The predictive workflow reports distributional
+diagnostics by state-month unit and retains a shared-innovation joint stream
+for the county and station series used in pricing.</p>
+<p>The release tables in <code>results/atlas/</code>, <code>results/tournament/</code>,
+<code>results/models/</code>, and <code>results/quotes/</code> are the authoritative results. The
+site and README must render any numerical conclusion from those files and their
+stage manifests.</p>
+<h2>What it does not claim</h2>
+<p>This work does not reproduce CME prices, Speedwell settlement values, order
+book liquidity, or a live forecast. It does not establish causality, provide
+insurance, recommend a hedge, make a per-county statistical-significance claim,
+or predict future hedge performance. A station's inclusion in the index
+universe is not evidence that a historical contract was tradable on every
+evaluated date.</p>
+<h2>Data and target construction</h2>
+<p>County daily temperatures come from a frozen nClimGrid-Daily TAVG vintage.
+Station daily temperatures come from frozen GHCN-Daily station snapshots and
+are transformed to the public index convention. A station day with an absent
+or quality-flagged maximum or minimum is missing. Runs of at most two missing
+days may be linearly filled and then rounded to integer Fahrenheit before the
+daily mean is formed; a station-month with more than the project threshold of
+missing days, or a longer gap, is excluded. This is a project convention, not
+an exchange rule.</p>
+<p>The county panel is a gridded and homogenized product. Its scaled daily files
+are regenerated upstream; therefore a small look-ahead in level and trend is
+unavoidable when those fields are used at historical tournament origins. The
+point-in-time convention documents this limitation explicitly. Auxiliary TMAX
+and TMIN diagnostics are limited to their verified common-vintage window; the
+vintage-drift decision record explains the exclusion outside that window.</p>
+<p>GHCN-Daily observations can include recent real-time feeds that are later
+replaced in the archive. Recent provisional station months are excluded from
+test-season scoring. Station coverage differs materially across locations;
+the short-record rule is pre-registered and remains visible in payloads and
+site labels.</p>
+<h2>Method and validation</h2>
+<p>County and station anomalies use strictly prior seasons. Hedge ratios are fit
+only on preceding observations, while the reported residual is held out. The
+point-in-time selection sequence is frozen before that residual is assessed.
+Bootstrap resampling holds the selection sequence fixed.</p>
+<p>The model ladder contains an empirical burn benchmark, a trend-plus-censored
+innovation model, and a daily seasonal model. Tournament comparisons aggregate
+CRPS at the state-month inference unit, use origin-block uncertainty, and do
+not elevate individual county cells to hypothesis tests. The selected marginal
+rung is diagnostic only: public distribution and quote payloads come from the
+same joint R2j site run.</p>
+<p>The current historical tournament implementation evaluates its R2 and R2j
+rungs with an annual-index residual fallback at each origin; the calibration
+table labels this basis explicitly. It does not claim to be the full daily R2
+refit at every historical origin. The production site simulation and pricing
+path does perform the registered daily R2 fit and shared-innovation R2j
+simulation, and its calibration rows are labelled
+<code>daily_R2_standardized_innovation</code>.</p>
+<p>The release should report its selected-rung table, joint diagnostic,
+calibration diagnostics, sensitivity runs, and pre-registered power statement
+from the corresponding result files. Missing or failed diagnostics must be
+shown as such; they must never be substituted with narrative estimates.</p>
+<h2>Pricing boundary</h2>
+<p>Option mids are expected payoffs under simulated county index draws. Bid and
+ask indications include documented residual-risk, model-uncertainty, and
+friction components. A displayed no-bid state means the modelled loaded buyer
+value is non-positive; it is not a quote refusal by any market participant.
+Strike interpolation in the explorer is labelled as interpolation between
+precomputed points.</p>
+<h2>Known limitations</h2>
+<ul>
+<li>The county temperature layer has the homogenization and vintage look-ahead
+described above; it is not a historical real-time operational feed.</li>
+<li>GHCN-Daily has reporting gaps, quality flags, station changes, and archive
+lag. The quality-control rule reduces but cannot erase those issues.</li>
+<li>County exposure is an area-average temperature index, which can differ from
+a policyholder, crop, facility, or settlement location exposure.</li>
+<li>The analysis is historical and climatological. It omits live weather
+forecasts, financing, transaction constraints beyond the stated convention,
+and actual market microstructure.</li>
+<li>The model is evaluated on finite historical samples. Bootstrap intervals and
+diagnostics describe that procedure's sampling variation, not a guarantee.</li>
+</ul>
+<h2>Release diagnostics</h2>
+<p>Selected state-contract units — R0: 661, R1: 25.</p>
+<p>Aligned R2j scenarios beat independently paired marginals in 243 of 252 diagnostics; mean CRPS was 10.478 versus 24.031.</p>
+<p>Daily calibration mean(z²) ranges from 1.000000 to 1.000000 across 3,120 series. The 80% minimum detectable skill estimate is 37.6%.</p>
+<p>The one-time 2023–2025 holdout confirmation below did not enter model selection:</p>
+<ul>
+<li>HDD-10: 9,321 cells; selected CRPS 41.073; R0 CRPS 41.208; skill vs R0 0.33%.</li>
+<li>HDD-11: 9,321 cells; selected CRPS 51.425; R0 CRPS 51.425; skill vs R0 0.00%.</li>
+<li>HDD-12: 9,321 cells; selected CRPS 83.150; R0 CRPS 83.150; skill vs R0 0.00%.</li>
+<li>HDD-01: 9,321 cells; selected CRPS 86.889; R0 CRPS 86.889; skill vs R0 0.00%.</li>
+<li>HDD-02: 9,321 cells; selected CRPS 86.960; R0 CRPS 86.960; skill vs R0 0.00%.</li>
+<li>HDD-03: 9,321 cells; selected CRPS 66.817; R0 CRPS 66.817; skill vs R0 0.00%.</li>
+<li>HDD-04: 9,321 cells; selected CRPS 30.736; R0 CRPS 30.736; skill vs R0 0.00%.</li>
+<li>CDD-04: 9,321 cells; selected CRPS 11.900; R0 CRPS 12.036; skill vs R0 1.13%.</li>
+<li>CDD-05: 9,321 cells; selected CRPS 19.690; R0 CRPS 19.690; skill vs R0 0.00%.</li>
+<li>CDD-06: 9,321 cells; selected CRPS 31.991; R0 CRPS 31.898; skill vs R0 -0.29%.</li>
+<li>CDD-07: 9,321 cells; selected CRPS 31.043; R0 CRPS 31.149; skill vs R0 0.34%.</li>
+<li>CDD-08: 9,321 cells; selected CRPS 28.811; R0 CRPS 29.296; skill vs R0 1.66%.</li>
+<li>CDD-09: 9,321 cells; selected CRPS 21.879; R0 CRPS 21.595; skill vs R0 -1.32%.</li>
+<li>CDD-10: 9,321 cells; selected CRPS 16.568; R0 CRPS 18.500; skill vs R0 10.44%.</li>
+</ul>
+<p>Sources: <code>results/tournament/{selection,calibration,joint_check}.parquet</code>, <code>holdout_check.json</code>, and <code>power.json</code>.</p>
+</article></main><footer>Research and education only · Model estimates, not executable quotes or advice.</footer></body></html>

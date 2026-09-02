@@ -1,0 +1,1 @@
+{"alpha_one_sided": 0.1, "method": "Monte Carlo paired-origin mean CRPS difference under equal-skill null", "minimum_detectable_skill_80": 0.376, "n_origins": 32, "power": 0.8, "seed": 20260901}

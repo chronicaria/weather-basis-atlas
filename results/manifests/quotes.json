@@ -1,0 +1,37 @@
+{
+  "config_hash": "df45780d6e91803d",
+  "created_utc": "2026-09-02T18:24:11.667877+00:00",
+  "extra": {
+    "allow_dirty": false
+  },
+  "geography_vintage": "us-atlas@3",
+  "git_commit": "87182504a57cd489a5d5c389f21d099fe430698d",
+  "holdout_unlocked": false,
+  "paths_in": [
+    "results/atlas",
+    "results/draws/R2j_aligned"
+  ],
+  "paths_out": [
+    "results/quotes/coherence.json",
+    "results/quotes/quotes.parquet"
+  ],
+  "prereg_sha256": "2b17ce6504cfe3c8178c2a7f5a09fd1b809c54cf000e904d32899b10e1e18bb1",
+  "run_id": "quotes-df45780d6e91803d",
+  "seed": 20260901,
+  "sha256_out": {
+    "results/quotes/coherence.json": "d36b19dc267d14c1ae1cff8e1c2e83e1d595176d24f8b5f8be0d23aa6481cec7",
+    "results/quotes/quotes.parquet": "67f85908e6d07f2d9fbcc3864eb9fa5c22c987a5f6c67b5e94daea6f630d58dd"
+  },
+  "stage": "quotes",
+  "vintages": {
+    "gazetteer": "census_2020",
+    "geography": "us-atlas@3",
+    "ghcnd": "ghcnd_snap2026-09-02",
+    "ghcnd_meta": "ghcnd_meta_snap2026-09-02",
+    "homr": "homr_snap2026-09-02",
+    "nclimgrid_tavg": "nclimgrid-daily_v1-0-0_snap2026-07-30",
+    "nclimgrid_tmax": "nclimgrid-daily_v1-0-0_snap2026-09-02",
+    "nclimgrid_tmin": "nclimgrid-daily_v1-0-0_snap2026-09-02",
+    "population": "co-est2021-alldata"
+  }
+}

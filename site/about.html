@@ -1,0 +1,48 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>Weather Basis Atlas</title><link rel="stylesheet" href="assets/static/site.css"><style>@media(max-width:760px){.masthead{grid-template-columns:1fr}.masthead nav{flex-wrap:wrap;margin-top:.8rem}.map-stage{width:100vw}}</style></head><body><a class="skip" href="#main">Skip to content</a><header class="masthead"><a class="wordmark" href="index.html">Weather<br><em>Basis Atlas</em></a><nav aria-label="Primary"><a href="index.html">Atlas</a><a href="methodology.html">Method</a><a href="model_card.html">Model card</a><a href="about.html">Provenance</a><a href="nebraska.html">Nebraska</a></nav><span class="issue">research instrument / v1</span></header><main id="main"><article class="reading"><p class="eyebrow">Audit trail</p><h1>Data, provenance, and interpretation</h1>
+<h2>Provenance</h2>
+<p>The county exposure layer is a frozen nClimGrid-Daily county TAVG vintage.
+Station inputs are frozen GHCN-Daily snapshots, with station metadata and
+change-event records from NOAA's station-history service. County names,
+internal-point centroids, and population weights use Census sources. The
+contract universe, calendar, and index conventions are kept in
+<code>data/contracts/</code>; the source manifest catalogue records URLs, retrieval
+metadata, and cryptographic digests.</p>
+<p>Every released calculation has a stage manifest with its input provenance,
+configuration identity, seed, software revision, and output files. Upstream
+sources that regenerate are not silently refreshed. The auxiliary-temperature
+vintage exclusion is documented in the decision record under <code>docs/decisions/</code>.</p>
+<p>County geometry and the input panel are reconciled explicitly. The one atlas
+geometry without an input county series remains visible as an exception rather
+than being imputed. Station-to-county assignments come from the Census
+geocoder; the saved assignment table is the authoritative record, including
+the recorded county for each station.</p>
+<h2>Project conventions</h2>
+<p>The station index is calculated from daily integer-F maximum and minimum
+temperatures. Quality-flagged values are treated as missing. Very short gaps
+may be filled by a documented interpolation rule; a materially incomplete
+month is excluded. These are project quality-control conventions and are not a
+claim about exchange settlement procedures.</p>
+<p>The atlas uses historical index quality, not a contemporaneous contract listing
+screen. Its selection sequence is point-in-time, but the gridded county layer
+has a documented homogenization look-ahead and station archives have a
+real-time-to-archive lag. See the model card for the implications and limits.</p>
+<h2>Model card</h2>
+<p>The model card explains intended use, claims and non-claims, data construction,
+model selection, pricing conventions, diagnostics, and known limitations. Its
+result-dependent diagnostics are read from release artifacts, not inferred
+from prose.</p>
+<h2>Market context</h2>
+<p>The contract-universe reference documents the listed U.S. weather stations and
+the dated product change reflected in this project. CME material describes
+weather contracts as primarily ClearPort block products. Contemporary
+third-party and exchange publications cited in the project source catalogue
+describe open-interest and volume context, while the dated weather bulletin
+record is retained as an observed screen-volume fact. These facts are context
+only: this project makes no liquidity, availability, execution, or price claim.</p>
+<h2>Disclaimer</h2>
+<p>Research and education only. Model outputs are not executable quotes, offers,
+insurance, investment advice, or a recommendation. The project is not
+affiliated with, endorsed by, or sponsored by CME Group or Speedwell/Xweather.
+Station names identify public NOAA stations only, and no exchange price data
+are reproduced.</p>
+<section class="notice"><h2>Interpretation boundary</h2><p>Station names identify public NOAA stations only. This project is not affiliated with, endorsed by, or sponsored by CME Group or Speedwell/Xweather, and reproduces no exchange price data.</p></section></article></main><footer>Research and education only · Model estimates, not executable quotes or advice.</footer></body></html>

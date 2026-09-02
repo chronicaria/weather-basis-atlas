@@ -1,0 +1,34 @@
+{
+  "assets": [
+    {
+      "name": "counties-albers-10m.json",
+      "sha256": "a674dfa31b625e92635f32684a61ae135b05a91507f17f2d5164833237fecf46",
+      "size": 795405,
+      "url": "https://cdn.jsdelivr.net/npm/us-atlas@3/counties-albers-10m.json"
+    },
+    {
+      "name": "d3.v7.9.0.min.js",
+      "sha256": "f2094bbf6141b359722c4fe454eb6c4b0f0e42cc10cc7af921fc158fceb86539",
+      "size": 279706,
+      "url": "https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"
+    },
+    {
+      "name": "katex/katex.min.css",
+      "sha256": "717bc9ae7853b61f0f76455dddf0ecd4f527a783f42de2ac24684899c1c46258",
+      "size": 23335,
+      "url": "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
+    },
+    {
+      "name": "katex/katex.min.js",
+      "sha256": "e6bfe5deebd4c7ccd272055bab63bd3ab2c73b907b6e6a22d352740a81381fd4",
+      "size": 275414,
+      "url": "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+    },
+    {
+      "name": "topojson-client.v3.1.0.min.js",
+      "sha256": "25cd02ae486cc5063e0215a4e4cfb15de83700c87ac48bac4d57dc6aaf3ebb89",
+      "size": 7169,
+      "url": "https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"
+    }
+  ]
+}

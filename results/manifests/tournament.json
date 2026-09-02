@@ -1,0 +1,73 @@
+{
+  "config_hash": "df45780d6e91803d",
+  "created_utc": "2026-09-02T18:44:48.556665+00:00",
+  "extra": {
+    "allow_dirty": false
+  },
+  "geography_vintage": "us-atlas@3",
+  "git_commit": "3dcaa7f5371a94c8046d58b03a6d9fea9b665538",
+  "holdout_unlocked": true,
+  "paths_in": [
+    "data/panel",
+    "results/indices"
+  ],
+  "paths_out": [
+    "results/tournament/calibration.parquet",
+    "results/tournament/calibration_by_origin.parquet",
+    "results/tournament/holdout_check.json",
+    "results/tournament/joint_check.parquet",
+    "results/tournament/power.json",
+    "results/tournament/scores/CDD-04.parquet",
+    "results/tournament/scores/CDD-05.parquet",
+    "results/tournament/scores/CDD-06.parquet",
+    "results/tournament/scores/CDD-07.parquet",
+    "results/tournament/scores/CDD-08.parquet",
+    "results/tournament/scores/CDD-09.parquet",
+    "results/tournament/scores/CDD-10.parquet",
+    "results/tournament/scores/HDD-01.parquet",
+    "results/tournament/scores/HDD-02.parquet",
+    "results/tournament/scores/HDD-03.parquet",
+    "results/tournament/scores/HDD-04.parquet",
+    "results/tournament/scores/HDD-10.parquet",
+    "results/tournament/scores/HDD-11.parquet",
+    "results/tournament/scores/HDD-12.parquet",
+    "results/tournament/selection.parquet"
+  ],
+  "prereg_sha256": "2b17ce6504cfe3c8178c2a7f5a09fd1b809c54cf000e904d32899b10e1e18bb1",
+  "run_id": "tournament-df45780d6e91803d",
+  "seed": 20260901,
+  "sha256_out": {
+    "results/tournament/calibration.parquet": "c6f802a3f21e874e6fdf7e94db6e9463a1e8ee3451f8af3acba94a33cf61e616",
+    "results/tournament/calibration_by_origin.parquet": "749c1167d3c8f6d65257d66521e0f3c188858907cc14c280bd3d18e09f744049",
+    "results/tournament/holdout_check.json": "b5d96c68503fc5691231129dbb193829a19734fb6604011fef55861e179ce486",
+    "results/tournament/joint_check.parquet": "cf7e61be3e4c52c9f026c8f09e2c31c6a8b6d6addeb0d3162b5988de18be3eab",
+    "results/tournament/power.json": "3601a384018d2d84f05c34367d5195a4e2cdbe9479a2d0ea2c3031be82113fb5",
+    "results/tournament/scores/CDD-04.parquet": "688d77a4d2de7eacf98ead4c64a05d59cbac406d1fafe47054c20fb0e955e3ac",
+    "results/tournament/scores/CDD-05.parquet": "b4e25996c51191a494680c18b821706f2c47c68975df8ecd6cd69224c25e4c36",
+    "results/tournament/scores/CDD-06.parquet": "f9cbab6665c67de19a5ff036f2ed3289ba040e4f0ed565afa9a59aa18a58772f",
+    "results/tournament/scores/CDD-07.parquet": "505f4eda240a5c4974610596f1710964942e52807c13d129aadb536d2dbadfd0",
+    "results/tournament/scores/CDD-08.parquet": "614c8a239ab26a5e377baad0546f74d1f38d3f5a278fcbc3ac8f2352417a37dd",
+    "results/tournament/scores/CDD-09.parquet": "7144e701e907b9f2a0861393f280aeec90cb14925a71c3aca7c96ace47b41787",
+    "results/tournament/scores/CDD-10.parquet": "771799f704002f22a72ee8a9eceb137e06e1744b6cf27092ce8a801d42aabdcc",
+    "results/tournament/scores/HDD-01.parquet": "674636881ce345bfe78af2ab564dfccbd4f51c27fa04cc2108c719a4a27ab48f",
+    "results/tournament/scores/HDD-02.parquet": "8fda924ebc01e3790df511533840d1705ed7c6e5d4ac15c5ec3667277975231f",
+    "results/tournament/scores/HDD-03.parquet": "b9a68165563ba19f4d965900ebc0d3bb43e55f43b79aa31be49511bd7d818301",
+    "results/tournament/scores/HDD-04.parquet": "08e9160a9217381bd896cea40237cb0942a7ad88ab59a1742c6521163fd210bd",
+    "results/tournament/scores/HDD-10.parquet": "49417ee2ad150d379c48155ad50d6c9941b9fcb27172e601af56afbb158c79c2",
+    "results/tournament/scores/HDD-11.parquet": "a5db14e64f9274b89df3657e0feaff5e56b9f041eef789889f6fdbd316039ec1",
+    "results/tournament/scores/HDD-12.parquet": "ae0a1e0d8d9232ecc8b904a40b4174d5f491b0ea08df78e77e0d90fc886dfcfd",
+    "results/tournament/selection.parquet": "038cd584d597e2e52eafe4aa6e75779f9b53314a27ef60cc5abc179992bbdea0"
+  },
+  "stage": "tournament",
+  "vintages": {
+    "gazetteer": "census_2020",
+    "geography": "us-atlas@3",
+    "ghcnd": "ghcnd_snap2026-09-02",
+    "ghcnd_meta": "ghcnd_meta_snap2026-09-02",
+    "homr": "homr_snap2026-09-02",
+    "nclimgrid_tavg": "nclimgrid-daily_v1-0-0_snap2026-07-30",
+    "nclimgrid_tmax": "nclimgrid-daily_v1-0-0_snap2026-09-02",
+    "nclimgrid_tmin": "nclimgrid-daily_v1-0-0_snap2026-09-02",
+    "population": "co-est2021-alldata"
+  }
+}
