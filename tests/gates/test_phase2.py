@@ -40,7 +40,12 @@ def test_phase2_county_hdd_january_panel_is_complete() -> None:
 def test_phase2_station_missingness_matches_qc_status() -> None:
     """Plan Section 10 Phase 2: only excluded, provisional, and pre-start rows have NaN indices."""
     qc = pd.read_parquet(ROOT / "data/panel/station_qc.parquet")
-    for path in sorted((ROOT / "results/indices").glob("station_*.parquet")):
+    monthly = [
+        path
+        for path in sorted((ROOT / "results/indices").glob("station_*.parquet"))
+        if path.stem.rsplit("-", 1)[1].isdigit()
+    ]
+    for path in monthly:
         panel = pd.read_parquet(path)
         month = int(path.stem.rsplit("-", 1)[1])
         month_qc = qc.loc[qc["month"] == month].rename(columns={"year": "season"})

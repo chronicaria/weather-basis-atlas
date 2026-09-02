@@ -11,11 +11,14 @@ from weather_basis.config import load_config
 from weather_basis.contracts.calendar import PAIRS
 from weather_basis.models.run import (
     _index_comparator_draws,
+    _joint_daily_draws,
+    _joint_diagnostic_summary,
     _pair_history,
     _score_frame,
     run_site_simulation,
     run_tournament,
 )
+from weather_basis.models.run_daily import _load_or_build_blocks, _subset_blocks
 
 
 def _fixture_root(tmp_path: Path) -> Path:
@@ -96,3 +99,36 @@ def test_vectorized_origin_draws_and_scores_are_seed_deterministic(tmp_path: Pat
     )
     assert len(frame) == 2 * 2
     assert frame["crps"].notna().all()
+
+
+def test_joint_daily_draws_share_a_seeded_daily_plan(tmp_path: Path) -> None:
+    """The rolling R2j primitive is daily and byte-repeatable for a shared seed."""
+    root = _fixture_root(tmp_path)
+    cfg = load_config(Path("config/defaults.yaml"), {"simulate": {"M_tournament": 13}})
+    values = np.load(root / "data/panel/tavg_f32.npy")
+    dates = np.load(root / "data/panel/dates.npy")
+    blocks = _subset_blocks(_load_or_build_blocks(root, cfg), np.array([0, 1]))
+    first, fit = _joint_daily_draws(
+        values, dates, blocks, PAIRS[0], 1991, 13, cfg, np.random.SeedSequence(271)
+    )
+    second, _ = _joint_daily_draws(
+        values, dates, blocks, PAIRS[0], 1991, 13, cfg, np.random.SeedSequence(271)
+    )
+    assert first.shape == (2, 13)
+    assert np.array_equal(first, second)
+    assert fit.z.shape[1] == 2
+
+
+def test_joint_diagnostic_uses_registered_pooled_and_exact_sign_criteria() -> None:
+    frame = pd.DataFrame(
+        {
+            "r2j_crps": [0.8] * 20,
+            "independent_r2_crps": [1.0] * 20,
+            "r2j_beats_independent": [True] * 20,
+        }
+    )
+    summary = _joint_diagnostic_summary(frame)
+    assert summary["mean_crps_improves"]
+    assert summary["sign_test_passes"]
+    assert summary["r2j_wins"] == 20
+    assert summary["n_rows"] == 20

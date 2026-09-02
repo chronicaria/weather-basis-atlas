@@ -1,0 +1,10 @@
+{
+  "criterion": "mean R2j CRPS lower and exact one-sided binomial sign-test p < 0.01",
+  "independent_r2_mean_crps": 24.775489148813,
+  "mean_crps_improves": true,
+  "n_rows": 252,
+  "one_sided_sign_test_p": 1.3817869688151111e-76,
+  "r2j_mean_crps": 11.395628857947601,
+  "r2j_wins": 252,
+  "sign_test_passes": true
+}

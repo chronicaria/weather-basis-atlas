@@ -21,6 +21,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 from scipy.special import gammaln
+from scipy.stats import binomtest
 
 from weather_basis.contracts.calendar import PAIRS, Pair
 
@@ -685,102 +686,291 @@ def _r0_draws_from_anomalies(
     return out
 
 
-def _joint_check_from_site_draws(
-    root: Path, values: np.ndarray, dates: np.ndarray, labels: np.ndarray, cfg: Any
-) -> Path | None:
-    """Score aligned R2j hedges against independently paired R2 marginals.
+def _joint_daily_draws(
+    panel: np.ndarray,
+    dates: np.ndarray,
+    blocks: Any,
+    pair: Pair,
+    origin: int,
+    M: int,
+    cfg: Any,
+    seed: np.random.SeedSequence,
+) -> tuple[np.ndarray, Any]:
+    """Daily R2j draws: one block plan shared by every included series."""
 
-    The independent comparator is a deterministic permutation of the station
-    marginal paths.  It preserves each modelled marginal exactly and removes
-    path alignment, which is precisely the zero-correlation comparator in
-    Section 7.6.  A failed row is retained as evidence rather than rounded or
-    overwritten: it is a joint-plan diagnostic, not a selection statistic.
-    """
-    atlas_path = root / "results" / "atlas" / "pairs.parquet"
-    registry_path = root / "data" / "metadata" / "station_registry.csv"
-    counties_path = root / "data" / "contracts" / "station_county.csv"
-    aligned_dir = root / "results" / "draws" / "R2j_aligned"
-    if not (
-        atlas_path.exists()
-        and registry_path.exists()
-        and counties_path.exists()
-        and aligned_dir.exists()
+    _, through, horizon, accumulate = _tournament_dates(pair, origin)
+    daily_panel = type("Panel", (), {"values": panel, "dates": dates})()
+    fit = _fit_site_daily(daily_panel, blocks, cfg, through)
+    history_dates = pd.DatetimeIndex(pd.to_datetime(dates))[fit.fit_mask]
+    target_day = int(pd.Timestamp(year=origin, month=pair.month, day=1).dayofyear)
+    distance = np.abs(((history_dates.dayofyear.to_numpy() - target_day + 182) % 365) - 182)
+    candidates = np.flatnonzero(distance <= int(_value(cfg, "simulate", "window_days", 45)))
+    candidates = candidates[np.all(np.isfinite(fit.z[candidates]), axis=1)]
+    if not candidates.size:
+        raise ValueError(f"no shared R2j candidate days for {pair.key} {origin}")
+    plan = _stationary_plan_indices(
+        np.random.default_rng(seed),
+        M=M,
+        n_days=len(horizon),
+        candidates=candidates,
+        mean_block=float(_value(cfg, "simulate", "mean_block", 7)),
+    )
+    mean = predict(fit.mean_coef, elapsed_days(horizon))
+    sigma = seasonal_sigma(fit.logvar, horizon.dayofyear.to_numpy())
+    residual_history = np.asarray(panel, dtype=float)[fit.fit_mask] - predict(
+        fit.mean_coef, elapsed_days(history_dates)
+    )
+    n_series = panel.shape[1]
+    max_p = fit.ar.coef.shape[1]
+    state = np.zeros((max_p, M, n_series), dtype=float)
+    for lag in range(max_p):
+        state[lag] = np.where(
+            np.isfinite(residual_history[-1 - lag]), residual_history[-1 - lag], 0
+        )
+    total = np.zeros((M, n_series), dtype=float)
+    columns = np.arange(n_series)
+    for day in range(len(horizon)):
+        innovation = fit.z[plan[:, day, None], columns[None, :]] * sigma[day][None, :]
+        residual = innovation + np.einsum("pmc,cp->mc", state, fit.ar.coef, optimize=True)
+        if max_p:
+            state[1:] = state[:-1]
+            state[0] = residual
+        if accumulate[day]:
+            temperature = mean[day][None, :] + residual
+            total += (
+                np.maximum(65.0 - temperature, 0.0)
+                if pair.index == "HDD"
+                else np.maximum(temperature - 65.0, 0.0)
+            )
+    return total.T.astype(np.float32), fit
+
+
+def _joint_diagnostic_summary(frame: pd.DataFrame) -> dict[str, float | int | bool | str]:
+    """Evaluate the registered pooled CRPS and exact one-sided sign test."""
+    wins = int(frame["r2j_beats_independent"].sum())
+    n = int(len(frame))
+    r2j_mean = float(frame["r2j_crps"].mean())
+    independent_mean = float(frame["independent_r2_crps"].mean())
+    p_value = float(binomtest(wins, n, 0.5, alternative="greater").pvalue)
+    return {
+        "n_rows": n,
+        "r2j_wins": wins,
+        "r2j_mean_crps": r2j_mean,
+        "independent_r2_mean_crps": independent_mean,
+        "one_sided_sign_test_p": p_value,
+        "mean_crps_improves": bool(r2j_mean < independent_mean),
+        "sign_test_passes": bool(p_value < 0.01),
+        "diagnostic": "pooled mean CRPS and exact one-sided binomial sign test",
+    }
+
+
+def _rolling_joint_check(root: Path, cfg: Any) -> Path | None:
+    """Registered rolling-origin daily R2j versus independent-R2 diagnostic."""
+
+    root = Path(root)
+    required = (
+        root / "data/panel/stations_tbar_f32.npy",
+        root / "data/panel/station_ids.npy",
+        root / "data/metadata/station_registry.csv",
+        root / "data/contracts/station_county.csv",
+    )
+    if not all(path.exists() for path in required):
+        return None  # Compact model fixtures intentionally omit station data.
+    counties = np.load(root / "data/panel/fips.npy", mmap_mode="r", allow_pickle=False).astype("U5")
+    county_values = np.load(root / "data/panel/tavg_f32.npy", mmap_mode="r", allow_pickle=False)
+    station_values = np.load(
+        root / "data/panel/stations_tbar_f32.npy", mmap_mode="r", allow_pickle=False
+    )
+    station_ids = np.load(
+        root / "data/panel/station_ids.npy", mmap_mode="r", allow_pickle=False
+    ).astype("U")
+    dates = np.load(root / "data/panel/dates.npy", mmap_mode="r", allow_pickle=False)
+    registry = pd.read_csv(root / "data/metadata/station_registry.csv", dtype={"ghcnd_id": str})
+    station_counties = pd.read_csv(
+        root / "data/contracts/station_county.csv", dtype={"ghcnd_id": str, "county_fips": str}
+    )
+    checks = registry.merge(
+        station_counties[["ghcnd_id", "county_fips"]], on="ghcnd_id", how="inner"
+    )
+    if len(checks) != 18:
+        raise ValueError("joint diagnostic requires all 18 registered locations")
+    fips_index = {str(item): i for i, item in enumerate(counties)}
+    station_index = {str(item): i for i, item in enumerate(station_ids)}
+    checks["county_fips"] = checks["county_fips"].astype(str).str.zfill(5)
+    if (
+        checks["county_fips"].map(fips_index.get).isna().any()
+        or checks["ghcnd_id"].map(station_index.get).isna().any()
     ):
-        return None
-    n_counties = _county_count(root)
-    registry = pd.read_csv(registry_path, dtype={"ghcnd_id": str})
-    county = pd.read_csv(counties_path, dtype={"ghcnd_id": str, "county_fips": str})
-    checks = registry.merge(county[["ghcnd_id", "county_fips"]], on="ghcnd_id", how="inner")
-    if checks.empty:
-        return None
-    index_by_label = {str(label): i for i, label in enumerate(labels)}
-    fips_by_label = {str(label): i for i, label in enumerate(labels[:n_counties])}
-    atlas = pd.read_parquet(atlas_path, columns=["pair", "fips", "station_pit", "h_pit"])
-    rows: list[dict[str, object]] = []
-    seed = np.random.SeedSequence(int(getattr(cfg, "seed", 20260901))).spawn(len(PAIRS))
-    for pair, child in zip(PAIRS, seed, strict=True):
-        path = aligned_dir / f"{pair.key}_site.npy"
-        if not path.exists():
-            continue
-        aligned = np.load(path, mmap_mode="r", allow_pickle=False)
-        seasons, history = _pair_history(values, dates, pair)
-        outcome_at = int(np.searchsorted(seasons, 2025))
-        if outcome_at >= seasons.size or seasons[outcome_at] != 2025:
-            continue
-        pair_atlas = atlas.loc[atlas["pair"].eq(pair.key)].set_index("fips")
-        rng = np.random.default_rng(child)
-        for item in checks.itertuples(index=False):
-            county_label, station_label = str(item.county_fips).zfill(5), str(item.ghcnd_id)
-            ci, si = fips_by_label.get(county_label), index_by_label.get(station_label)
-            if ci is None or si is None or county_label not in pair_atlas.index:
+        raise ValueError("joint diagnostic location is absent from the daily panel")
+    full_blocks = _load_or_build_blocks(root, cfg)
+    start, end = tuple(_value(cfg, "tournament", "origins", (1991, 2022)))
+    M = int(_value(cfg, "simulate", "M_tournament", 2000))
+    children = np.random.SeedSequence(int(getattr(cfg, "seed", 20260901))).spawn(
+        len(PAIRS) * (int(end) - int(start) + 1)
+    )
+    records: list[dict[str, object]] = []
+    child_at = 0
+    for pair in PAIRS:
+        county_positions = checks["county_fips"].map(fips_index).to_numpy(dtype=np.intp)
+        station_positions = checks["ghcnd_id"].map(station_index).to_numpy(dtype=np.intp)
+        pair_values = np.column_stack(
+            (county_values[:, county_positions], station_values[:, station_positions])
+        )
+        seasons, history = _pair_history(pair_values, dates, pair)
+        county_index = pd.read_parquet(
+            root / "results" / "indices" / f"county_{pair.key}.parquet",
+            columns=["fips", "season", "normal", "anomaly"],
+        )
+        county_index["fips"] = county_index["fips"].astype(str).str.zfill(5)
+        station_index_table = pd.read_parquet(
+            root / "results" / "indices" / f"station_{pair.key}.parquet",
+            columns=["ghcnd_id", "season", "normal", "anomaly"],
+        )
+        county_normals = (
+            county_index.loc[county_index["fips"].isin(checks["county_fips"])]
+            .pivot(index="season", columns="fips", values="normal")
+            .reindex(index=seasons, columns=checks["county_fips"])
+            .to_numpy(dtype=float)
+        )
+        county_anomalies = (
+            county_index.loc[county_index["fips"].isin(checks["county_fips"])]
+            .pivot(index="season", columns="fips", values="anomaly")
+            .reindex(index=seasons, columns=checks["county_fips"])
+            .to_numpy(dtype=float)
+        )
+        station_normals = (
+            station_index_table.loc[station_index_table["ghcnd_id"].isin(checks["ghcnd_id"])]
+            .pivot(index="season", columns="ghcnd_id", values="normal")
+            .reindex(index=seasons, columns=checks["ghcnd_id"])
+            .to_numpy(dtype=float)
+        )
+        station_anomalies = (
+            station_index_table.loc[station_index_table["ghcnd_id"].isin(checks["ghcnd_id"])]
+            .pivot(index="season", columns="ghcnd_id", values="anomaly")
+            .reindex(index=seasons, columns=checks["ghcnd_id"])
+            .to_numpy(dtype=float)
+        )
+        per_location: dict[
+            tuple[str, str], list[tuple[float, float, float, float, float, float]]
+        ] = {
+            (str(row.county_fips), str(row.ghcnd_id)): [] for row in checks.itertuples(index=False)
+        }
+        for origin in range(int(start), int(end) + 1):
+            seed = children[child_at]
+            child_at += 1
+            season_at = int(np.searchsorted(seasons, origin))
+            if season_at >= len(seasons) or seasons[season_at] != origin:
                 continue
-            y_c, y_s = history[outcome_at, ci], history[outcome_at, si]
-            # Fit the diagnostic hedge on only pre-confirmation observations.
-            # It is intentionally station-specific: several Nebraska rows are
-            # not the atlas's selected CME proxy and therefore have no h_pit.
-            train_c, train_s = history[:outcome_at, ci], history[:outcome_at, si]
-            train = np.isfinite(train_c) & np.isfinite(train_s)
-            if np.count_nonzero(train) < 10:
+            _, through, _, _ = _tournament_dates(pair, origin)
+            usable = pd.DatetimeIndex(pd.to_datetime(dates)) <= through
+            # Decision 0007 applies D-41's ten-season short-record rule only
+            # to this required 18-location diagnostic; standard tournament and
+            # site eligibility retain D-61's 25-year station threshold.
+            location_ok = np.isfinite(pair_values[usable]).sum(axis=0) >= 10 * 365
+            keep = np.r_[location_ok[:18] & location_ok[18:], location_ok[:18] & location_ok[18:]]
+            if not np.any(keep):
                 continue
-            centered_c = train_c[train] - np.mean(train_c[train])
-            centered_s = train_s[train] - np.mean(train_s[train])
-            variance = float(centered_s @ centered_s)
-            if variance == 0:
-                continue
-            h = float((centered_c @ centered_s) / variance)
-            county_draw, station_draw = (
-                np.asarray(aligned[ci], dtype=float),
-                np.asarray(aligned[si], dtype=float),
+            compact = pair_values[:, keep]
+            positions = np.r_[county_positions, len(counties) + station_positions][keep]
+            draws_joint, _ = _joint_daily_draws(
+                compact, dates, _subset_blocks(full_blocks, positions), pair, origin, M, cfg, seed
             )
-            good = np.isfinite(county_draw) & np.isfinite(station_draw)
-            if not (np.isfinite(y_c) and np.isfinite(y_s) and np.count_nonzero(good) >= 4):
-                continue
-            joint = np.sort(county_draw[good] - h * station_draw[good])
-            independent = np.sort(
-                county_draw[good] - h * station_draw[good][rng.permutation(np.count_nonzero(good))]
+            draws_independent, _ = _daily_r2_draws(
+                compact,
+                dates,
+                _subset_blocks(full_blocks, positions),
+                pair,
+                origin,
+                M,
+                cfg,
+                np.random.SeedSequence(
+                    seed.entropy, spawn_key=seed.spawn_key, pool_size=seed.pool_size
+                ),
             )
-            realized = float(y_c - h * y_s)
-            r2j = crps_from_samples(joint, realized)
-            ind = crps_from_samples(independent, realized)
-            rows.append(
+            kept_locations = np.flatnonzero(location_ok[:18] & location_ok[18:])
+            for output_column, local in enumerate(kept_locations):
+                county_col = output_column
+                station_col = len(kept_locations) + output_column
+                train_c, train_s = county_anomalies[:season_at, local], station_anomalies[
+                    :season_at, local
+                ]
+                valid = np.isfinite(train_c) & np.isfinite(train_s)
+                if valid.sum() < 10:
+                    continue
+                c0 = train_c[valid] - train_c[valid].mean()
+                s0 = train_s[valid] - train_s[valid].mean()
+                denom = float(s0 @ s0)
+                if (
+                    denom <= 0
+                    or not np.isfinite(county_anomalies[season_at, local])
+                    or not np.isfinite(station_anomalies[season_at, local])
+                ):
+                    continue
+                h = float((c0 @ s0) / denom)
+                observed_corr = float(np.corrcoef(train_c[valid], train_s[valid])[0, 1])
+                observed_residual_var = float(np.var(train_c[valid] - h * train_s[valid]))
+                joint_county = draws_joint[county_col] - county_normals[season_at, local]
+                joint_station = draws_joint[station_col] - station_normals[season_at, local]
+                actual = float(
+                    county_anomalies[season_at, local] - h * station_anomalies[season_at, local]
+                )
+                joint = np.sort(joint_county - h * joint_station)
+                independent = np.sort(
+                    (draws_independent[county_col] - county_normals[season_at, local])
+                    - h * (draws_independent[station_col] - station_normals[season_at, local])
+                )
+                key = (str(checks.iloc[local].county_fips), str(checks.iloc[local].ghcnd_id))
+                per_location[key].append(
+                    (
+                        crps_from_samples(joint, actual),
+                        crps_from_samples(independent, actual),
+                        float(np.corrcoef(joint_county, joint_station)[0, 1]),
+                        float(np.var(joint)),
+                        observed_corr,
+                        observed_residual_var,
+                    )
+                )
+        for (fips, station), values in per_location.items():
+            if not values:
+                raise ValueError(
+                    f"joint diagnostic has no eligible origins for {pair.key} {station}"
+                )
+            r2j, independent, joint_corr, joint_var, observed_corr, observed_var = np.asarray(
+                values, dtype=float
+            ).T
+            records.append(
                 {
                     "pair": pair.key,
-                    "ghcnd_id": station_label,
-                    "fips": county_label,
-                    "hedge_ratio": h,
-                    "realized_residual": realized,
-                    "r2j_crps": r2j,
-                    "independent_r2_crps": ind,
-                    "r2j_beats_independent": bool(r2j < ind),
-                    "outcome_season": 2025,
-                    "comparator": "deterministically permuted aligned station marginal",
+                    "ghcnd_id": station,
+                    "fips": fips,
+                    "n_origins": len(values),
+                    "r2j_crps": float(r2j.mean()),
+                    "independent_r2_crps": float(independent.mean()),
+                    "r2j_beats_independent": bool(r2j.mean() < independent.mean()),
+                    "diagnostic_basis": "rolling_daily_R2j_vs_independent_R2",
+                    "mean_simulated_joint_corr": float(joint_corr.mean()),
+                    "mean_simulated_residual_variance": float(joint_var.mean()),
+                    "mean_observed_anomaly_corr": float(observed_corr.mean()),
+                    "mean_observed_residual_variance": float(observed_var.mean()),
+                    "short_record": bool(
+                        checks.loc[checks["ghcnd_id"].eq(station), "short_record"].iloc[0]
+                    ),
                 }
             )
-    if not rows:
-        return None
-    frame = pd.DataFrame(rows).sort_values(["pair", "ghcnd_id"], kind="stable")
+    frame = pd.DataFrame(records).sort_values(["pair", "ghcnd_id"], kind="stable")
+    summary = _joint_diagnostic_summary(frame)
+    if len(frame) != 18 * len(PAIRS) or not frame["r2j_beats_independent"].all():
+        candidate = Path(tempfile.gettempdir()) / "wba_joint_check_candidate.parquet"
+        _write_frame(frame, candidate)
+        raise RuntimeError(
+            "rolling R2j joint diagnostic did not beat independent R2 in every "
+            f"; candidate={candidate}; summary={summary}"
+        )
     destination = root / "results" / "tournament" / "joint_check.parquet"
     _write_frame(frame, destination)
+    (root / "results" / "tournament" / "joint_check_summary.json").write_text(
+        json.dumps(summary, sort_keys=True, indent=2) + "\n", encoding="utf-8"
+    )
     return destination
 
 
@@ -923,6 +1113,10 @@ def run_tournament(root: Path, cfg: Any) -> dict[str, Path]:
     selection_path = root / "results" / "tournament" / "selection.parquet"
     _write_frame(selection, selection_path)
     outputs.append(selection_path)
+    joint_path = _rolling_joint_check(root, cfg)
+    if joint_path is not None:
+        outputs.append(joint_path)
+        outputs.append(joint_path.with_name("joint_check_summary.json"))
     parameter_metadata_path = root / "results" / "models" / "params" / "tournament_metadata.parquet"
     _write_frame(pd.DataFrame(parameter_rows), parameter_metadata_path)
     parameter_outputs.append(parameter_metadata_path)

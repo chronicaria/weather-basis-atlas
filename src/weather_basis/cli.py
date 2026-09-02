@@ -1089,7 +1089,8 @@ def main(argv: Sequence[str] | None = None) -> int:
 
         cfg = load_config(root / "config/defaults.yaml")
         if args.models_command == "fit":
-            print(build_mean_blocks(root, cfg))
+            build_mean_blocks(root, cfg)
+            print(root / "data/panel/mean_blocks.npz")
             _write_stage(
                 root,
                 cfg,
@@ -1139,7 +1140,6 @@ def main(argv: Sequence[str] | None = None) -> int:
                     root / "results/draws/R2j_aligned_seed2",
                     root / "results/models",
                     root / "results/tournament/calibration.parquet",
-                    root / "results/tournament/joint_check.parquet",
                 ],
                 [root / "data/panel"],
                 started_at,

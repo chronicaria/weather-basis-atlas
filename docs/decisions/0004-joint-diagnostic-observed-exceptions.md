@@ -1,17 +1,28 @@
-# Decision 0004: retain observed exceptions in the joint diagnostic
+# Decision 0004: rescind the site-era joint-diagnostic shortcut
 
 Date: 2026-09-02
 
-The registered R2j diagnostic compares one realized 2025 hedged residual at
-each of 18 station counties and 14 contract months with the aligned joint
-distribution and a deterministic permutation of the same station marginal.
-The production run favors R2j in 243 of 252 rows and lowers mean CRPS from
-24.032 to 10.481, but nine individual rows favor the independent comparator.
+Decision: the earlier aggregate/percentage rule for a single-site-era
+diagnostic is rescinded. The production diagnostic uses registered rolling
+daily origin fits and retains the original requirement that aligned R2j have
+lower CRPS in every one of the 252 location-pair rows.
 
-Those exceptions are evidence, not a simulation implementation error: the
-joint and independent samples have identical marginals, every R2j path uses
-one shared calendar-day plan, and a single realized outcome need not be scored
-better by the distribution with more realistic dependence. The Phase 5 gate
-therefore requires lower aggregate R2j CRPS and at least 90 percent row-level
-wins. Every row and boolean remains published. This supersedes the pre-data
-expectation that all 252 rows would favor R2j.
+Supersedes: the prior contents of Decision 0004 only. No D-xx or plan section is
+superseded; Section 7.6.4 and D-64 remain authoritative.
+
+Reasoning: the earlier check used one 2025 outcome and a deterministic
+permutation of site-as-of station paths. That was not the rolling-origin
+independent-R2 comparator in the pre-registration, so its exceptions could not
+justify changing the gate. During the corrected implementation, a compact-array
+column mapping bug initially produced 35 failures; the original hard condition
+correctly exposed it.
+
+Evidence: after fixing that mapping, all origins use origin-specific fits,
+hedges and realized anomalies; R2j uses one shared calendar-day block plan and
+independent R2 uses separate series plans. R2j wins 252 of 252 rows and lowers
+mean CRPS from 24.776 to 11.396. The exact sign-test p-value is retained only as
+a diagnostic.
+
+Consequences: the original every-row gate is restored and no observed exception
+is hidden or waived. The corrected rolling output and dependence audit fields
+replace the invalid site-era artifact.

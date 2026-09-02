@@ -97,8 +97,24 @@ def _release_diagnostics_markdown(root: Path) -> str:
 
 def build_site(root: Path, out: Path, config: Any | None = None) -> dict[str, Any]:
     root, out = Path(root), Path(out)
-    if not (root / "results/manifests/atlas.json").is_file():
-        raise FileNotFoundError("site build requires results/manifests/atlas.json")
+    required_manifests = (
+        ("atlas.json",)
+        if (root / "fixture-source").exists()
+        else (
+            "atlas.json",
+            "models_simulate.json",
+            "tournament.json",
+            "quotes.json",
+            "nebraska.json",
+        )
+    )
+    missing_manifests = [
+        name for name in required_manifests if not (root / "results/manifests" / name).is_file()
+    ]
+    if missing_manifests:
+        raise FileNotFoundError(
+            "site build requires result manifests: " + ", ".join(missing_manifests)
+        )
     if out.exists():
         shutil.rmtree(out)
     out.mkdir(parents=True)

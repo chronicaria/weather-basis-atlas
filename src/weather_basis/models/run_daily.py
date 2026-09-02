@@ -345,7 +345,6 @@ def run_site_daily(root: Path, cfg: Any) -> dict[str, Path]:
 
     root = Path(root)
     panel, labels = _combined_panel(root)
-    full_values, full_dates, full_labels = panel.values, panel.dates, labels.copy()
     n_counties = len(np.load(root / "data" / "panel" / "fips.npy", mmap_mode="r"))
     as_of = pd.Timestamp(_value(cfg, "site", "as_of", "2026-07-01"))
     through = as_of - pd.Timedelta(days=1)
@@ -397,17 +396,10 @@ def run_site_daily(root: Path, cfg: Any) -> dict[str, Path]:
     calibration_path.parent.mkdir(parents=True, exist_ok=True)
     calibration.sort_values("series", kind="stable").to_parquet(calibration_path, index=False)
 
-    from weather_basis.models.run import _joint_check_from_site_draws
-
-    joint_path = _joint_check_from_site_draws(
-        root, np.asarray(full_values), np.asarray(full_dates), full_labels, cfg
-    )
     result = {
         "draws": sorted_dir,
         "aligned": aligned_dir,
         "params": params,
         "calibration": calibration_path,
     }
-    if joint_path is not None:
-        result["joint_check"] = joint_path
     return result
