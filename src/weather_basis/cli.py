@@ -19,7 +19,7 @@ import pandas as pd
 
 from weather_basis.config import config_hash, load_config
 from weather_basis.contracts.calendar import PAIRS, Pair
-from weather_basis.io import write_npy, write_parquet
+from weather_basis.io import atomic_write_bytes, sha256, write_npy, write_parquet
 
 
 def _write_stage(
@@ -440,6 +440,16 @@ def _atlas_from_indices(root: Path, pairs: tuple[Pair, ...], station_limit: int 
     from weather_basis.hedge.zero_distance import station_own_county_table
     from weather_basis.ingest.confidence import haversine_km
 
+    atlas_root = root / "results/atlas"
+    tracked_before = {
+        path.relative_to(root).as_posix(): sha256(path)
+        for path in sorted(atlas_root.rglob("*"))
+        if path.is_file()
+    }
+    headline_path = atlas_root / "headline.json"
+    if headline_path.is_file():
+        tracked_before[headline_path.relative_to(root).as_posix()] = sha256(headline_path)
+
     cfg = load_config(root / "config/defaults.yaml")
     counties = pd.read_csv(root / "data/metadata/counties.csv", dtype={"fips": str})
     registry = pd.read_csv(root / "data/metadata/station_registry.csv").iloc[:station_limit]
@@ -632,6 +642,25 @@ def _atlas_from_indices(root: Path, pairs: tuple[Pair, ...], station_limit: int 
         write_parquet(strip_pairs, root / "results/atlas/strips.parquet")
         write_parquet(strip_stations, root / "results/atlas/strip_stations.parquet")
         write_parquet(strip_bootstrap, root / "results/atlas/strip_bootstrap.parquet")
+    tracked_after = {
+        path.relative_to(root).as_posix(): sha256(path)
+        for path in sorted(atlas_root.rglob("*"))
+        if path.is_file()
+    }
+    equality = {
+        name: tracked_before.get(name) == digest
+        for name, digest in tracked_after.items()
+        if name in tracked_before
+    }
+    evidence = {
+        "hash_equality": equality,
+        "previous_hashes": {name: tracked_before[name] for name in equality},
+        "current_hashes": {name: tracked_after[name] for name in equality},
+    }
+    atomic_write_bytes(
+        root / "results/qc/atlas_determinism.json",
+        (json.dumps(evidence, indent=2, sort_keys=True) + "\n").encode(),
+    )
     return 0
 
 
@@ -844,6 +873,7 @@ def _snapshot_reproduce(root: Path, snapshot: Path, out: Path) -> int:
         ("contracts", "check"),
         ("indices", "build"),
         ("atlas", "run"),
+        ("atlas", "run"),
         ("atlas", "headline"),
         ("models", "fit", "--origins", "1991-2022"),
         ("models", "tournament"),
@@ -1020,7 +1050,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             result = _write_headline(root)
         cfg = load_config(root / "config/defaults.yaml")
         _write_stage(
-            root, cfg, "atlas", [root / "results/atlas"], [root / "results/indices"], started_at
+            root,
+            cfg,
+            "atlas",
+            [root / "results/atlas", root / "results/qc/atlas_determinism.json"],
+            [root / "results/indices"],
+            started_at,
         )
         return result
     if args.command == "site":
