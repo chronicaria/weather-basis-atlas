@@ -1,9 +1,7 @@
 # Weather Basis Atlas
 
 <!-- atlas-headline:start -->
-Weather Basis Atlas is a reproducible county-to-weather-station basis-risk
-research instrument. Its release headline is generated from the committed
-atlas result.
+Weather Basis Atlas finds that 85.1% of counties meet the pre-registered January HDD hedgeability rule and 52.4% meet it for July CDD.
 <!-- atlas-headline:end -->
 
 It evaluates calendar-month heating-degree-day and cooling-degree-day indexes
