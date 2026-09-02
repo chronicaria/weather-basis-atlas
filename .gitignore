@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.pyc
+data/raw/
+data/panel/
+results/draws/
+results/models/
+results/atlas/tensors/
+results/tournament/scores/

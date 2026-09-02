@@ -1,0 +1,39 @@
+[project]
+name = "weather-basis-atlas"
+version = "0.1.0"
+description = "Out-of-sample atlas of U.S. county weather-hedging basis risk"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "jinja2",
+  "jsonschema",
+  "markdown-it-py",
+  "numpy",
+  "pandas",
+  "pyarrow",
+  "pyyaml",
+  "scipy",
+]
+
+[project.scripts]
+wba = "weather_basis.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.11.17,<0.12.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "weather_basis"
+
+[dependency-groups]
+dev = ["hypothesis", "playwright", "pytest", "pytest-xdist", "ruff"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+markers = ["data: needs the NOAA panels on disk", "slow: long-running local check"]
+addopts = "-m 'not data' --ignore=tests/gates"
