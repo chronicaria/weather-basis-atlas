@@ -21,7 +21,13 @@ from weather_basis.contracts.degree_days import daily_cdd, daily_hdd
 from weather_basis.models.daily import DailyFit, fit_daily
 from weather_basis.models.joint import joint_block_plan
 from weather_basis.models.residual import seasonal_sigma
-from weather_basis.models.seasonal_mean import MonthBlocks, elapsed_days, month_blocks, predict
+from weather_basis.models.seasonal_mean import (
+    DEFAULT_BASIS,
+    MonthBlocks,
+    elapsed_days,
+    month_blocks,
+    predict,
+)
 from weather_basis.models.simulate import simulate_month
 
 
@@ -115,8 +121,29 @@ def build_mean_blocks(root: Path, cfg: Any) -> MonthBlocks:
 
 
 def _load_or_build_blocks(root: Path, cfg: Any) -> MonthBlocks:
-    # Rebuilding from the memory-mapped daily panel is deterministic and avoids
-    # accepting a stale sufficient-statistic file after a panel update.
+    path = Path(root) / "data/panel/mean_blocks.npz"
+    panel_paths = [
+        Path(root) / "data/panel/tavg_f32.npy",
+        Path(root) / "data/panel/stations_tbar_f32.npy",
+    ]
+    panel_paths = [item for item in panel_paths if item.exists()]
+    if path.exists() and all(
+        path.stat().st_mtime_ns >= item.stat().st_mtime_ns for item in panel_paths
+    ):
+        with np.load(path, allow_pickle=False) as archive:
+            gram = archive["gram"]
+            xty = archive["xty"]
+            yy = archive["yy"]
+            counts = archive["counts"]
+            months = archive["months"]
+        return MonthBlocks(
+            gram=gram,
+            xty=xty,
+            yy=yy,
+            counts=counts,
+            months=pd.DatetimeIndex(months),
+            basis=DEFAULT_BASIS,
+        )
     return build_mean_blocks(root, cfg)
 
 

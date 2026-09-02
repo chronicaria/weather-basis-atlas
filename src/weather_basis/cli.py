@@ -130,9 +130,13 @@ def _run_data(args: argparse.Namespace, root: Path) -> int:
         print(report)
         return 0 if report.ok else 1
     if args.data_command == "verify":
+        from weather_basis.ingest.migrate import write_sha256sums
+
         report = verify_manifest(
             root / "data/manifests/nclimgrid_tavg.csv", root / "data/raw/nclimgrid_daily"
         )
+        if report.ok:
+            write_sha256sums(root)
         print(report)
         return 0 if report.ok else 1
     if args.data_command == "snapshot":
@@ -376,6 +380,10 @@ def _fixture_reproduce(out: Path) -> int:
     config_path = out / "config/defaults.yaml"
     config_path.parent.mkdir(parents=True, exist_ok=True)
     config_path.write_text(yaml.safe_dump(config, sort_keys=True), encoding="utf-8")
+    source_root = Path(__file__).resolve().parents[2]
+    shutil.copytree(source_root / "web", out / "web")
+    shutil.copytree(source_root / "docs", out / "docs")
+    shutil.copytree(source_root / "src/weather_basis/schemas", out / "src/weather_basis/schemas")
     shutil.copytree(paths.raw / "averages", out / "data/raw/nclimgrid_daily/averages")
     shutil.copytree(paths.raw / "ghcnd", out / "data/raw/ghcnd")
 
@@ -480,6 +488,18 @@ def _fixture_reproduce(out: Path) -> int:
                 }
             )
     write_parquet(pd.DataFrame(quote_rows), out / "results/quotes/quotes.parquet")
+    from weather_basis.manifest_stage import write_stage_manifest
+    from weather_basis.site.build import build_site
+
+    write_stage_manifest(
+        out,
+        cfg,
+        stage="atlas",
+        outputs=[out / "results/atlas"],
+        paths_in=[out / "results/indices"],
+        started_at=datetime.now(UTC),
+    )
+    build_site(out, out / "site", cfg)
     return 0
 
 
@@ -637,7 +657,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
         return result
     if args.command == "site":
-        result = _run_site(args, root)
+        site_root = args.site_path.resolve().parent if args.fixture else root
+        result = _run_site(args, site_root)
         if result == 0 and args.site_command in {"payloads", "build", "check"}:
             output = args.site_path.resolve()
             try:

@@ -618,12 +618,24 @@ def run_tournament(root: Path, cfg: Any) -> dict[str, Path]:
     outputs.append(selection_path)
     # Section 7.3's site diagnostic covers counties plus the 13 listed CME
     # stations (not the five Nebraska check-only stations).
-    calibration_labels = labels[: min(labels.size, n_counties + 13)]
-    calibration_history = _pair_history(values[:, : calibration_labels.size], dates, PAIRS[0])[1]
-    calibration_seasons = _pair_history(values[:, : calibration_labels.size], dates, PAIRS[0])[0]
-    calibration = _calibration_rows(calibration_history, calibration_seasons, calibration_labels)
     calibration_path = root / "results" / "tournament" / "calibration.parquet"
-    _write_frame(calibration, calibration_path)
+    preserve_daily = False
+    if calibration_path.exists():
+        existing = pd.read_parquet(calibration_path)
+        preserve_daily = (
+            len(existing) == n_counties + 13
+            and "diagnostic_basis" in existing
+            and existing["diagnostic_basis"].eq("daily_R2_standardized_innovation").all()
+        )
+    if not preserve_daily:
+        calibration_labels = labels[: min(labels.size, n_counties + 13)]
+        calibration_seasons, calibration_history = _pair_history(
+            values[:, : calibration_labels.size], dates, PAIRS[0]
+        )
+        calibration = _calibration_rows(
+            calibration_history, calibration_seasons, calibration_labels
+        )
+        _write_frame(calibration, calibration_path)
     calibration_by_origin_path = root / "results" / "tournament" / "calibration_by_origin.parquet"
     if score_data.empty:
         calibration_by_origin = pd.DataFrame(columns=["pair", "origin", "n_scores", "mean_pit"])
