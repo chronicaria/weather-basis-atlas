@@ -39,12 +39,13 @@
 - Built 869,960 coherent option indications for 3,107 counties and 14
   contracts. The coherence gate reported zero violations.
 - Built and validated the static release: 3,107 gzip county payloads, 14
-  contract summaries, 160,487,435 total bytes, and a largest county payload of
+  contract summaries, 160,487,917 total bytes, and a largest county payload of
   50,383 bytes. The initial production build exposed and prompted removal of a
   pandas metadata deep-copy bottleneck; subsequent full builds take about two
   minutes.
 - Browser smoke and an independent agent-browser walkthrough covered desktop
   and 375 px mobile layouts, county search, contract and layer changes, gzip
   decoding, quote display, local-only requests, and console/page errors.
+- Gates 0 through 6 pass on the final corrected production artifacts.
 - Public hosting and Gate 7 remain human-controlled because choosing an account
   and making the site externally visible require H-3 authorization.
