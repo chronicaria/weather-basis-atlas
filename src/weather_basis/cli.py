@@ -526,6 +526,48 @@ def _write_headline(root: Path) -> int:
     return 0
 
 
+def _run_nebraska(root: Path) -> int:
+    """Write the registered 18-location basis diagnostic across all 14 pairs."""
+
+    station_county = pd.read_csv(
+        root / "data/contracts/station_county.csv", dtype={"county_fips": str}
+    )
+    station_county["county_fips"] = station_county["county_fips"].str.zfill(5)
+    atlas = pd.read_parquet(root / "results/atlas/pairs.parquet")
+    atlas["fips"] = atlas["fips"].astype(str).str.zfill(5)
+    stations = pd.read_parquet(root / "results/atlas/stations.parquet")
+    stations["fips"] = stations["fips"].astype(str).str.zfill(5)
+    rows = []
+    for location in station_county.itertuples(index=False):
+        own = stations.loc[
+            (stations["fips"] == location.county_fips) & (stations["station"] == location.ghcnd_id)
+        ]
+        pair_rows = atlas.loc[atlas["fips"] == location.county_fips]
+        merged = pair_rows.merge(
+            own[["pair", "he_pooled", "rmse", "n_test"]], on="pair", how="left"
+        )
+        for row in merged.itertuples(index=False):
+            rows.append(
+                {
+                    "ghcnd_id": location.ghcnd_id,
+                    "fips": location.county_fips,
+                    "pair": row.pair,
+                    "own_station_he": row.he_pooled,
+                    "own_station_rmse": row.rmse,
+                    "own_station_n_test": row.n_test_y,
+                    "pit_station": row.station_pit,
+                    "pit_he": row.he_pit,
+                    "nearest_station": row.station_nearest,
+                    "nearest_he": row.he_nearest,
+                }
+            )
+    output = pd.DataFrame(rows).sort_values(["ghcnd_id", "pair"], kind="stable")
+    if len(output) != 18 * len(PAIRS):
+        raise ValueError("18-location diagnostic did not cover every contract pair")
+    write_parquet(output, root / "results/nebraska/basis.parquet")
+    return 0
+
+
 def _run_site(args: argparse.Namespace, root: Path) -> int:
     from weather_basis.site.build import build_site, check_site
     from weather_basis.site.payloads import build_payloads
@@ -676,6 +718,18 @@ def main(argv: Sequence[str] | None = None) -> int:
             started_at,
         )
         return 0
+    if args.command == "nebraska":
+        result = _run_nebraska(root)
+        cfg = load_config(root / "config/defaults.yaml")
+        _write_stage(
+            root,
+            cfg,
+            "nebraska",
+            [root / "results/nebraska"],
+            [root / "results/atlas", root / "data/contracts/station_county.csv"],
+            started_at,
+        )
+        return result
     if args.command == "reproduce" and args.fixture:
         return _fixture_reproduce(args.out)
     if args.command == "gate":
