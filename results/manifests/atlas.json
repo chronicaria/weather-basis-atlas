@@ -1,11 +1,11 @@
 {
   "config_hash": "df45780d6e91803d",
-  "created_utc": "2026-09-02T16:55:09.883374+00:00",
+  "created_utc": "2026-09-02T18:43:19.534222+00:00",
   "extra": {
     "allow_dirty": false
   },
   "geography_vintage": "us-atlas@3",
-  "git_commit": "2b709e63f4b3b8af5a4f0e99f207eab4d8f0b861",
+  "git_commit": "3cd8645fab9f09810e2b50d3c3ec93aad7028b00",
   "holdout_unlocked": false,
   "paths_in": [
     "results/indices"
@@ -22,7 +22,7 @@
   "seed": 20260901,
   "sha256_out": {
     "results/atlas/bootstrap.parquet": "d7cbe660f42d1bbd8b3de00987469409b482adae33458c2eb95c3d5803dfdd1d",
-    "results/atlas/headline.json": "37330a5d895e645b533bd0dc7a1bbd4a92285624a25991113f668f172dab5572",
+    "results/atlas/headline.json": "a5559e445f919392a93b44e8be056c2d6030d4cba1262155d610f0c877e1a92c",
     "results/atlas/pairs.parquet": "052dd5bf78b19c744efbfe065af92c5346a0fd4572a8e5817ac60fa486f90f9e",
     "results/atlas/stations.parquet": "8970eeda86ff9e2771a059e3838b07b183f37955515496b0bb4f3f44359d878f",
     "results/atlas/zero_distance.parquet": "97244e4f0c15d7779ef8fa1a7506d7d2e269b674a7527a6392cdb9445ab7c8d2"
