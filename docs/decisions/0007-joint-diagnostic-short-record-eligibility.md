@@ -23,5 +23,6 @@ D-61-eligible Burbank origin in 1991--2022. The output records `n_origins` and
 `short_record` for every row so the shorter comparison cannot be hidden.
 
 Consequences: the diagnostic retains all 252 required location-pair rows and
-applies Decision 0004's aggregate-CRPS and exact-sign-test gate. Burbank's
-smaller origin count is disclosed; production model availability is unchanged.
+retains the original every-row superiority gate restored by Decision 0004.
+Burbank's smaller origin count is disclosed; production model availability is
+unchanged.

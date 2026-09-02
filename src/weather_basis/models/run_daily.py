@@ -327,7 +327,11 @@ def _seed_panel_positions(
     registry_path = root / "data/metadata/station_registry.csv"
     if registry_path.exists():
         registry = pd.read_csv(registry_path, dtype={"ghcnd_id": str})
-        cme_ids = registry.loc[registry["role"].eq("cme"), "ghcnd_id"].astype(str).to_numpy()
+        cme_ids = (
+            registry.loc[registry["role"].eq("cme"), "ghcnd_id"]
+            .astype(str)
+            .to_numpy(dtype="U11")
+        )
     else:  # Fixture-only: no station table is available to price against.
         cme_ids = np.asarray([], dtype="U")
     index = {str(label): position for position, label in enumerate(labels)}
@@ -350,6 +354,20 @@ def run_site_daily(root: Path, cfg: Any) -> dict[str, Path]:
     through = as_of - pd.Timedelta(days=1)
     blocks = _load_or_build_blocks(root, cfg)
     included = _r2j_eligible(panel, n_counties, through, cfg)
+    registry_path = root / "data/metadata/station_registry.csv"
+    if registry_path.exists():
+        registry = pd.read_csv(registry_path, dtype={"ghcnd_id": str})
+        cme_ids = set(
+            registry.loc[registry["role"].eq("cme"), "ghcnd_id"].astype(str)
+        )
+        included = np.asarray(
+            [
+                position
+                for position in included
+                if position < n_counties or str(labels[position]) in cme_ids
+            ],
+            dtype=np.intp,
+        )
     panel = SimpleNamespace(values=np.asarray(panel.values)[:, included], dates=panel.dates)
     labels = labels[included]
     blocks = _subset_blocks(blocks, included)
