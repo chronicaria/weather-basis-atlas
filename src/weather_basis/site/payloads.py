@@ -119,9 +119,13 @@ def _stations_payload(rows: pd.DataFrame) -> list[dict[str, Any]]:
     return output
 
 
-def _summary(pairs: pd.DataFrame, county: pd.Series, pair: str) -> dict[str, Any]:
+def _summary(
+    pairs: pd.DataFrame,
+    county: pd.Series,
+    pair: str,
+    lookup: dict[tuple[str, str], pd.Series],
+) -> dict[str, Any]:
     fips = str(county["_fips"])
-    lookup = pairs.attrs.get("by_county_pair", {})
     row = lookup.get((fips, pair), pd.Series(dtype=object))
     return {
         "f": fips,
@@ -143,8 +147,13 @@ def _summary(pairs: pd.DataFrame, county: pd.Series, pair: str) -> dict[str, Any
     }
 
 
-def _hedge_rows(stations: pd.DataFrame, fips: str, pair: str) -> list[dict[str, Any]]:
-    positions = stations.attrs.get("by_county_pair", {}).get((fips, pair), [])
+def _hedge_rows(
+    stations: pd.DataFrame,
+    fips: str,
+    pair: str,
+    lookup: dict[tuple[str, str], list[int]],
+) -> list[dict[str, Any]]:
+    positions = lookup.get((fips, pair), [])
     output = []
     for position in positions:
         row = stations.iloc[position]
@@ -190,10 +199,15 @@ def _draw_matrix(path: Path) -> np.ndarray:
     return np.load(path, mmap_mode="r", allow_pickle=False)
 
 
-def _quotes_for(quotes: pd.DataFrame, pair: str, fips: str) -> list[dict[str, Any]]:
+def _quotes_for(
+    quotes: pd.DataFrame,
+    pair: str,
+    fips: str,
+    lookup: dict[tuple[str, str], list[int]],
+) -> list[dict[str, Any]]:
     if quotes.empty:
         return []
-    positions = quotes.attrs.get("by_county_pair", {}).get((fips, pair), [])
+    positions = lookup.get((fips, pair), [])
     output: list[dict[str, Any]] = []
     for position in positions:
         row = quotes.iloc[position]
@@ -269,11 +283,11 @@ def build_payloads(root: Path, out: Path, config: Any | None = None) -> dict[str
     quotes = _records(quote_path if quote_path.exists() else root / "results/quotes.parquet")
     pair_positions = _group_positions(pairs)
     pairs_present = sorted({pair for _, pair in pair_positions})
-    pairs.attrs["by_county_pair"] = {
+    pair_lookup = {
         key: pairs.iloc[positions[0]] for key, positions in pair_positions.items()
     }
-    station_atlas.attrs["by_county_pair"] = _group_positions(station_atlas)
-    quotes.attrs["by_county_pair"] = _group_positions(quotes)
+    station_lookup = _group_positions(station_atlas)
+    quote_lookup = _group_positions(quotes)
     site_cfg = config.get("site", {}) if isinstance(config, dict) else getattr(config, "site", {})
     simulate_cfg = (
         config.get("simulate", {}) if isinstance(config, dict) else getattr(config, "simulate", {})
@@ -316,7 +330,7 @@ def build_payloads(root: Path, out: Path, config: Any | None = None) -> dict[str
     if headline.exists():
         atomic_write_bytes(out / "data/headline.json", headline.read_bytes())
     for pair in pairs_present:
-        summary = [_summary(pairs, row, pair) for _, row in counties.iterrows()]
+        summary = [_summary(pairs, row, pair, pair_lookup) for _, row in counties.iterrows()]
         _write_json(out / f"data/summary/{pair}.json", summary)
     max_size = 0
     for county_position, (_, county) in enumerate(counties.iterrows()):
@@ -332,14 +346,14 @@ def build_payloads(root: Path, out: Path, config: Any | None = None) -> dict[str
             "pairs": {},
         }
         for pair in pairs_present:
-            summary = _summary(pairs, county, pair)
+            summary = _summary(pairs, county, pair, pair_lookup)
             draws = _draws_for(root, pair, fips, county_position)
             item["pairs"][pair] = {
                 "q": [int(value) for value in np.rint(np.quantile(draws, np.linspace(0, 1, 101)))]
                 if len(draws)
                 else [],
                 "d": delta_encode(thin_draws(draws, _cfg(site_cfg, "draws_shipped", 1000))),
-                "hedge": _hedge_rows(station_atlas, fips, pair),
+                "hedge": _hedge_rows(station_atlas, fips, pair, station_lookup),
                 "pit": {
                     "station_pit": summary["sp"],
                     "best_station": summary["sb"],
@@ -350,7 +364,7 @@ def build_payloads(root: Path, out: Path, config: Any | None = None) -> dict[str
                     "ub": summary["ub"],
                 },
                 "oos": [],
-                "quotes": _quotes_for(quotes, pair, fips),
+                "quotes": _quotes_for(quotes, pair, fips, quote_lookup),
                 "as_of": as_of,
                 "lead_days": int(_cfg(simulate_cfg, "site_lead_in_days", 30)),
                 "rung": _rung_for(root, pair, county),
