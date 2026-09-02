@@ -1,0 +1,34 @@
+{
+  "config_hash": "df45780d6e91803d",
+  "created_utc": "2026-09-02T16:28:31.655379+00:00",
+  "extra": {
+    "allow_dirty": false
+  },
+  "geography_vintage": "us-atlas@3",
+  "git_commit": "7d271ba2cd34466fbf95238ba93a0c4a39c0501f",
+  "holdout_unlocked": false,
+  "paths_in": [
+    "/Users/andrewpark/Desktop/Code/WeatherDerivativePricing"
+  ],
+  "paths_out": [
+    "data/manifests/nclimgrid_tavg.csv"
+  ],
+  "prereg_sha256": "2b17ce6504cfe3c8178c2a7f5a09fd1b809c54cf000e904d32899b10e1e18bb1",
+  "run_id": "data_migrate-df45780d6e91803d",
+  "seed": 20260901,
+  "sha256_out": {
+    "data/manifests/nclimgrid_tavg.csv": "1fc446b3a0648bad118e7537da98469fe2080eb02e5ecc67e1fc75a9e7ad70a7"
+  },
+  "stage": "data_migrate",
+  "vintages": {
+    "gazetteer": "census_2020",
+    "geography": "us-atlas@3",
+    "ghcnd": "ghcnd_snap2026-09-02",
+    "ghcnd_meta": "ghcnd_meta_snap2026-09-02",
+    "homr": "homr_snap2026-09-02",
+    "nclimgrid_tavg": "nclimgrid-daily_v1-0-0_snap2026-07-30",
+    "nclimgrid_tmax": "nclimgrid-daily_v1-0-0_snap2026-09-02",
+    "nclimgrid_tmin": "nclimgrid-daily_v1-0-0_snap2026-09-02",
+    "population": "co-est2021-alldata"
+  }
+}

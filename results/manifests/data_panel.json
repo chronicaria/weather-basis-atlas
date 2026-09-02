@@ -1,0 +1,61 @@
+{
+  "config_hash": "df45780d6e91803d",
+  "created_utc": "2026-09-02T16:28:31.692725+00:00",
+  "extra": {
+    "allow_dirty": false
+  },
+  "geography_vintage": "us-atlas@3",
+  "git_commit": "7d271ba2cd34466fbf95238ba93a0c4a39c0501f",
+  "holdout_unlocked": false,
+  "paths_in": [
+    "data/metadata",
+    "data/raw"
+  ],
+  "paths_out": [
+    "data/panel/dates.npy",
+    "data/panel/fips.npy",
+    "data/panel/station_ids.npy",
+    "data/panel/station_qc.parquet",
+    "data/panel/stations_tbar_f32.npy",
+    "data/panel/tavg_f32.npy",
+    "data/panel/tmax_f32.npy",
+    "data/panel/tmin_f32.npy",
+    "results/qc/data_through.json",
+    "results/qc/geography.json",
+    "results/qc/panel_consistency.json",
+    "results/qc/panel_consistency_drift.json",
+    "results/qc/panel_tavg.json",
+    "results/qc/stations.json"
+  ],
+  "prereg_sha256": "2b17ce6504cfe3c8178c2a7f5a09fd1b809c54cf000e904d32899b10e1e18bb1",
+  "run_id": "data_panel-df45780d6e91803d",
+  "seed": 20260901,
+  "sha256_out": {
+    "data/panel/dates.npy": "7ea8961e3964dbb4ea7858c9cc693595245bb1fdf6436d3c988954def57906d6",
+    "data/panel/fips.npy": "ef820d68eb74a7e67f943068cc1210d321c453182028ede01ceb6fb65eb417c3",
+    "data/panel/station_ids.npy": "6abdba54d9c04c9cd45f726eb6a516daab4481eddc445f694094093ba6413b91",
+    "data/panel/station_qc.parquet": "a364422b5f34e20f64415f2247e45a3649344ad912e2677d089dc99d97acfa90",
+    "data/panel/stations_tbar_f32.npy": "c7f03b9c60c4200f48ebdfb31a2e4511c62ec4ee100f074dda789e5e391391af",
+    "data/panel/tavg_f32.npy": "2b82c3c7c597ea936fbe4a69931156fa7241ec10b74e5c40acd1ed45a5adfd74",
+    "data/panel/tmax_f32.npy": "8a791ab6e6525c6c6f3c7f7b0970bebd6add40e948dfe8d4c97d693842985f8d",
+    "data/panel/tmin_f32.npy": "4e84e81c6f72bb31543b6983740f4359f73a0393727b7cc6b2be1cc947c84edd",
+    "results/qc/data_through.json": "6c5b8b7daf7f8817b30815df2ab8ce250d163c9dcf9aa89210202e1cbcbc3e05",
+    "results/qc/geography.json": "308e5aa938fda16af50719d53320f0e18a0ca438b8ee5313ac3c2c92e6b21493",
+    "results/qc/panel_consistency.json": "320894f2a5a7e552dfb8b17df2ad95c5fd37140d6584a94c28ffd539b7565b68",
+    "results/qc/panel_consistency_drift.json": "ced9a4486e45b10f4e936feb77db6df3e395e015d8ce1430ae4928d760cb385a",
+    "results/qc/panel_tavg.json": "3a06857f5f70650473b93563255e50f3093391f14b57c576238e1f2cf7289dc1",
+    "results/qc/stations.json": "403df7866db713a205c8b25013cf16c4516aa41ed9376c402ca9e9a0a12fb72b"
+  },
+  "stage": "data_panel",
+  "vintages": {
+    "gazetteer": "census_2020",
+    "geography": "us-atlas@3",
+    "ghcnd": "ghcnd_snap2026-09-02",
+    "ghcnd_meta": "ghcnd_meta_snap2026-09-02",
+    "homr": "homr_snap2026-09-02",
+    "nclimgrid_tavg": "nclimgrid-daily_v1-0-0_snap2026-07-30",
+    "nclimgrid_tmax": "nclimgrid-daily_v1-0-0_snap2026-09-02",
+    "nclimgrid_tmin": "nclimgrid-daily_v1-0-0_snap2026-09-02",
+    "population": "co-est2021-alldata"
+  }
+}
