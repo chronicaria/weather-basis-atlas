@@ -53,8 +53,9 @@ uv run wba indices build
 uv run wba atlas run
 uv run wba atlas headline
 uv run wba models fit
-uv run wba models simulate
-uv run wba quotes run
+uv run wba models tournament
+uv run wba models simulate --as-of site
+uv run wba quotes build
 uv run wba nebraska run
 uv run wba site build
 uv run wba site check

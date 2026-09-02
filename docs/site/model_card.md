@@ -70,6 +70,14 @@ not elevate individual county cells to hypothesis tests. The selected marginal
 rung is diagnostic only: public distribution and quote payloads come from the
 same joint R2j site run.
 
+The current historical tournament implementation evaluates its R2 and R2j
+rungs with an annual-index residual fallback at each origin; the calibration
+table labels this basis explicitly. It does not claim to be the full daily R2
+refit at every historical origin. The production site simulation and pricing
+path does perform the registered daily R2 fit and shared-innovation R2j
+simulation, and its calibration rows are labelled
+`daily_R2_standardized_innovation`.
+
 The release should report its selected-rung table, joint diagnostic,
 calibration diagnostics, sensitivity runs, and pre-registered power statement
 from the corresponding result files. Missing or failed diagnostics must be
