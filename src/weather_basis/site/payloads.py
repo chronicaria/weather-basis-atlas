@@ -144,9 +144,10 @@ def _summary(pairs: pd.DataFrame, county: pd.Series, pair: str) -> dict[str, Any
 
 
 def _hedge_rows(stations: pd.DataFrame, fips: str, pair: str) -> list[dict[str, Any]]:
-    subset = stations.attrs.get("by_county_pair", {}).get((fips, pair), [])
+    positions = stations.attrs.get("by_county_pair", {}).get((fips, pair), [])
     output = []
-    for row in subset:
+    for position in positions:
+        row = stations.iloc[position]
         output.append(
             {
                 "s": _value(row, "station", "station_code", "code", default=""),
@@ -174,7 +175,7 @@ def _draws_for(root: Path, pair: str, fips: str, county_position: int) -> np.nda
         path = base / name
         if not path.exists():
             continue
-        values = np.asarray(np.load(path, allow_pickle=False), dtype=float)
+        values = _draw_matrix(path)
         if values.ndim == 1:
             return values[np.isfinite(values)]
         if values.ndim == 2 and county_position < values.shape[0]:
@@ -182,12 +183,20 @@ def _draws_for(root: Path, pair: str, fips: str, county_position: int) -> np.nda
     return np.array([], dtype=float)
 
 
+@lru_cache(maxsize=16)
+def _draw_matrix(path: Path) -> np.ndarray:
+    """Memory-map each production pair once during a payload build."""
+
+    return np.load(path, mmap_mode="r", allow_pickle=False)
+
+
 def _quotes_for(quotes: pd.DataFrame, pair: str, fips: str) -> list[dict[str, Any]]:
     if quotes.empty:
         return []
-    subset = quotes.attrs.get("by_county_pair", {}).get((fips, pair), [])
+    positions = quotes.attrs.get("by_county_pair", {}).get((fips, pair), [])
     output: list[dict[str, Any]] = []
-    for row in subset:
+    for position in positions:
+        row = quotes.iloc[position]
         item = {
             "K": _round(_value(row, "K", "strike")),
             "kind": _value(row, "kind", "payoff", default="call"),
@@ -227,10 +236,18 @@ def _selection(root: Path) -> pd.DataFrame:
     return _records(root / "results/tournament/selection.parquet")
 
 
-def _group_records(frame: pd.DataFrame) -> dict[tuple[str, str], list[pd.Series]]:
-    grouped: dict[tuple[str, str], list[pd.Series]] = {}
-    for _, row in frame.iterrows():
-        grouped.setdefault((_fips(row), _pair_name(row)), []).append(row)
+def _group_positions(frame: pd.DataFrame) -> dict[tuple[str, str], list[int]]:
+    """Index large tables without retaining a Python Series per row."""
+
+    grouped: dict[tuple[str, str], list[int]] = {}
+    if frame.empty:
+        return grouped
+    fips_column = next(name for name in ("fips", "FIPS", "county_fips") if name in frame)
+    pair_column = next(name for name in PAIR_COLUMNS if name in frame)
+    fips_values = frame[fips_column].astype(str).str.split(".").str[0].str.zfill(5)
+    pair_values = frame[pair_column].astype(str)
+    for position, key in enumerate(zip(fips_values, pair_values, strict=True)):
+        grouped.setdefault(key, []).append(position)
     return grouped
 
 
@@ -243,11 +260,12 @@ def build_payloads(root: Path, out: Path, config: Any | None = None) -> dict[str
     station_atlas = _records(root / "results/atlas/stations.parquet")
     quote_path = root / "results/quotes/quotes.parquet"
     quotes = _records(quote_path if quote_path.exists() else root / "results/quotes.parquet")
+    pair_positions = _group_positions(pairs)
     pairs.attrs["by_county_pair"] = {
-        key: values[0] for key, values in _group_records(pairs).items()
+        key: pairs.iloc[positions[0]] for key, positions in pair_positions.items()
     }
-    station_atlas.attrs["by_county_pair"] = _group_records(station_atlas)
-    quotes.attrs["by_county_pair"] = _group_records(quotes)
+    station_atlas.attrs["by_county_pair"] = _group_positions(station_atlas)
+    quotes.attrs["by_county_pair"] = _group_positions(quotes)
     site_cfg = config.get("site", {}) if isinstance(config, dict) else getattr(config, "site", {})
     simulate_cfg = (
         config.get("simulate", {}) if isinstance(config, dict) else getattr(config, "simulate", {})
