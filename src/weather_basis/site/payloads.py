@@ -103,7 +103,8 @@ def _stations_payload(rows: pd.DataFrame) -> list[dict[str, Any]]:
         code = _value(row, "code", "letter", "station_code", default=chr(65 + number))
         output.append(
             {
-                "code": str(code), "city": _value(row, "city", default=""),
+                "code": str(code),
+                "city": _value(row, "city", default=""),
                 "station": _value(row, "station", "name", default=""),
                 "wban": _value(row, "wban", "WBAN", default=""),
                 "ghcn_id": _value(row, "ghcn_id", "ghcnd_id", "id", "GHCN_ID", default=""),
@@ -123,7 +124,8 @@ def _summary(pairs: pd.DataFrame, county: pd.Series, pair: str) -> dict[str, Any
     lookup = pairs.attrs.get("by_county_pair", {})
     row = lookup.get((fips, pair), pd.Series(dtype=object))
     return {
-        "f": fips, "hp": _round(_value(row, "he_pit", "hp")),
+        "f": fips,
+        "hp": _round(_value(row, "he_pit", "hp")),
         "sp": _value(row, "station_pit", "pit_station", "sp", default=None),
         "hn": _round(_value(row, "he_nearest", "hn")),
         "sn": _value(row, "station_nearest", "nearest_station", "sn", default=None),
@@ -133,7 +135,8 @@ def _summary(pairs: pd.DataFrame, county: pd.Series, pair: str) -> dict[str, Any
         "hd": int(bool(_value(row, "hedgeable", "hd", default=False))),
         "ns": int(bool(_value(row, "no_stable_proxy", "ns", default=False))),
         "n": _value(row, "n_test", "n", default=0),
-        "lb": _round(_value(row, "he_pit_lb", "lb")), "ub": _round(_value(row, "he_pit_ub", "ub")),
+        "lb": _round(_value(row, "he_pit_lb", "lb")),
+        "ub": _round(_value(row, "he_pit_ub", "ub")),
         "c": _value(county, "confidence", "c", default="not_assessed"),
         "rp": int(bool(_value(row, "index_rarely_positive", "rp", default=False))),
         "sk": _round(_value(row, "skill", "sk")),
@@ -144,17 +147,22 @@ def _hedge_rows(stations: pd.DataFrame, fips: str, pair: str) -> list[dict[str, 
     subset = stations.attrs.get("by_county_pair", {}).get((fips, pair), [])
     output = []
     for row in subset:
-        output.append({
-            "s": _value(row, "station", "station_code", "code", default=""),
-            "he": _round(_value(row, "he_pooled", "he")), "lb": _round(_value(row, "lb", "he_lb")),
-            "ub": _round(_value(row, "ub", "he_ub")),
-            "h": _round(_value(row, "h", "h_mean", "hedge_ratio")),
-            "rmse": _round(_value(row, "rmse")), "es90_upper": _round(_value(row, "es90_upper")),
-            "es90_lower": _round(_value(row, "es90_lower")), "worst": _round(_value(row, "worst")),
-            "worst_season": _value(row, "worst_season", default=None),
-            "distance_km": _round(_value(row, "distance_km")),
-            "short_record": bool(_value(row, "short_record", default=False)),
-        })
+        output.append(
+            {
+                "s": _value(row, "station", "station_code", "code", default=""),
+                "he": _round(_value(row, "he_pooled", "he")),
+                "lb": _round(_value(row, "lb", "he_lb")),
+                "ub": _round(_value(row, "ub", "he_ub")),
+                "h": _round(_value(row, "h", "h_mean", "hedge_ratio")),
+                "rmse": _round(_value(row, "rmse")),
+                "es90_upper": _round(_value(row, "es90_upper")),
+                "es90_lower": _round(_value(row, "es90_lower")),
+                "worst": _round(_value(row, "worst")),
+                "worst_season": _value(row, "worst_season", default=None),
+                "distance_km": _round(_value(row, "distance_km")),
+                "short_record": bool(_value(row, "short_record", default=False)),
+            }
+        )
     return output
 
 
@@ -319,9 +327,7 @@ def build_payloads(root: Path, out: Path, config: Any | None = None) -> dict[str
                 "oos": [],
                 "quotes": _quotes_for(quotes, pair, fips),
                 "as_of": as_of,
-                "lead_days": int(
-                    _cfg(simulate_cfg, "site_lead_in_days", 30)
-                ),
+                "lead_days": int(_cfg(simulate_cfg, "site_lead_in_days", 30)),
                 "rung": _rung_for(root, pair, county),
             }
         compressed = gzip_bytes(_json_bytes(item))

@@ -27,7 +27,7 @@ def _metric_from_results(root: Path, dotted: str, fmt: str | None = None) -> str
     try:
         value: Any = json.loads(path.read_text(encoding="utf-8"))
         for part in parts[1:] if path.name == parts[0] + ".json" else parts:
-            value = value[part]
+            value = value[int(part)] if isinstance(value, list) else value[part]
         return format(value, fmt or "") if isinstance(value, (int, float)) else str(value)
     except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError):
         return "not yet computed"
@@ -88,7 +88,9 @@ def validate_payload_schemas(out: Path) -> None:
     for stem, schema_name in names.items():
         payload, schema = out / f"data/{stem}.json", out / f"schema/{schema_name}"
         if payload.exists() and schema.exists():
-            Draft202012Validator(json.loads(schema.read_text())).validate(json.loads(payload.read_text()))
+            Draft202012Validator(json.loads(schema.read_text())).validate(
+                json.loads(payload.read_text())
+            )
     summary_schema = out / "schema/summary.schema.json"
     if summary_schema.exists():
         validator = Draft202012Validator(json.loads(summary_schema.read_text()))

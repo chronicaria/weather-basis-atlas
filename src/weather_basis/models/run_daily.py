@@ -178,6 +178,64 @@ def _r2j_eligible(panel: Any, n_counties: int, through: pd.Timestamp, cfg: Any) 
     return np.concatenate((np.arange(n_counties), n_counties + np.flatnonzero(station_ok)))
 
 
+def _daily_calibration(z: np.ndarray, labels: np.ndarray) -> pd.DataFrame:
+    """Summarize the site-fit standardized daily innovations per series."""
+
+    rows: list[dict[str, object]] = []
+    for column, label in enumerate(labels):
+        values = np.asarray(z[:, column], dtype=float)
+        values = values[np.isfinite(values)]
+        if values.size < 12:
+            rows.append(
+                {
+                    "series": str(label),
+                    "n": int(values.size),
+                    "skewness": np.nan,
+                    "excess_kurtosis": np.nan,
+                    "ljung_box_q10": np.nan,
+                    "mean_z2": np.nan,
+                    "variance_regime_ratio": np.nan,
+                    "diagnostic_basis": "unavailable",
+                }
+            )
+            continue
+        centered = values - values.mean()
+        m2 = float(np.mean(centered * centered))
+        skew = float(np.mean(centered**3) / m2**1.5) if m2 > 0 else np.nan
+        kurt = float(np.mean(centered**4) / m2**2 - 3.0) if m2 > 0 else np.nan
+        ac = []
+        for lag in range(1, 11):
+            left, right = centered[lag:], centered[:-lag]
+            ac.append(
+                float(np.corrcoef(left, right)[0, 1])
+                if np.std(left) > 0 and np.std(right) > 0
+                else 0.0
+            )
+        q10 = float(
+            values.size
+            * (values.size + 2)
+            * sum(rho * rho / (values.size - lag) for lag, rho in enumerate(ac, 1))
+        )
+        width = max(1, values.size // 3)
+        early, late = values[:width], values[-width:]
+        early_var = float(np.var(early))
+        rows.append(
+            {
+                "series": str(label),
+                "n": int(values.size),
+                "skewness": skew,
+                "excess_kurtosis": kurt,
+                "ljung_box_q10": q10,
+                "mean_z2": float(np.mean(values * values)),
+                "variance_regime_ratio": float(np.var(late) / early_var)
+                if early_var > 0
+                else np.nan,
+                "diagnostic_basis": "daily_R2_standardized_innovation",
+            }
+        )
+    return pd.DataFrame(rows)
+
+
 def _simulate_pair(
     fit: DailyFit,
     history_dates: pd.DatetimeIndex,
@@ -241,6 +299,7 @@ def run_site_daily(root: Path, cfg: Any) -> dict[str, Path]:
 
     root = Path(root)
     panel, labels = _combined_panel(root)
+    full_values, full_dates, full_labels = panel.values, panel.dates, labels.copy()
     n_counties = len(np.load(root / "data" / "panel" / "fips.npy", mmap_mode="r"))
     as_of = pd.Timestamp(_value(cfg, "site", "as_of", "2026-07-01"))
     through = as_of - pd.Timedelta(days=1)
@@ -268,4 +327,24 @@ def run_site_daily(root: Path, cfg: Any) -> dict[str, Path]:
             bic=fit.ar.bic,
         )
     _save_npy(sorted_dir / "series_labels.npy", labels)
-    return {"draws": sorted_dir, "aligned": aligned_dir, "params": params}
+    # The registered calibration table covers counties plus the 13 listed CME
+    # stations; the five Nebraska stations remain available to the joint check.
+    calibration = _daily_calibration(fit.z[:, : n_counties + 13], labels[: n_counties + 13])
+    calibration_path = root / "results/tournament/calibration.parquet"
+    calibration_path.parent.mkdir(parents=True, exist_ok=True)
+    calibration.sort_values("series", kind="stable").to_parquet(calibration_path, index=False)
+
+    from weather_basis.models.run import _joint_check_from_site_draws
+
+    joint_path = _joint_check_from_site_draws(
+        root, np.asarray(full_values), np.asarray(full_dates), full_labels, cfg
+    )
+    result = {
+        "draws": sorted_dir,
+        "aligned": aligned_dir,
+        "params": params,
+        "calibration": calibration_path,
+    }
+    if joint_path is not None:
+        result["joint_check"] = joint_path
+    return result

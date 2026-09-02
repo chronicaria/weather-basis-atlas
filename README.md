@@ -1,9 +1,10 @@
 # Weather Basis Atlas
 
+<!-- atlas-headline:start -->
 Weather Basis Atlas is a reproducible county-to-weather-station basis-risk
-research instrument. Its rendered release headline is generated from the
-committed atlas result, rather than entered as prose, so that the public claim
-and its underlying calculation stay tied together.
+research instrument. Its release headline is generated from the committed
+atlas result.
+<!-- atlas-headline:end -->
 
 It evaluates calendar-month heating-degree-day and cooling-degree-day indexes
 for CONUS counties against the listed U.S. weather-station index universe.

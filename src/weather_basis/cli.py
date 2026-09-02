@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 from collections.abc import Sequence
+from datetime import UTC, datetime
 from pathlib import Path
 
 import numpy as np
@@ -15,6 +17,31 @@ import pandas as pd
 from weather_basis.config import config_hash, load_config
 from weather_basis.contracts.calendar import PAIRS, Pair
 from weather_basis.io import write_npy, write_parquet
+
+
+def _write_stage(
+    root: Path,
+    cfg: object,
+    stage: str,
+    outputs: list[Path],
+    inputs: list[Path],
+    started_at: datetime,
+    *,
+    holdout_unlocked: bool = False,
+    manifest_path: Path | None = None,
+) -> None:
+    from weather_basis.manifest_stage import write_stage_manifest
+
+    write_stage_manifest(
+        root,
+        cfg,
+        stage=stage,
+        outputs=outputs,
+        paths_in=inputs,
+        holdout_unlocked=holdout_unlocked,
+        started_at=started_at,
+        manifest_path=manifest_path,
+    )
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -37,9 +64,11 @@ def build_parser() -> argparse.ArgumentParser:
     commands.add_parser("contracts").add_subparsers(
         dest="contracts_command", required=True
     ).add_parser("check")
-    indices = commands.add_parser("indices").add_subparsers(
-        dest="indices_command", required=True
-    ).add_parser("build")
+    indices = (
+        commands.add_parser("indices")
+        .add_subparsers(dest="indices_command", required=True)
+        .add_parser("build")
+    )
     indices.add_argument("--pairs", nargs="*")
     atlas = commands.add_parser("atlas").add_subparsers(dest="atlas_command", required=True)
     atlas_run = atlas.add_parser("run")
@@ -52,9 +81,9 @@ def build_parser() -> argparse.ArgumentParser:
     models.add_parser("tournament")
     model_simulate = models.add_parser("simulate")
     model_simulate.add_argument("--as-of", default="site")
-    commands.add_parser("quotes").add_subparsers(
-        dest="quotes_command", required=True
-    ).add_parser("build")
+    commands.add_parser("quotes").add_subparsers(dest="quotes_command", required=True).add_parser(
+        "build"
+    )
     commands.add_parser("nebraska").add_subparsers(
         dest="nebraska_command", required=True
     ).add_parser("run")
@@ -237,12 +266,16 @@ def _atlas_from_indices(root: Path, pairs: tuple[Pair, ...], station_limit: int 
         seasons = np.sort(county_frame.season.unique())
         fips = np.sort(county_frame.fips.astype(str).str.zfill(5).unique())
         ids = registry.ghcnd_id.astype(str).to_numpy()
-        county_anomaly = county_frame.pivot(
-            index="season", columns="fips", values="anomaly"
-        ).reindex(index=seasons, columns=fips).to_numpy()
-        station_anomaly = station_frame.pivot(
-            index="season", columns="ghcnd_id", values="anomaly"
-        ).reindex(index=seasons, columns=ids).to_numpy()
+        county_anomaly = (
+            county_frame.pivot(index="season", columns="fips", values="anomaly")
+            .reindex(index=seasons, columns=fips)
+            .to_numpy()
+        )
+        station_anomaly = (
+            station_frame.pivot(index="season", columns="ghcnd_id", values="anomaly")
+            .reindex(index=seasons, columns=ids)
+            .to_numpy()
+        )
         first = int(np.searchsorted(seasons, cfg.hedge.first_test))
         starts = registry.get("tmax_start", pd.Series(np.full(len(ids), 1951))).to_numpy()
         minimum = np.where(starts <= 1951, cfg.hedge.min_train, cfg.hedge.min_train_station)
@@ -300,9 +333,7 @@ def _atlas_from_indices(root: Path, pairs: tuple[Pair, ...], station_limit: int 
                 choices,
                 boot,
                 counties.get("pop2020", pd.Series(np.ones(len(fips)))).to_numpy(),
-                counties.get(
-                    "confidence", pd.Series(["not_assessed"] * len(fips))
-                ).to_numpy(),
+                counties.get("confidence", pd.Series(["not_assessed"] * len(fips))).to_numpy(),
                 distance,
                 registry.get("short_record", pd.Series([False] * len(ids))).to_numpy(),
             )
@@ -396,9 +427,7 @@ def _fixture_reproduce(out: Path) -> int:
         centered = panel_values.astype(np.float64, copy=True)
         for month in range(1, 13):
             selected = dates.month == month
-            centered[selected] = 65.0 + centered[selected] - np.nanmean(
-                centered[selected], axis=0
-            )
+            centered[selected] = 65.0 + centered[selected] - np.nanmean(centered[selected], axis=0)
         write_npy(centered.astype(np.float32), panel_path)
     _build_indices(out, PAIRS)
     _atlas_from_indices(out, PAIRS, station_limit=len(station_ids))
@@ -476,6 +505,24 @@ def _write_headline(root: Path) -> int:
         stations=stations,
     )
     write_headline(payload, root / "results/atlas/headline.json")
+    focal = {row["pair"]: row for row in payload["pairs"]}
+    hdd = 1.0 - float(focal["HDD-01"]["no_hedge_share_counties"])
+    cdd = 1.0 - float(focal["CDD-07"]["no_hedge_share_counties"])
+    readme = root / "README.md"
+    if not readme.exists():
+        return 0
+    text = readme.read_text(encoding="utf-8")
+    start, end = "<!-- atlas-headline:start -->", "<!-- atlas-headline:end -->"
+    rendered = (
+        f"{start}\nWeather Basis Atlas finds that {hdd:.1%} of counties meet the "
+        f"pre-registered January HDD hedgeability rule and {cdd:.1%} meet it "
+        f"for July CDD.\n{end}"
+    )
+    before, separator, remainder = text.partition(start)
+    if not separator or end not in remainder:
+        raise ValueError("README atlas headline markers are missing")
+    _, _, after = remainder.partition(end)
+    readme.write_text(before + rendered + after, encoding="utf-8")
     return 0
 
 
@@ -500,18 +547,74 @@ def _run_site(args: argparse.Namespace, root: Path) -> int:
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     root = Path.cwd()
+    started_at = datetime.now(UTC)
     if args.command == "data":
-        return _run_data(args, root)
+        result = _run_data(args, root)
+        if result == 0 and args.data_command in {"migrate", "panel", "qc"}:
+            cfg = load_config(root / "config/defaults.yaml")
+            if args.data_command == "migrate":
+                _write_stage(
+                    root,
+                    cfg,
+                    "data_migrate",
+                    [root / "data/manifests/nclimgrid_tavg.csv"],
+                    [args.donor],
+                    started_at,
+                )
+            elif args.data_command == "panel":
+                _write_stage(
+                    root,
+                    cfg,
+                    "data_panel",
+                    [root / "data/panel"],
+                    [root / "data/raw", root / "data/metadata"],
+                    started_at,
+                )
+            else:
+                _write_stage(
+                    root, cfg, "data_qc", [root / "results/qc"], [root / "data/panel"], started_at
+                )
+        return result
     if args.command == "contracts":
         return _check_contracts(root)
     if args.command == "indices":
-        return _build_indices(root, _selected_pairs(args.pairs))
+        result = _build_indices(root, _selected_pairs(args.pairs))
+        cfg = load_config(root / "config/defaults.yaml")
+        _write_stage(
+            root, cfg, "indices", [root / "results/indices"], [root / "data/panel"], started_at
+        )
+        return result
     if args.command == "atlas":
         if args.atlas_command == "run":
-            return _atlas_from_indices(root, _selected_pairs(args.pairs))
-        return _write_headline(root)
+            result = _atlas_from_indices(root, _selected_pairs(args.pairs))
+        else:
+            result = _write_headline(root)
+        cfg = load_config(root / "config/defaults.yaml")
+        _write_stage(
+            root, cfg, "atlas", [root / "results/atlas"], [root / "results/indices"], started_at
+        )
+        return result
     if args.command == "site":
-        return _run_site(args, root)
+        result = _run_site(args, root)
+        if result == 0 and args.site_command in {"payloads", "build", "check"}:
+            output = args.site_path.resolve()
+            try:
+                output.relative_to(root.resolve())
+            except ValueError:
+                pass  # Temporary development builds are outside release provenance.
+            else:
+                cfg = load_config(root / "config/defaults.yaml")
+                stage = f"site_{args.site_command}"
+                _write_stage(
+                    root,
+                    cfg,
+                    stage,
+                    [output],
+                    [root / "results"],
+                    started_at,
+                    manifest_path=root / f"results/manifests/site/{args.site_command}.json",
+                )
+        return result
     if args.command == "models":
         from weather_basis.models.run import run_tournament
         from weather_basis.models.run_daily import build_mean_blocks, run_site_daily
@@ -519,19 +622,59 @@ def main(argv: Sequence[str] | None = None) -> int:
         cfg = load_config(root / "config/defaults.yaml")
         if args.models_command == "fit":
             print(build_mean_blocks(root, cfg))
+            _write_stage(
+                root,
+                cfg,
+                "models_fit",
+                [root / "data/panel/mean_blocks.npz"],
+                [root / "data/panel/tavg_f32.npy"],
+                started_at,
+            )
             return 0
         if args.models_command == "tournament":
             print(run_tournament(root, cfg))
+            _write_stage(
+                root,
+                cfg,
+                "tournament",
+                [root / "results/tournament"],
+                [root / "results/indices", root / "data/panel"],
+                started_at,
+                holdout_unlocked=os.environ.get("WBA_UNLOCK_HOLDOUT") == "1",
+            )
             return 0
         if args.models_command == "simulate":
             if args.as_of != "site":
                 raise ValueError("the production simulation accepts only the registered site as-of")
             print(run_site_daily(root, cfg))
+            _write_stage(
+                root,
+                cfg,
+                "models_simulate",
+                [
+                    root / "results/draws/R2j",
+                    root / "results/draws/R2j_aligned",
+                    root / "results/models",
+                    root / "results/tournament/calibration.parquet",
+                    root / "results/tournament/joint_check.parquet",
+                ],
+                [root / "data/panel"],
+                started_at,
+            )
             return 0
     if args.command == "quotes":
         from weather_basis.pricing.run import run_quotes
 
-        print(run_quotes(root, load_config(root / "config/defaults.yaml")))
+        cfg = load_config(root / "config/defaults.yaml")
+        print(run_quotes(root, cfg))
+        _write_stage(
+            root,
+            cfg,
+            "quotes",
+            [root / "results/quotes"],
+            [root / "results/draws/R2j_aligned", root / "results/atlas"],
+            started_at,
+        )
         return 0
     if args.command == "reproduce" and args.fixture:
         return _fixture_reproduce(args.out)
