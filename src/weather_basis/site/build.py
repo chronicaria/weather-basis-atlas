@@ -78,13 +78,12 @@ def _release_diagnostics_markdown(root: Path) -> str:
         "",
         "The one-time 2023–2025 holdout confirmation below did not enter model selection:",
         "",
-        "| Contract | Cells | Selected CRPS | R0 CRPS | Skill vs R0 |",
-        "| --- | ---: | ---: | ---: | ---: |",
     ]
     for row in holdout.get("confirmation", []):
         lines.append(
-            f"| {row['pair']} | {int(row['n_cells']):,} | {row['selected_crps']:.3f} | "
-            f"{row['r0_crps']:.3f} | {row['skill_vs_r0']:.2%} |"
+            f"- {row['pair']}: {int(row['n_cells']):,} cells; selected CRPS "
+            f"{row['selected_crps']:.3f}; R0 CRPS {row['r0_crps']:.3f}; "
+            f"skill vs R0 {row['skill_vs_r0']:.2%}."
         )
     lines.extend(
         (
