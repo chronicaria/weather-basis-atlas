@@ -1,0 +1,8 @@
+{
+  "excluded_window": [
+    "2026-01-01",
+    "2026-06-30"
+  ],
+  "max_deviation_f": 6.920997619628906,
+  "reason": "fresh auxiliary files do not match frozen TAVG vintage"
+}

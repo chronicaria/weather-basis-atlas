@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"array","items":{"type":"object","required":["fips","name","state","confidence","centroid"],"properties":{"fips":{"type":"string","pattern":"^[0-9]{5}$"},"name":{"type":"string"},"state":{"type":"string"},"confidence":{"type":"string"},"centroid":{"type":"array","minItems":2,"maxItems":2}}}}

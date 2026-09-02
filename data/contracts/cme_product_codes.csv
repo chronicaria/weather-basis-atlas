@@ -1,0 +1,35 @@
+scope,city,index,product_code
+monthly,Atlanta,HDD,H1
+monthly,Atlanta,CDD,K1
+monthly,Boston,HDD,HW
+monthly,Boston,CDD,KW
+monthly,Burbank,HDD,LP
+monthly,Burbank,CDD,KP
+monthly,Chicago,HDD,H2
+monthly,Chicago,CDD,K2
+monthly,Cincinnati,HDD,H3
+monthly,Cincinnati,CDD,K3
+monthly,Dallas,HDD,H5
+monthly,Dallas,CDD,K5
+monthly,Houston,HDD,HR
+monthly,Houston,CDD,KR
+monthly,Las Vegas,HDD,H0
+monthly,Las Vegas,CDD,K0
+monthly,Minneapolis,HDD,HQ
+monthly,Minneapolis,CDD,KQ
+monthly,New York,HDD,H4
+monthly,New York,CDD,K4
+monthly,Philadelphia,HDD,H6
+monthly,Philadelphia,CDD,K6
+monthly,Portland,HDD,H7
+monthly,Portland,CDD,K7
+monthly,Sacramento,HDD,HS
+monthly,Sacramento,CDD,KS
+strip,,HDD,X
+strip,,HDD,Z
+strip,,HDD,Q1
+strip,,HDD,Q4
+strip,,CDD,K
+strip,,CDD,N
+strip,,CDD,Q2
+strip,,CDD,Q3

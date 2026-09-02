@@ -1,0 +1,10 @@
+{
+  "cached": false,
+  "etag": "\"225444c-65a067961ad1e\"",
+  "last_modified": "Thu, 27 Aug 2026 12:28:33 GMT",
+  "path": "data/metadata/ghcnd-inventory.txt",
+  "retrieved_at_utc": "2026-09-02T15:45:53.440256Z",
+  "sha256": "a5fb1dfd2e9667d53925e53161acfe0e363079a9cc0b72c83984aacb4375e76a",
+  "size": 35996748,
+  "url": "https://www.ncei.noaa.gov/pub/data/ghcn/daily/ghcnd-inventory.txt"
+}

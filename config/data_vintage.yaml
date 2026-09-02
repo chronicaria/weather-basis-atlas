@@ -1,6 +1,6 @@
 nclimgrid_tavg: {id: nclimgrid-daily_v1-0-0_snap2026-07-30, start: 1951-01, end: 2026-06, status: scaled}
-nclimgrid_tmax: {id: null, start: 2023-01, end: 2026-06, status: scaled}
-nclimgrid_tmin: {id: null, start: 2023-01, end: 2026-06, status: scaled}
+nclimgrid_tmax: {id: nclimgrid-daily_v1-0-0_snap2026-09-02, start: 2023-01, end: 2026-06, usable_through: 2025-12, status: scaled}
+nclimgrid_tmin: {id: nclimgrid-daily_v1-0-0_snap2026-09-02, start: 2023-01, end: 2026-06, usable_through: 2025-12, status: scaled}
 ghcnd: {id: null}
 ghcnd_meta: {id: null}
 homr: {id: null}

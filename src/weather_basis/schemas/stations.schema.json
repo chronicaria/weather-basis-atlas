@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"array","items":{"type":"object","required":["code","station","lat","lon"],"properties":{"code":{"type":"string"},"station":{"type":"string"},"lat":{"type":["number","null"]},"lon":{"type":["number","null"]}}}}

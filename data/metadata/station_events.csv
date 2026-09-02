@@ -1,0 +1,13 @@
+ghcnd_id,event_date,event_type,field,old_value,new_value,source_path
+USW00013874,1962-04-02,location,relocation,,.9 mi WSW,$.stationCollection.stations[0].relocations[0]
+USW00094846,1989-01-19,location,relocation,,1.2 mi NE,$.stationCollection.stations[0].relocations[0]
+USW00093814,1999-02-01,location,relocation,,.75 mi S,$.stationCollection.stations[0].relocations[0]
+USW00012960,2002-04-18,location,relocation,,200 yd S,$.stationCollection.stations[0].relocations[0]
+USW00023169,1995-09-01,location,relocation,,.4 mi E,$.stationCollection.stations[0].relocations[0]
+USW00014922,1997-10-01,location,relocation,,41 ft NE,$.stationCollection.stations[0].relocations[0]
+USW00014732,1961-06-30,location,relocation,,.6 mi W,$.stationCollection.stations[0].relocations[0]
+USW00013739,1955-05-09,location,relocation,,.2 mi N,$.stationCollection.stations[0].relocations[0]
+USW00024229,1997-06-03,location,relocation,,.5 mi NW,$.stationCollection.stations[0].relocations[0]
+USW00023232,1998-04-15,location,relocation,,.1 mi SSE,$.stationCollection.stations[0].relocations[0]
+USW00014935,1992-10-01,location,relocation,,.8 mi SE,$.stationCollection.stations[0].relocations[0]
+USW00024023,1996-10-01,location,relocation,,1.3 mi SE,$.stationCollection.stations[0].relocations[0]

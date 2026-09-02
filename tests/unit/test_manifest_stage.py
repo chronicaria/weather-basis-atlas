@@ -1,0 +1,139 @@
+"""Tests for complete, filesystem-derived stage provenance manifests."""
+
+from __future__ import annotations
+
+from datetime import UTC, datetime
+from hashlib import sha256
+from pathlib import Path
+
+from weather_basis.config import load_config
+from weather_basis.io import sha256 as file_sha256
+from weather_basis.manifest import Manifest, _dirty_before_start, read_manifest
+from weather_basis.manifest_stage import (
+    output_hashes,
+    write_reproduction_manifest,
+    write_stage_manifest,
+)
+
+
+def _project(root: Path) -> tuple[Path, object]:
+    (root / "docs").mkdir(parents=True)
+    prereg = root / "docs" / "preregistration.md"
+    prereg.write_text("locked protocol\n", encoding="utf-8")
+    digest = sha256(prereg.read_bytes()).hexdigest()
+    config = root / "defaults.yaml"
+    config.write_text(
+        "\n".join(
+            (
+                "seed: 17",
+                "allow_dirty: true",
+                "vintages: {county: county-v1, geography: geo-v1}",
+                f"prereg: {{sha256: {digest}}}",
+                "",
+            )
+        ),
+        encoding="utf-8",
+    )
+    return root, load_config(config)
+
+
+def test_stage_manifest_hashes_real_outputs_and_complete_provenance(tmp_path: Path) -> None:
+    root, cfg = _project(tmp_path / "repo")
+    output = root / "results" / "atlas" / "result.bin"
+    output.parent.mkdir(parents=True)
+    output.write_bytes(b"first result")
+
+    target = write_stage_manifest(
+        root,
+        cfg,
+        stage="atlas",
+        outputs=[root / "results" / "atlas"],
+        paths_in=[root / "docs" / "preregistration.md"],
+        started_at=datetime.now(UTC),
+    )
+    manifest = read_manifest(target)
+    assert manifest.config_hash
+    assert manifest.git_commit
+    assert manifest.vintages == {"county": "county-v1", "geography": "geo-v1"}
+    assert manifest.geography_vintage == "geo-v1"
+    assert manifest.seed == 17
+    assert manifest.holdout_unlocked is False
+    prereg_hash = sha256((root / "docs/preregistration.md").read_bytes()).hexdigest()
+    assert manifest.prereg_sha256 == prereg_hash
+    assert manifest.sha256_out == {"results/atlas/result.bin": file_sha256(output)}
+    assert manifest.paths_out == ["results/atlas/result.bin"]
+
+
+def test_output_hashes_reject_missing_outputs(tmp_path: Path) -> None:
+    root, _ = _project(tmp_path / "repo")
+    try:
+        output_hashes(root, [root / "results" / "absent.parquet"])
+    except FileNotFoundError as exc:
+        assert "absent.parquet" in str(exc)
+    else:  # pragma: no cover - makes the intended failure mode explicit
+        raise AssertionError("missing output was accepted")
+
+
+def test_reproduction_manifest_records_actual_hash_equality(tmp_path: Path) -> None:
+    reference, cfg = _project(tmp_path / "reference")
+    reproduced, _ = _project(tmp_path / "reproduced")
+    files = {
+        "results/atlas/headline.json": b'{"headline": true}\n',
+        "results/atlas/pairs.parquet": b"pairs bytes",
+        "results/quotes/quotes.parquet": b"quotes bytes",
+    }
+    for root in (reference, reproduced):
+        for relative, contents in files.items():
+            destination = root / relative
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(contents)
+    snapshot = tmp_path / "wba-raw.tar"
+    snapshot.write_bytes(b"snapshot")
+
+    target = write_reproduction_manifest(
+        reproduced,
+        cfg,
+        reference_root=reference,
+        reproduced_root=reproduced,
+        snapshot=snapshot,
+        started_at=datetime.now(UTC),
+    )
+    manifest = read_manifest(target)
+    assert manifest.stage == "reproduce"
+    assert manifest.extra["hash_equality"] == {
+        "headline.json": True,
+        "pairs.parquet": True,
+        "quotes.parquet": True,
+    }
+    assert manifest.extra["reference_hashes"]["quotes.parquet"] == file_sha256(
+        reference / "results/quotes/quotes.parquet"
+    )
+
+
+def test_dirty_rule_treats_a_tracked_deletion_as_preexisting_change(
+    tmp_path: Path, monkeypatch
+) -> None:
+    root, _ = _project(tmp_path / "repo")
+    deleted = root / "src" / "removed.py"
+    deleted.parent.mkdir()
+    deleted.write_text("gone\n", encoding="utf-8")
+    deleted.unlink()
+    manifest = Manifest(
+        run_id="run",
+        stage="atlas",
+        created_utc="2026-09-02T00:00:00+00:00",
+        git_commit="commit",
+        config_hash="config",
+        vintages={},
+        geography_vintage="geo",
+        seed=1,
+        paths_in=[],
+        paths_out=[],
+        sha256_out={},
+        holdout_unlocked=False,
+        prereg_sha256=None,
+        extra={},
+    )
+    monkeypatch.setattr("weather_basis.manifest._repo_root", lambda: root)
+    monkeypatch.setattr("weather_basis.manifest._changed_tracked_files", lambda _: {deleted})
+    assert _dirty_before_start(manifest, datetime.now(UTC)) == ["src/removed.py"]

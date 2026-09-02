@@ -1,0 +1,10 @@
+{
+  "cached": false,
+  "etag": "W/\"5b27-P5ThtzeuEZszeXZYcsZkLk5Fy5o\"",
+  "last_modified": null,
+  "path": "web/vendor/katex/katex.min.css",
+  "retrieved_at_utc": "2026-09-02T15:45:37.016946Z",
+  "sha256": "717bc9ae7853b61f0f76455dddf0ecd4f527a783f42de2ac24684899c1c46258",
+  "size": 23335,
+  "url": "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
+}

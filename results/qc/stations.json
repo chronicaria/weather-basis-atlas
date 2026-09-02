@@ -1,0 +1,110 @@
+{
+  "USW00003927": {
+    "excluded_months": 64,
+    "gap_filled_days": 1,
+    "integer_f_deviation_flag_rate": 0.010301743639717397,
+    "provisional_months": 2
+  },
+  "USW00012960": {
+    "excluded_months": 0,
+    "gap_filled_days": 1,
+    "integer_f_deviation_flag_rate": 0.0037779159294151405,
+    "provisional_months": 2
+  },
+  "USW00013739": {
+    "excluded_months": 6,
+    "gap_filled_days": 0,
+    "integer_f_deviation_flag_rate": 0.027325008737648142,
+    "provisional_months": 2
+  },
+  "USW00013874": {
+    "excluded_months": 0,
+    "gap_filled_days": 2,
+    "integer_f_deviation_flag_rate": 0.008270314668479339,
+    "provisional_months": 2
+  },
+  "USW00014732": {
+    "excluded_months": 2,
+    "gap_filled_days": 4,
+    "integer_f_deviation_flag_rate": 0.022458815006142312,
+    "provisional_months": 2
+  },
+  "USW00014739": {
+    "excluded_months": 2,
+    "gap_filled_days": 7,
+    "integer_f_deviation_flag_rate": 0.035602125860611185,
+    "provisional_months": 2
+  },
+  "USW00014922": {
+    "excluded_months": 1,
+    "gap_filled_days": 2,
+    "integer_f_deviation_flag_rate": 0.07406719306394179,
+    "provisional_months": 2
+  },
+  "USW00014935": {
+    "excluded_months": 1,
+    "gap_filled_days": 1,
+    "integer_f_deviation_flag_rate": 0.061900637257934786,
+    "provisional_months": 2
+  },
+  "USW00014939": {
+    "excluded_months": 281,
+    "gap_filled_days": 0,
+    "integer_f_deviation_flag_rate": 0.0641088382108251,
+    "provisional_months": 2
+  },
+  "USW00014942": {
+    "excluded_months": 5,
+    "gap_filled_days": 2,
+    "integer_f_deviation_flag_rate": 0.06619566352277868,
+    "provisional_months": 2
+  },
+  "USW00023152": {
+    "excluded_months": 11,
+    "gap_filled_days": 24,
+    "integer_f_deviation_flag_rate": 0.0004830917874396135,
+    "provisional_months": 2
+  },
+  "USW00023169": {
+    "excluded_months": 2,
+    "gap_filled_days": 0,
+    "integer_f_deviation_flag_rate": 0.0012285443504510512,
+    "provisional_months": 2
+  },
+  "USW00023232": {
+    "excluded_months": 42,
+    "gap_filled_days": 6,
+    "integer_f_deviation_flag_rate": 0.0034210101662094563,
+    "provisional_months": 2
+  },
+  "USW00024023": {
+    "excluded_months": 0,
+    "gap_filled_days": 0,
+    "integer_f_deviation_flag_rate": 0.08182229492221488,
+    "provisional_months": 2
+  },
+  "USW00024028": {
+    "excluded_months": 123,
+    "gap_filled_days": 405,
+    "integer_f_deviation_flag_rate": 0.046640721015977056,
+    "provisional_months": 1
+  },
+  "USW00024229": {
+    "excluded_months": 23,
+    "gap_filled_days": 0,
+    "integer_f_deviation_flag_rate": 0.009455978178511897,
+    "provisional_months": 2
+  },
+  "USW00093814": {
+    "excluded_months": 1,
+    "gap_filled_days": 3,
+    "integer_f_deviation_flag_rate": 0.042390282949918215,
+    "provisional_months": 2
+  },
+  "USW00094846": {
+    "excluded_months": 145,
+    "gap_filled_days": 0,
+    "integer_f_deviation_flag_rate": 0.0565604659129839,
+    "provisional_months": 2
+  }
+}

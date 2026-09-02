@@ -1,0 +1,10 @@
+{
+  "cached": false,
+  "etag": "\"ade00e-65a06796356e6\"",
+  "last_modified": "Thu, 27 Aug 2026 12:28:33 GMT",
+  "path": "data/metadata/ghcnd-stations.txt",
+  "retrieved_at_utc": "2026-09-02T15:45:37.183103Z",
+  "sha256": "91e4bd9b4c991c3ea9c19062eae73bca118cad0f4a436e33149ff345bffc8f9c",
+  "size": 11395086,
+  "url": "https://www.ncei.noaa.gov/pub/data/ghcn/daily/ghcnd-stations.txt"
+}
