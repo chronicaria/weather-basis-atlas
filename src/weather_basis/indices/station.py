@@ -10,7 +10,7 @@ import pandas as pd
 from weather_basis.indices.anomalies import anomaly, prior_counts, trailing_normal
 from weather_basis.indices.seasons import date_parts, index_frame, pair_key, pair_parts
 
-_UNUSABLE_QC = frozenset({"excluded", "provisional"})
+_UNUSABLE_QC = frozenset({"excluded", "provisional", "pre_start"})
 
 
 def monthly_indices(

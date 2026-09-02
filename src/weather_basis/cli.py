@@ -187,6 +187,10 @@ def _build_station_panel(root: Path) -> int:
     cfg = load_config(root / "config/defaults.yaml")
     dates = np.load(root / "data/panel/dates.npy")
     date_index = pd.DatetimeIndex(dates.astype("datetime64[ns]"))
+    panel_periods = pd.period_range(date_index.min(), date_index.max(), freq="M")
+    panel_months = pd.DataFrame(
+        {"year": panel_periods.year.astype(int), "month": panel_periods.month.astype(int)}
+    )
     ids = list(cfg.station.ids)
     values = np.full((len(dates), len(ids)), np.nan, dtype=np.float32)
     monthly = []
@@ -196,6 +200,12 @@ def _build_station_panel(root: Path) -> int:
         good = ~frame.qc_status.isin(("excluded", "provisional")) & frame.tbar_f.notna()
         values[good.to_numpy(), column] = frame.loc[good, "tbar_f"].to_numpy(np.float32)
         item = qc.monthly.copy()
+        first_period = qc.daily["date"].min().to_period("M")
+        item = panel_months.merge(item, on=["year", "month"], how="left", sort=True)
+        item_periods = pd.PeriodIndex(year=item["year"], month=item["month"], freq="M")
+        pre_start = item["qc_status"].isna() & (item_periods < first_period)
+        item.loc[pre_start, "qc_status"] = "pre_start"
+        item.loc[item["qc_status"].isna(), "qc_status"] = "excluded"
         item.insert(0, "ghcnd_id", station_id)
         monthly.append(item)
     write_npy(values, root / "data/panel/stations_tbar_f32.npy")

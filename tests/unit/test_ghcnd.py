@@ -117,6 +117,16 @@ def test_qc_does_not_treat_a_partial_boundary_month_as_complete() -> None:
     assert january.qc_status == "excluded"
 
 
+def test_qc_excludes_an_unfillable_short_edge_gap() -> None:
+    """A short run still excludes the month when no right endpoint exists."""
+    frame = _station_frame(pd.date_range("1995-09-01", "1995-09-30", freq="D"))
+    frame.loc[frame["date"] == pd.Timestamp("1995-09-30"), "tmin_tenths_c"] = np.nan
+    september = qc_station(frame, _cfg()).monthly.iloc[0]
+    assert september.n_missing == 1
+    assert september.n_gap_filled == 0
+    assert september.qc_status == "excluded"
+
+
 def test_invalid_tolerance_is_rejected() -> None:
     """Section 4.5: conversion tolerance is a non-negative data-quality threshold."""
     with pytest.raises(ValueError, match="tolerance"):

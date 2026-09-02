@@ -49,7 +49,7 @@ def test_phase1_station_panel_qc_and_counties() -> None:
     # report that evidence; the current frozen vintage stays below ten percent.
     assert all(row["integer_f_deviation_flag_rate"] < 0.10 for row in rows)
     county = pd.read_csv(ROOT / "data/contracts/station_county.csv", dtype=str)
-    assert len(county) == 18 and county["fips"].str.len().eq(5).all()
+    assert len(county) == 18 and county["county_fips"].str.len().eq(5).all()
 
 
 def test_phase1_station_indices_are_half_degree_multiples() -> None:

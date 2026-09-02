@@ -260,7 +260,8 @@ def _monthly_qc(daily: pd.DataFrame, *, max_gap: int, max_missing_share: float) 
         longest = int(_run_lengths(missing).max(initial=0))
         n_missing = int(missing.sum())
         n_days = int(len(group))
-        excluded = n_missing / n_days > max_missing_share or longest > max_gap
+        unfilled = missing & ~group["gap_filled"].to_numpy(dtype=bool)
+        excluded = bool(unfilled.any()) or n_missing / n_days > max_missing_share or longest > max_gap
         status = (
             "excluded" if excluded else ("gap_filled" if group["gap_filled"].any() else "complete")
         )

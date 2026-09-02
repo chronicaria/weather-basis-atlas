@@ -44,7 +44,7 @@ def test_phase0_migrated_panel_and_geography() -> None:
     assert geography["matched"] == 3_107
     assert set(map(str, geography["exceptions"])) == {"51678"}
     consistency = _json("results/qc/panel_consistency.json")
-    assert consistency["max_deviation"] <= 0.036
+    assert consistency["max_deviation_f"] <= 0.036
 
 
 def test_phase0_vendor_and_ci_contracts() -> None:
