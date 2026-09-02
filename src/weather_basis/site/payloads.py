@@ -218,22 +218,29 @@ def _quotes_for(quotes: pd.DataFrame, pair: str, fips: str) -> list[dict[str, An
 
 
 def _rung_for(root: Path, pair: str, county: pd.Series) -> str:
-    selection = _selection(root)
-    if selection.empty:
+    selection = _selection_lookup(root)
+    if not selection:
         return "R2j (pricing)"
     state = _value(county, "state", "state_abbr", default=None)
-    subset = selection[selection.apply(lambda row: _pair_name(row) == pair, axis=1)]
-    if state is not None and "state" in subset:
-        subset = subset[subset["state"].astype(str) == str(state)]
-    if subset.empty:
+    selected = selection.get((pair, str(state))) if state is not None else None
+    selected = selected or selection.get((pair, None))
+    if selected is None:
         return "R2j (pricing)"
-    selected = _value(subset.iloc[0], "rung", "selected_rung", "model", default="R2j")
     return f"R2j (pricing); tournament preferred {selected}"
 
 
 @lru_cache(maxsize=1)
-def _selection(root: Path) -> pd.DataFrame:
-    return _records(root / "results/tournament/selection.parquet")
+def _selection_lookup(root: Path) -> dict[tuple[str, str | None], str]:
+    rows = _records(root / "results/tournament/selection.parquet")
+    if rows.empty:
+        return {}
+    lookup: dict[tuple[str, str | None], str] = {}
+    for _, row in rows.iterrows():
+        pair = _pair_name(row)
+        state = str(row["state"]) if "state" in row and pd.notna(row["state"]) else None
+        selected = _value(row, "rung", "selected_rung", "model", default="R2j")
+        lookup[(pair, state)] = str(selected)
+    return lookup
 
 
 def _group_positions(frame: pd.DataFrame) -> dict[tuple[str, str], list[int]]:
@@ -261,6 +268,7 @@ def build_payloads(root: Path, out: Path, config: Any | None = None) -> dict[str
     quote_path = root / "results/quotes/quotes.parquet"
     quotes = _records(quote_path if quote_path.exists() else root / "results/quotes.parquet")
     pair_positions = _group_positions(pairs)
+    pairs_present = sorted({pair for _, pair in pair_positions})
     pairs.attrs["by_county_pair"] = {
         key: pairs.iloc[positions[0]] for key, positions in pair_positions.items()
     }
@@ -307,7 +315,6 @@ def build_payloads(root: Path, out: Path, config: Any | None = None) -> dict[str
     headline = root / "results/atlas/headline.json"
     if headline.exists():
         atomic_write_bytes(out / "data/headline.json", headline.read_bytes())
-    pairs_present = sorted({_pair_name(row) for _, row in pairs.iterrows()})
     for pair in pairs_present:
         summary = [_summary(pairs, row, pair) for _, row in counties.iterrows()]
         _write_json(out / f"data/summary/{pair}.json", summary)
