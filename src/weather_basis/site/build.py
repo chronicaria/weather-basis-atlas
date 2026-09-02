@@ -35,6 +35,67 @@ def _metric_from_results(root: Path, dotted: str, fmt: str | None = None) -> str
         return "not yet computed"
 
 
+def _release_diagnostics_markdown(root: Path) -> str:
+    """Render the public model diagnostics directly from release artifacts."""
+
+    import pandas as pd
+
+    tournament = root / "results/tournament"
+    required = (
+        tournament / "selection.parquet",
+        tournament / "calibration.parquet",
+        tournament / "joint_check.parquet",
+        tournament / "holdout_check.json",
+        tournament / "power.json",
+    )
+    if not all(path.is_file() for path in required):
+        return ""
+    selection = pd.read_parquet(required[0])
+    calibration = pd.read_parquet(required[1])
+    joint = pd.read_parquet(required[2])
+    holdout = json.loads(required[3].read_text(encoding="utf-8"))
+    power = json.loads(required[4].read_text(encoding="utf-8"))
+    counts = selection["rung_selected"].value_counts().sort_index()
+    count_text = ", ".join(f"{name}: {int(value)}" for name, value in counts.items())
+    lines = [
+        "## Release diagnostics",
+        "",
+        f"Selected state-contract units — {count_text}.",
+        "",
+        (
+            f"Aligned R2j scenarios beat independently paired marginals in "
+            f"{int(joint['r2j_beats_independent'].sum())} of {len(joint)} diagnostics; "
+            f"mean CRPS was {joint['r2j_crps'].mean():.3f} versus "
+            f"{joint['independent_r2_crps'].mean():.3f}."
+        ),
+        "",
+        (
+            f"Daily calibration mean(z²) ranges from {calibration['mean_z2'].min():.6f} "
+            f"to {calibration['mean_z2'].max():.6f} across {len(calibration):,} series. "
+            f"The 80% minimum detectable skill estimate is "
+            f"{float(power['minimum_detectable_skill_80']):.1%}."
+        ),
+        "",
+        "The one-time 2023–2025 holdout confirmation below did not enter model selection:",
+        "",
+        "| Contract | Cells | Selected CRPS | R0 CRPS | Skill vs R0 |",
+        "| --- | ---: | ---: | ---: | ---: |",
+    ]
+    for row in holdout.get("confirmation", []):
+        lines.append(
+            f"| {row['pair']} | {int(row['n_cells']):,} | {row['selected_crps']:.3f} | "
+            f"{row['r0_crps']:.3f} | {row['skill_vs_r0']:.2%} |"
+        )
+    lines.extend(
+        (
+            "",
+            "Sources: `results/tournament/{selection,calibration,joint_check}.parquet`, "
+            "`holdout_check.json`, and `power.json`.",
+        )
+    )
+    return "\n".join(lines)
+
+
 def build_site(root: Path, out: Path, config: Any | None = None) -> dict[str, Any]:
     root, out = Path(root), Path(out)
     if not (root / "results/manifests/atlas.json").is_file():
@@ -51,6 +112,8 @@ def build_site(root: Path, out: Path, config: Any | None = None) -> dict[str, An
         template = env.get_template(f"{name}.html.j2")
         document = root / f"docs/site/{name}.md"
         content = markdown.render(document.read_text(encoding="utf-8")) if document.exists() else ""
+        if name == "model_card":
+            content += markdown.render(_release_diagnostics_markdown(root))
         rendered = template.render(
             content=content, metric=lambda key, fmt=None: _metric_from_results(root, key, fmt)
         )
