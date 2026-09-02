@@ -1,11 +1,11 @@
 {
   "config_hash": "df45780d6e91803d",
-  "created_utc": "2026-09-02T18:16:19.989936+00:00",
+  "created_utc": "2026-09-02T18:19:13.768153+00:00",
   "extra": {
     "allow_dirty": false
   },
   "geography_vintage": "us-atlas@3",
-  "git_commit": "60d59f8a55d634c665f6f62584ed96be7302d454",
+  "git_commit": "129fad1dd174898e9c40d2f8e8c2b872cd100ce3",
   "holdout_unlocked": false,
   "paths_in": [
     "data/metadata",
@@ -28,7 +28,7 @@
   "sha256_out": {
     "data/panel/dates.npy": "7ea8961e3964dbb4ea7858c9cc693595245bb1fdf6436d3c988954def57906d6",
     "data/panel/fips.npy": "ef820d68eb74a7e67f943068cc1210d321c453182028ede01ceb6fb65eb417c3",
-    "data/panel/mean_blocks.npz": "fe8b48cc69130831e44fb3367edb74c161ac3a681977e8521ce3f290623da87a",
+    "data/panel/mean_blocks.npz": "3bf5642d2e42b21a39ca0b942381b2d6aa25d599806ccf944f76cc9d213e4a5b",
     "data/panel/station_ids.npy": "6abdba54d9c04c9cd45f726eb6a516daab4481eddc445f694094093ba6413b91",
     "data/panel/station_qc.parquet": "63d28ba7c52a7c4e1bd13fdd5ac9510a3dd3e9956bd8963b038bc3c8aeb71fdd",
     "data/panel/stations_tbar_f32.npy": "66a9c7b12de35f11d600881ba3e644d440d7a5199896e21aa7051e0c09ffeda5",
