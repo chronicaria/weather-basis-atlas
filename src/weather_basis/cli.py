@@ -202,7 +202,12 @@ def _build_station_panel(root: Path) -> int:
         item = qc.monthly.copy()
         first_period = qc.daily["date"].min().to_period("M")
         item = panel_months.merge(item, on=["year", "month"], how="left", sort=True)
-        item_periods = pd.PeriodIndex(year=item["year"], month=item["month"], freq="M")
+        item_periods = pd.PeriodIndex(
+            pd.to_datetime(
+                {"year": item["year"], "month": item["month"], "day": np.ones(len(item), int)}
+            ),
+            freq="M",
+        )
         pre_start = item["qc_status"].isna() & (item_periods < first_period)
         item.loc[pre_start, "qc_status"] = "pre_start"
         item.loc[item["qc_status"].isna(), "qc_status"] = "excluded"
