@@ -1,0 +1,39 @@
+{
+  "config_hash": "fdb7f34b315aa21c",
+  "created_utc": "2026-09-03T05:59:04.119918+00:00",
+  "extra": {
+    "allow_dirty": false,
+    "self_excluded_from_sha256": "results/manifests/data_snapshot_export.json",
+    "sha256_in": {
+      "/private/tmp/weather-basis-atlas-2026-06.tar.gz": "3d854584795496a320487b4f3e4cabc4b3121a5a57bbf89408790d4dd61963e6"
+    }
+  },
+  "geography_vintage": "us-atlas@3",
+  "git_commit": "555f533d42e275c985c9a88b60207970f8fed191",
+  "holdout_unlocked": false,
+  "paths_in": [
+    "/private/tmp/weather-basis-atlas-2026-06.tar.gz"
+  ],
+  "paths_out": [
+    "data/raw/SHA256SUMS",
+    "results/manifests/data_snapshot_export.json"
+  ],
+  "prereg_sha256": "2b17ce6504cfe3c8178c2a7f5a09fd1b809c54cf000e904d32899b10e1e18bb1",
+  "run_id": "data_snapshot_export-fdb7f34b315aa21c",
+  "seed": 20260901,
+  "sha256_out": {
+    "data/raw/SHA256SUMS": "652c427b1c66e9631686f47c8cb7ea977912119eedc39a25aaa411a07d64b3bb"
+  },
+  "stage": "data_snapshot_export",
+  "vintages": {
+    "gazetteer": "census_2020",
+    "geography": "us-atlas@3",
+    "ghcnd": "ghcnd_snap2026-09-02",
+    "ghcnd_meta": "ghcnd_meta_snap2026-09-02",
+    "homr": "homr_snap2026-09-02",
+    "nclimgrid_tavg": "nclimgrid-daily_v1-0-0_snap2026-07-30",
+    "nclimgrid_tmax": "nclimgrid-daily_v1-0-0_snap2026-09-02",
+    "nclimgrid_tmin": "nclimgrid-daily_v1-0-0_snap2026-09-02",
+    "population": "co-est2021-alldata"
+  }
+}
