@@ -1,26 +1,36 @@
 # Weather Basis Atlas
 
-<!-- atlas-headline:start -->
-Weather Basis Atlas finds that 85.1% of counties meet the pre-registered January HDD hedgeability rule and 52.4% meet it for July CDD.
-<!-- atlas-headline:end -->
+For HDD January, 15% of
+CONUS counties (12% of
+population) have no point-in-time-selected CME hedge whose out-of-sample hedge
+effectiveness reaches the pre-registered threshold with the required bootstrap
+lower bound; in 38% of
+counties the best station is not the nearest (median gain
+-0.02 HE).
 
-It evaluates calendar-month heating-degree-day and cooling-degree-day indexes
-for CONUS counties against the listed U.S. weather-station index universe.
-The atlas uses rolling, held-out observations and a point-in-time selection
-rule. It is designed to show the geographic limits of a station proxy, not to
-recommend a trade.
+For CDD July, 48% of
+CONUS counties (42% of
+population) have no point-in-time-selected CME hedge whose out-of-sample hedge
+effectiveness reaches the pre-registered threshold with the required bootstrap
+lower bound; in 46% of
+counties the best station is not the nearest (median gain
+-0.07 HE).
+
+Weather Basis Atlas is a reproducible county-to-weather-station basis-risk
+research instrument. The complete release headline table comes directly from
+`results/atlas/headline.json`; this README is rendered only as part of the site
+build, never hand-edited with computed values.
 
 ## What is in this repository
 
 - `data/` contains manifests, metadata, contracts, and reproducible input
-  records. Raw source files are deliberately versioned separately from derived
-  panels.
+  records. Raw source files are versioned separately from derived panels.
 - `results/atlas/` contains the county and station-level out-of-sample atlas,
   bootstrap output, zero-distance checks, and the release headline source.
 - `results/indices/` contains monthly county and station index panels.
 - `results/qc/` records panel, station, geography, and vintage checks.
-- `docs/site/` contains the methodological, provenance, model-card, and
-  Nebraska case-study copy rendered into the static site.
+- `docs/site/` contains methodological, provenance, model-card, and Nebraska
+  case-study copy rendered into the static site.
 - `site/` is the locally built static release artifact; its county payloads
   are deterministic gzip files.
 
@@ -28,10 +38,10 @@ recommend a trade.
 
 For a daily mean temperature `tbar` in degrees Fahrenheit, heating degree days
 are `max(65 − tbar, 0)` and cooling degree days are `max(tbar − 65, 0)`.
-Monthly indexes sum those daily values. County `tbar` is the county daily TAVG;
-station `tbar` is the arithmetic mean of quality-controlled integer-F TMAX and
-TMIN observations. This station calculation reproduces the published index
-rule, but it is not settlement data.
+Monthly indexes sum those daily values. County `tbar` is daily TAVG; station
+`tbar` is the arithmetic mean of quality-controlled integer-F TMAX and TMIN.
+This station calculation reproduces the public index convention, but is not
+settlement data.
 
 The primary outcome is held-out hedge effectiveness: one minus the hedged
 residual sum of squares divided by the comparable unhedged anomaly sum of
@@ -42,11 +52,8 @@ selection, and uncertainty procedures are fixed in
 
 ## Reproduce locally
 
-The workflow uses Python and `uv`:
-
 ```bash
 uv sync --frozen
-uv run wba --help
 uv run wba data verify
 uv run wba indices build
 uv run wba atlas run
@@ -56,10 +63,18 @@ uv run wba site check
 ```
 
 The complete command sequence, snapshot workflow, deterministic checks, and
-release checklist are in [docs/runbook.md](docs/runbook.md). The frozen
-protocol is in [docs/preregistration.md](docs/preregistration.md); data
-vintages and their source hashes are recorded in `data/manifests/` and
-`results/manifests/`.
+release checklist are in [docs/runbook.md](docs/runbook.md).
+
+## Source and release discipline
+
+Input URLs, retrieval metadata, and cryptographic digests are retained under
+`data/manifests/`; each derived stage has a result manifest with configuration,
+seed, software revision, and output identity. The release uses frozen source
+vintages and a snapshot-based reproduction route rather than silently
+refreshing regenerated upstream observations.
+
+Code is MIT licensed. Data retain their source terms as recorded in the
+contract and input manifests.
 
 ## Interpretation boundary
 
@@ -68,10 +83,3 @@ quotes, offers, insurance, investment advice, or a promise of future hedge
 performance. The project is not affiliated with, endorsed by, or sponsored by
 CME Group or Speedwell/Xweather. Station names identify public NOAA stations;
 no exchange price data are reproduced.
-
-## License and sources
-
-Code is MIT licensed. Data retain their source terms; the source catalogue and
-retrieval records belong in `data/contracts/README.md`, `data/manifests/`, and
-the site provenance page. See [the about page source](docs/site/about.md) for
-the data boundary and known limitations.

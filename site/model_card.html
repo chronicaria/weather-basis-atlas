@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>Model card · Weather Basis Atlas</title><link rel="stylesheet" href="assets/static/site.css"><style>@media(max-width:760px){.masthead{grid-template-columns:1fr}.masthead nav{flex-wrap:wrap;margin-top:.8rem}.map-stage{width:100vw}}</style></head><body><a class="skip" href="#main">Skip to content</a><header class="masthead"><a class="wordmark" href="index.html">Weather<br><em>Basis Atlas</em></a><nav aria-label="Primary"><a href="index.html">Atlas</a><a href="methodology.html">Method</a><a href="model_card.html">Model card</a><a href="about.html">Provenance</a><a href="nebraska.html">Nebraska</a></nav><span class="issue">research instrument / v1</span></header><main id="main"><article class="reading"><h1>Model card</h1><h1>Model card</h1>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>Model card · Weather Basis Atlas</title><link rel="stylesheet" href="assets/static/site.css"><link rel="stylesheet" href="assets/static/site-additions.css"><style>@media(max-width:760px){.masthead{grid-template-columns:1fr}.masthead nav{flex-wrap:wrap;margin-top:.8rem}.map-stage{width:100vw}}</style></head><body><a class="skip" href="#main">Skip to content</a><header class="masthead"><a class="wordmark" href="index.html">Weather<br><em>Basis Atlas</em></a><nav aria-label="Primary"><a href="index.html">Atlas</a><a href="methodology.html">Method</a><a href="model_card.html">Model card</a><a href="about.html">Provenance</a><a href="nebraska.html">Nebraska</a></nav><span class="issue">research instrument / v1</span></header><main id="main"><article class="reading"><h1>Model card</h1><h1>Model card</h1>
 <h2>Intended use</h2>
 <p>Weather Basis Atlas is a historical basis-risk research tool. It compares a
 county degree-day exposure with weather-station degree-day indexes under a
@@ -87,25 +87,25 @@ and actual market microstructure.</li>
 diagnostics describe that procedure's sampling variation, not a guarantee.</li>
 </ul>
 <h2>Release diagnostics</h2>
-<p>Selected state-contract units — R0: 661, R1: 25.</p>
-<p>Aligned R2j scenarios beat independently paired marginals in 243 of 252 diagnostics; mean CRPS was 10.478 versus 24.031.</p>
-<p>Daily calibration mean(z²) ranges from 1.000000 to 1.000000 across 3,120 series. The 80% minimum detectable skill estimate is 37.6%.</p>
+<p>Selected state-contract units — R0: 641, R1: 38, R2: 7.</p>
+<p>Aligned R2j scenarios beat independently paired marginals in 252 of 252 diagnostics; mean CRPS was 11.396 versus 24.775.</p>
+<p>Daily calibration mean(z²) ranges from 1.000000 to 1.000000 across 3,120 series. The 80% minimum detectable skill estimate is 10.3%.</p>
 <p>The one-time 2023–2025 holdout confirmation below did not enter model selection:</p>
 <ul>
-<li>HDD-10: 9,321 cells; selected CRPS 41.073; R0 CRPS 41.208; skill vs R0 0.33%.</li>
-<li>HDD-11: 9,321 cells; selected CRPS 51.425; R0 CRPS 51.425; skill vs R0 0.00%.</li>
-<li>HDD-12: 9,321 cells; selected CRPS 83.150; R0 CRPS 83.150; skill vs R0 0.00%.</li>
-<li>HDD-01: 9,321 cells; selected CRPS 86.889; R0 CRPS 86.889; skill vs R0 0.00%.</li>
-<li>HDD-02: 9,321 cells; selected CRPS 86.960; R0 CRPS 86.960; skill vs R0 0.00%.</li>
-<li>HDD-03: 9,321 cells; selected CRPS 66.817; R0 CRPS 66.817; skill vs R0 0.00%.</li>
-<li>HDD-04: 9,321 cells; selected CRPS 30.736; R0 CRPS 30.736; skill vs R0 0.00%.</li>
-<li>CDD-04: 9,321 cells; selected CRPS 11.900; R0 CRPS 12.036; skill vs R0 1.13%.</li>
-<li>CDD-05: 9,321 cells; selected CRPS 19.690; R0 CRPS 19.690; skill vs R0 0.00%.</li>
-<li>CDD-06: 9,321 cells; selected CRPS 31.991; R0 CRPS 31.898; skill vs R0 -0.29%.</li>
-<li>CDD-07: 9,321 cells; selected CRPS 31.043; R0 CRPS 31.149; skill vs R0 0.34%.</li>
-<li>CDD-08: 9,321 cells; selected CRPS 28.811; R0 CRPS 29.296; skill vs R0 1.66%.</li>
-<li>CDD-09: 9,321 cells; selected CRPS 21.879; R0 CRPS 21.595; skill vs R0 -1.32%.</li>
-<li>CDD-10: 9,321 cells; selected CRPS 16.568; R0 CRPS 18.500; skill vs R0 10.44%.</li>
+<li>HDD-10: 9,321 cells; selected CRPS 34.339; R0 CRPS 34.177; skill vs R0 -0.48%.</li>
+<li>HDD-11: 9,321 cells; selected CRPS 46.868; R0 CRPS 46.868; skill vs R0 0.00%.</li>
+<li>HDD-12: 9,321 cells; selected CRPS 71.903; R0 CRPS 71.903; skill vs R0 0.00%.</li>
+<li>HDD-01: 9,321 cells; selected CRPS 92.123; R0 CRPS 92.176; skill vs R0 0.06%.</li>
+<li>HDD-02: 9,321 cells; selected CRPS 81.207; R0 CRPS 81.207; skill vs R0 0.00%.</li>
+<li>HDD-03: 9,321 cells; selected CRPS 60.751; R0 CRPS 60.765; skill vs R0 0.02%.</li>
+<li>HDD-04: 9,321 cells; selected CRPS 27.716; R0 CRPS 27.598; skill vs R0 -0.43%.</li>
+<li>CDD-04: 9,321 cells; selected CRPS 11.439; R0 CRPS 11.496; skill vs R0 0.50%.</li>
+<li>CDD-05: 9,321 cells; selected CRPS 20.570; R0 CRPS 20.570; skill vs R0 0.00%.</li>
+<li>CDD-06: 9,321 cells; selected CRPS 29.521; R0 CRPS 29.623; skill vs R0 0.35%.</li>
+<li>CDD-07: 9,321 cells; selected CRPS 28.719; R0 CRPS 28.678; skill vs R0 -0.14%.</li>
+<li>CDD-08: 9,321 cells; selected CRPS 29.037; R0 CRPS 28.925; skill vs R0 -0.39%.</li>
+<li>CDD-09: 9,321 cells; selected CRPS 19.947; R0 CRPS 19.907; skill vs R0 -0.20%.</li>
+<li>CDD-10: 9,321 cells; selected CRPS 14.932; R0 CRPS 15.821; skill vs R0 5.62%.</li>
 </ul>
 <p>Sources: <code>results/tournament/{selection,calibration,joint_check}.parquet</code>, <code>holdout_check.json</code>, and <code>power.json</code>.</p>
 </article></main><footer>Research and education only · Model estimates, not executable quotes or advice.</footer></body></html>
