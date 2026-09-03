@@ -303,6 +303,8 @@ def run_quotes(root: Path, cfg: Any) -> QuoteRunReport:
     seed_agreement = _optional_seed_agreement(root, cfg)
     output = root / "results/quotes/quotes.parquet"
     coherence_output = root / "results/quotes/coherence.json"
+    recompute_output = root / "results/quotes/recompute_50.json"
+    seed_output = root / "results/quotes/seed_agreement.json"
     write_parquet(quotes, output)
     payload = {
         "diagnostics": {
@@ -317,6 +319,39 @@ def run_quotes(root: Path, cfg: Any) -> QuoteRunReport:
     }
     data = json.dumps(payload, sort_keys=True, separators=(",", ":")) + "\n"
     atomic_write_bytes(coherence_output, data.encode())
+    atomic_write_bytes(
+        recompute_output,
+        (
+            json.dumps(
+                {
+                    "n_quotes": int(recompute["n_checked"]),
+                    "max_abs_error": float(recompute["max_abs_error"]),
+                    "tolerance": float(recompute["tolerance"]),
+                },
+                sort_keys=True,
+                separators=(",", ":"),
+            )
+            + "\n"
+        ).encode(),
+    )
+    seed_violations = seed_agreement.get("violations", {})
+    atomic_write_bytes(
+        seed_output,
+        (
+            json.dumps(
+                {
+                    **seed_agreement,
+                    "n_counties": int(_value(cfg, "quotes", "seed_panel_counties", 50)),
+                    "sigma": float(_value(cfg, "quotes", "seed_agreement_sigma", 4)),
+                    "violations": int(sum(seed_violations.values())),
+                    "violation_detail": seed_violations,
+                },
+                sort_keys=True,
+                separators=(",", ":"),
+            )
+            + "\n"
+        ).encode(),
+    )
     if not report.ok:
         raise RuntimeError(f"quote coherence failed: {payload['violations']}")
     return QuoteRunReport(len(quotes), n_counties, len(pairs), output, coherence_output)

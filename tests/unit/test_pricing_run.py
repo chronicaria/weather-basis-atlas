@@ -80,6 +80,10 @@ def test_run_quotes_writes_deterministic_decomposed_grid(tmp_path) -> None:
     assert coherence["diagnostics"]["recompute"]["n_checked"] == 16
     assert coherence["diagnostics"]["recompute"]["max_abs_error"] <= 1e-6
     assert coherence["diagnostics"]["seed_agreement"]["status"] == "not_run"
+    recompute = json.loads((tmp_path / "results/quotes/recompute_50.json").read_text())
+    assert recompute["n_quotes"] == 16 and recompute["max_abs_error"] <= 1e-6
+    seed = json.loads((tmp_path / "results/quotes/seed_agreement.json").read_text())
+    assert seed["status"] == "not_run" and seed["violations"] == 0
     assert verify_quote_rows(tmp_path, cfg, n_rows=16)["max_abs_error"] <= 1e-6
 
     tampered = quotes.copy()
@@ -137,3 +141,5 @@ def test_two_seed_agreement_checks_mid_and_bootstrapped_ask(tmp_path) -> None:
     built = run_quotes(tmp_path, cfg)
     diagnostics = json.loads(built.coherence_path.read_text())["diagnostics"]["seed_agreement"]
     assert diagnostics["status"] == "passed" and diagnostics["n_checked"] == 2
+    attestation = json.loads((tmp_path / "results/quotes/seed_agreement.json").read_text())
+    assert attestation["status"] == "passed" and attestation["violations"] == 0
