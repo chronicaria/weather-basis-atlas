@@ -44,7 +44,17 @@ def git_commit(root: Path | None = None) -> str:
 
     The optional root keeps manifests correct when a pipeline is invoked from
     a wrapper process whose working directory is not the repository itself.
+    Snapshot reproduction sets ``WBA_SOURCE_COMMIT`` after checking out that
+    exact revision and removing Git metadata from the isolated work directory.
     """
+
+    reproduced_commit = os.environ.get("WBA_SOURCE_COMMIT")
+    if reproduced_commit:
+        if len(reproduced_commit) != 40 or any(
+            character not in "0123456789abcdef" for character in reproduced_commit.lower()
+        ):
+            raise ValueError("WBA_SOURCE_COMMIT must be a full 40-character Git SHA")
+        return reproduced_commit.lower()
 
     completed = subprocess.run(
         ["git", "rev-parse", "HEAD"], cwd=root, capture_output=True, text=True, check=False

@@ -22,7 +22,7 @@ from weather_basis.io import (
     write_npy,
     write_parquet,
 )
-from weather_basis.manifest import Manifest, read_manifest, write_manifest
+from weather_basis.manifest import Manifest, git_commit, read_manifest, write_manifest
 
 
 def test_config_is_immutable_and_hashes_canonical_yaml(tmp_path: Path) -> None:
@@ -89,6 +89,15 @@ def test_manifest_round_trip(tmp_path: Path) -> None:
     assert loaded.run_id == manifest.run_id
     assert loaded.config_hash == manifest.config_hash
     assert loaded.sha256_out == manifest.sha256_out
+
+
+def test_reproduction_commit_override_is_full_sha_only(monkeypatch: pytest.MonkeyPatch) -> None:
+    commit = "a" * 40
+    monkeypatch.setenv("WBA_SOURCE_COMMIT", commit)
+    assert git_commit() == commit
+    monkeypatch.setenv("WBA_SOURCE_COMMIT", "short")
+    with pytest.raises(ValueError, match="full 40-character"):
+        git_commit()
 
 
 class _Handler(BaseHTTPRequestHandler):

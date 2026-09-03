@@ -156,13 +156,13 @@ def _run_data(args: argparse.Namespace, root: Path) -> int:
             print("\n".join(checksum_drift))
         return 0 if report.ok and not checksum_drift else 1
     if args.data_command == "snapshot":
-        report = (
-            export_snapshot(root, args.out)
-            if args.snapshot_command == "export"
-            else import_snapshot(args.source, root)
-        )
+        if args.snapshot_command == "export":
+            report = export_snapshot(root, args.out)
+            print(report)
+            return 0
+        report = import_snapshot(args.source, root)
         print(report)
-        return 0
+        return 0 if report.ok else 1
     if args.data_command == "fetch":
         return _fetch_data(args, root)
     if args.data_command == "extend":
@@ -195,6 +195,106 @@ def _run_data(args: argparse.Namespace, root: Path) -> int:
     outputs = build_qc_reports(root, cfg)
     print("\n".join(str(path.relative_to(root)) for path in outputs))
     return 0
+
+
+def _manifest_data_command(
+    args: argparse.Namespace, root: Path, cfg: object, started_at: datetime
+) -> None:
+    """Write complete provenance for each successful data subcommand."""
+
+    command = args.data_command
+    if command == "migrate":
+        outputs = [root / "data/raw", root / "data/manifests", root / "data/metadata"]
+        inputs = [args.donor]
+        stage = "data_migrate"
+    elif command == "verify":
+        outputs = [root / "data/raw/SHA256SUMS"]
+        inputs = [root / "data/raw", root / "data/manifests"]
+        stage = "data_verify"
+    elif command == "snapshot":
+        if args.snapshot_command == "export":
+            outputs = [root / "data/raw/SHA256SUMS"]
+            inputs = [args.out.resolve()]
+            stage = "data_snapshot_export"
+        else:
+            outputs = [root / "data/raw", root / "data/manifests", root / "data/metadata"]
+            inputs = [args.source.resolve()]
+            stage = "data_snapshot_import"
+    elif command == "extend":
+        outputs = [root / "config/data_vintage.yaml"]
+        inputs = [args.decision.resolve()]
+        stage = "data_extend"
+    elif command == "panel":
+        panel_outputs: dict[str, list[Path]] = {
+            "tavg": [
+                root / "data/panel/tavg_f32.npy",
+                root / "data/panel/dates.npy",
+                root / "data/panel/fips.npy",
+            ],
+            "tmax": [
+                root / "data/panel/tmax_f32.npy",
+                root / "data/panel/dates.npy",
+                root / "data/panel/fips.npy",
+            ],
+            "tmin": [
+                root / "data/panel/tmin_f32.npy",
+                root / "data/panel/dates.npy",
+                root / "data/panel/fips.npy",
+            ],
+            "stations": [
+                root / "data/panel/stations_tbar_f32.npy",
+                root / "data/panel/station_ids.npy",
+                root / "data/panel/station_qc.parquet",
+            ],
+            "mean_blocks": [root / "data/panel/mean_blocks.npz"],
+        }
+        outputs = panel_outputs[args.variable]
+        inputs = [root / "data/raw", root / "data/metadata"]
+        stage = "data_panel"
+    elif command == "qc":
+        from weather_basis.manifest_stage import write_data_qc_manifest
+
+        write_data_qc_manifest(
+            root,
+            cfg,
+            outputs=[
+                root / "results/qc",
+                root / "data/manifests/geography.json",
+                root / "data/manifests/population.json",
+            ],
+            inputs=[
+                root / "data/raw",
+                root / "data/panel",
+                root / "data/manifests",
+                root / "data/metadata",
+            ],
+            started_at=started_at,
+        )
+        return
+    elif command == "fetch":
+        fetch_outputs: dict[str, list[Path]] = {
+            "nclimgrid": [
+                root / "data/raw/nclimgrid_daily",
+                root / f"data/manifests/nclimgrid_{args.variable}.csv",
+            ],
+            "ghcnd": [root / "data/raw/ghcnd", root / "data/manifests/ghcnd_stations.csv"],
+            "homr": [root / "data/raw/homr", root / "data/manifests/homr.csv"],
+            "geography": [
+                root / "web/vendor/counties-albers-10m.json",
+                root / "data/manifests/geography.csv",
+            ],
+            "population": [
+                root / "data/raw/census/co-est2021-alldata.csv",
+                root / "data/manifests/population.csv",
+            ],
+            "geocode": [root / "data/contracts/station_county.csv"],
+        }
+        outputs = fetch_outputs[args.fetch_command]
+        inputs = [root / "config/defaults.yaml"]
+        stage = f"data_fetch_{args.fetch_command}"
+    else:  # pragma: no cover - argparse constrains the command surface.
+        raise ValueError(f"cannot manifest data command: {command}")
+    _write_stage(root, cfg, stage, outputs, inputs, started_at)
 
 
 def _write_fetch_manifest(path: Path, results: list[object]) -> None:
@@ -363,8 +463,11 @@ def _check_contracts(root: Path) -> int:
     calendar = pd.read_csv(root / "data/contracts/cme_contract_calendar.csv")
     strips = pd.read_csv(root / "data/contracts/cme_strips.csv")
     inventory = (root / "data/metadata/ghcnd-stations.txt").read_text(errors="ignore")
-    assert len(universe) == 13 and len(calendar) == 14 and len(strips) == 8
-    assert all(station.ghcnd_id in inventory for station in universe)
+    if (len(universe), len(calendar), len(strips)) != (13, 14, 8):
+        raise ValueError("contract tables must contain 13 stations, 14 pairs, and 8 strips")
+    missing = [station.ghcnd_id for station in universe if station.ghcnd_id not in inventory]
+    if missing:
+        raise ValueError(f"contract stations absent from GHCN inventory: {missing}")
     return 0
 
 
@@ -815,6 +918,15 @@ def _fixture_reproduce(out: Path) -> int:
         started_at=datetime.now(UTC),
     )
     build_site(out, out / "site", cfg)
+    write_stage_manifest(
+        out,
+        cfg,
+        stage="reproduce_fixture",
+        outputs=[out / "results/atlas", out / "results/quotes", out / "site"],
+        paths_in=[out / "fixture-source", out / "data/panel"],
+        extra={"fixture": True, "fresh_clone": False},
+        started_at=datetime.now(UTC),
+    )
     return 0
 
 
@@ -837,30 +949,22 @@ def _snapshot_reproduce(root: Path, snapshot: Path, out: Path) -> int:
     if out.exists():
         raise FileExistsError(f"reproduction destination already exists: {out}")
 
-    def ignore(directory: str, names: list[str]) -> set[str]:
-        relative = Path(directory).resolve().relative_to(root)
-        excluded = {".git", ".venv", "__pycache__", ".pytest_cache", ".ruff_cache"}
-        if relative == Path("."):
-            excluded.update({"site", "artifacts"})
-        if relative in {Path("data"), Path("results")}:
-            excluded.update(
-                {
-                    "raw",
-                    "panel",
-                    "draws",
-                    "models",
-                    "atlas",
-                    "tournament",
-                    "quotes",
-                    "qc",
-                    "nebraska",
-                    "indices",
-                    "manifests",
-                }
-            )
-        return excluded.intersection(names)
-
-    shutil.copytree(root, out, ignore=ignore)
+    headline = json.loads((root / "results/atlas/headline.json").read_text(encoding="utf-8"))
+    source_commit = str(headline.get("git_commit", ""))
+    if len(source_commit) != 40:
+        raise ValueError("headline.json must record the full source commit for reproduction")
+    clone = subprocess.run(
+        ["git", "clone", "--local", "--no-hardlinks", "--quiet", str(root), str(out)],
+        check=False,
+    )
+    if clone.returncode:
+        raise RuntimeError("snapshot reproduction could not create a fresh local clone")
+    checkout = subprocess.run(
+        ["git", "checkout", "--detach", "--quiet", source_commit], cwd=out, check=False
+    )
+    if checkout.returncode:
+        raise RuntimeError(f"snapshot reproduction source commit is unavailable: {source_commit}")
+    shutil.rmtree(out / ".git")
     report = import_snapshot(snapshot, out)
     if not report.ok:
         raise RuntimeError(f"snapshot checksum verification failed: {', '.join(report.drift)}")
@@ -884,19 +988,44 @@ def _snapshot_reproduce(root: Path, snapshot: Path, out: Path) -> int:
         ("site", "check"),
     )
     launcher = "from weather_basis.cli import main; raise SystemExit(main())"
+    replay_env = os.environ.copy()
+    replay_env["WBA_SOURCE_COMMIT"] = source_commit
+    replay_env["PYTHONPATH"] = os.pathsep.join(
+        [str(out / "src"), replay_env.get("PYTHONPATH", "")]
+    ).rstrip(os.pathsep)
     for command in commands:
-        completed = subprocess.run([sys.executable, "-c", launcher, *command], cwd=out, check=False)
+        command_env = replay_env.copy()
+        if command[:2] == ("models", "tournament"):
+            command_env["WBA_UNLOCK_HOLDOUT"] = "1"
+        else:
+            command_env.pop("WBA_UNLOCK_HOLDOUT", None)
+        completed = subprocess.run(
+            [sys.executable, "-c", launcher, *command],
+            cwd=out,
+            env=command_env,
+            check=False,
+        )
         if completed.returncode:
             raise RuntimeError(f"snapshot reproduction failed: wba {' '.join(command)}")
-    cfg = load_config(out / "config/defaults.yaml")
+    tracked = subprocess.run(
+        ["git", "ls-files", "*.parquet"],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.splitlines()
+    cfg = load_config(root / "config/defaults.yaml")
     manifest = write_reproduction_manifest(
-        out,
+        root,
         cfg,
         reference_root=root,
         reproduced_root=out,
         snapshot=snapshot,
+        parquet_filenames=tracked,
+        source_commit=source_commit,
     )
-    equality = json.loads(manifest.read_text(encoding="utf-8"))["extra"]["hash_equality"]
+    evidence = json.loads(manifest.read_text(encoding="utf-8"))["extra"]
+    equality = {**evidence["hash_equality"], **evidence["parquet_hash_equality"]}
     if not all(equality.values()):
         raise RuntimeError(f"snapshot reproduction hash mismatch: {equality}")
     print(manifest)
@@ -994,48 +1123,22 @@ def main(argv: Sequence[str] | None = None) -> int:
     started_at = datetime.now(UTC)
     if args.command == "data":
         result = _run_data(args, root)
-        if result == 0 and args.data_command in {"migrate", "panel", "qc"}:
+        if result == 0:
             cfg = load_config(root / "config/defaults.yaml")
-            if args.data_command == "migrate":
-                _write_stage(
-                    root,
-                    cfg,
-                    "data_migrate",
-                    [root / "data/manifests/nclimgrid_tavg.csv"],
-                    [args.donor],
-                    started_at,
-                )
-            elif args.data_command == "panel":
-                _write_stage(
-                    root,
-                    cfg,
-                    "data_panel",
-                    [root / "data/panel"],
-                    [root / "data/raw", root / "data/metadata"],
-                    started_at,
-                )
-            else:
-                from weather_basis.manifest_stage import write_data_qc_manifest
-
-                write_data_qc_manifest(
-                    root,
-                    cfg,
-                    outputs=[
-                        root / "results/qc",
-                        root / "data/manifests/geography.json",
-                        root / "data/manifests/population.json",
-                    ],
-                    inputs=[
-                        root / "data/raw",
-                        root / "data/panel",
-                        root / "data/manifests",
-                        root / "data/metadata",
-                    ],
-                    started_at=started_at,
-                )
+            _manifest_data_command(args, root, cfg, started_at)
         return result
     if args.command == "contracts":
-        return _check_contracts(root)
+        result = _check_contracts(root)
+        cfg = load_config(root / "config/defaults.yaml")
+        _write_stage(
+            root,
+            cfg,
+            "contracts_check",
+            [root / "data/contracts"],
+            [root / "data/metadata/ghcnd-stations.txt"],
+            started_at,
+        )
+        return result
     if args.command == "indices":
         result = _build_indices(root, _selected_pairs(args.pairs))
         cfg = load_config(root / "config/defaults.yaml")
@@ -1046,14 +1149,18 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.command == "atlas":
         if args.atlas_command == "run":
             result = _atlas_from_indices(root, _selected_pairs(args.pairs))
+            stage = "atlas"
+            outputs = [root / "results/atlas", root / "results/qc/atlas_determinism.json"]
         else:
             result = _write_headline(root)
+            stage = "atlas_headline"
+            outputs = [root / "results/atlas/headline.json"]
         cfg = load_config(root / "config/defaults.yaml")
         _write_stage(
             root,
             cfg,
-            "atlas",
-            [root / "results/atlas", root / "results/qc/atlas_determinism.json"],
+            stage,
+            outputs,
             [root / "results/indices"],
             started_at,
         )
@@ -1063,24 +1170,26 @@ def main(argv: Sequence[str] | None = None) -> int:
         result = _run_site(args, site_root)
         if result == 0 and args.site_command in {"payloads", "build", "check"}:
             output = args.site_path.resolve()
+            manifest_root = site_root if args.fixture else root
             try:
-                output.relative_to(root.resolve())
+                output.relative_to(manifest_root.resolve())
             except ValueError:
                 pass  # Temporary development builds are outside release provenance.
             else:
-                cfg = load_config(root / "config/defaults.yaml")
+                cfg = load_config(manifest_root / "config/defaults.yaml")
                 stage = f"site_{args.site_command}"
                 outputs = [output]
-                if args.site_command == "build":
-                    outputs.append(root / "README.md")
+                if args.site_command == "build" and (manifest_root / "README.md").exists():
+                    outputs.append(manifest_root / "README.md")
                 _write_stage(
-                    root,
+                    manifest_root,
                     cfg,
                     stage,
                     outputs,
-                    [root / "results"],
+                    [manifest_root / "results"],
                     started_at,
-                    manifest_path=root / f"results/manifests/site/{args.site_command}.json",
+                    manifest_path=manifest_root
+                    / f"results/manifests/site/{args.site_command}.json",
                 )
         return result
     if args.command == "models":
@@ -1089,6 +1198,16 @@ def main(argv: Sequence[str] | None = None) -> int:
 
         cfg = load_config(root / "config/defaults.yaml")
         if args.models_command == "fit":
+            try:
+                first_origin, last_origin = (int(value) for value in args.origins.split("-", 1))
+            except ValueError as exc:
+                raise ValueError("--origins must be START-END") from exc
+            expected_origins = tuple(int(value) for value in cfg.tournament.origins)
+            if (first_origin, last_origin) != expected_origins:
+                raise ValueError(
+                    f"--origins must equal the registered range "
+                    f"{expected_origins[0]}-{expected_origins[1]}"
+                )
             build_mean_blocks(root, cfg)
             print(root / "data/panel/mean_blocks.npz")
             _write_stage(
@@ -1178,8 +1297,36 @@ def main(argv: Sequence[str] | None = None) -> int:
             return _fixture_reproduce(args.out)
         return _snapshot_reproduce(root, args.snapshot, args.out)
     if args.command == "gate":
-        return subprocess.run(
+        completed = subprocess.run(
             ["pytest", "-o", "addopts=", "-m", "data", f"tests/gates/test_phase{args.number}.py"],
             check=False,
-        ).returncode
+        )
+        if completed.returncode:
+            return completed.returncode
+        result_path = root / f"results/gates/gate_{args.number}.json"
+        atomic_write_bytes(
+            result_path,
+            (
+                json.dumps(
+                    {
+                        "gate": int(args.number),
+                        "passed": True,
+                        "test": f"tests/gates/test_phase{args.number}.py",
+                    },
+                    sort_keys=True,
+                    separators=(",", ":"),
+                )
+                + "\n"
+            ).encode(),
+        )
+        cfg = load_config(root / "config/defaults.yaml")
+        _write_stage(
+            root,
+            cfg,
+            f"gate_{args.number}",
+            [result_path],
+            [root / f"tests/gates/test_phase{args.number}.py"],
+            started_at,
+        )
+        return 0
     raise SystemExit(f"{args.command} requires generated inputs not yet available")

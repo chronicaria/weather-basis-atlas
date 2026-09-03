@@ -194,6 +194,8 @@ def write_reproduction_manifest(
     reproduced_root: Path,
     snapshot: Path,
     filenames: Iterable[str] = ("headline.json", "pairs.parquet", "quotes.parquet"),
+    parquet_filenames: Iterable[str] = (),
+    source_commit: str | None = None,
     started_at: datetime | None = None,
 ) -> Path:
     """Record an honest byte-level comparison for a snapshot reproduction.
@@ -207,8 +209,6 @@ def write_reproduction_manifest(
     root = Path(root).resolve()
     reference_root = Path(reference_root).resolve()
     reproduced_root = Path(reproduced_root).resolve()
-    if root != reproduced_root:
-        raise ValueError("reproduction manifest root must be the reproduced repository")
     names = tuple(filenames)
     reference_hashes: dict[str, str] = {}
     reproduced_hashes: dict[str, str] = {}
@@ -232,17 +232,32 @@ def write_reproduction_manifest(
         equality[name] = reference_hashes[name] == reproduced_hashes[name]
         reproduced_files.append(actual)
         reference_files.append(expected)
+    parquet_equality: dict[str, bool] = {}
+    for name in sorted(set(parquet_filenames)):
+        relative = Path(name)
+        expected, actual = reference_root / relative, reproduced_root / relative
+        if not expected.is_file() or not actual.is_file():
+            raise FileNotFoundError(f"reproduction comparison missing {relative}")
+        parquet_equality[relative.as_posix()] = file_sha256(expected) == file_sha256(actual)
+        reference_files.append(expected)
+        reproduced_files.append(actual)
+    local_outputs = reference_files if root == reference_root else reproduced_files
+    if root not in {reference_root, reproduced_root}:
+        raise ValueError("reproduction manifest root must be a compared repository")
     manifest = write_stage_manifest(
         root,
         cfg,
         stage="reproduce",
-        outputs=reproduced_files,
-        paths_in=[snapshot, *reference_files],
+        outputs=local_outputs,
+        paths_in=[snapshot, *reference_files, *reproduced_files],
         extra={
             "snapshot": str(Path(snapshot)),
             "reference_hashes": reference_hashes,
             "reproduced_hashes": reproduced_hashes,
             "hash_equality": equality,
+            "parquet_hash_equality": parquet_equality,
+            "fresh_clone": True,
+            "source_commit": source_commit,
         },
         started_at=started_at,
     )

@@ -100,11 +100,13 @@ def test_reproduction_manifest_records_actual_hash_equality(tmp_path: Path) -> N
     snapshot.write_bytes(b"snapshot")
 
     target = write_reproduction_manifest(
-        reproduced,
+        reference,
         cfg,
         reference_root=reference,
         reproduced_root=reproduced,
         snapshot=snapshot,
+        parquet_filenames=["results/atlas/pairs.parquet", "results/quotes/quotes.parquet"],
+        source_commit="a" * 40,
         started_at=datetime.now(UTC),
     )
     manifest = read_manifest(target)
@@ -114,13 +116,14 @@ def test_reproduction_manifest_records_actual_hash_equality(tmp_path: Path) -> N
         "pairs.parquet": True,
         "quotes.parquet": True,
     }
+    assert manifest.extra["fresh_clone"] is True
+    assert manifest.extra["source_commit"] == "a" * 40
+    assert all(manifest.extra["parquet_hash_equality"].values())
     assert manifest.extra["reference_hashes"]["quotes.parquet"] == file_sha256(
         reference / "results/quotes/quotes.parquet"
     )
     assert str(snapshot.resolve()) in manifest.extra["sha256_in"]
-    assert str((reference / "results/atlas/pairs.parquet").resolve()) in manifest.extra[
-        "sha256_in"
-    ]
+    assert "results/atlas/pairs.parquet" in manifest.extra["sha256_in"]
 
 
 def test_named_stage_helpers_preserve_inputs_and_do_not_forge_release_url(tmp_path: Path) -> None:
