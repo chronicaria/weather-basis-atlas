@@ -250,7 +250,7 @@ def _manifest_data_command(
         }
         outputs = panel_outputs[args.variable]
         inputs = [root / "data/raw", root / "data/metadata"]
-        stage = "data_panel"
+        stage = f"data_panel_{args.variable}"
     elif command == "qc":
         from weather_basis.manifest_stage import write_data_qc_manifest
 
@@ -295,6 +295,17 @@ def _manifest_data_command(
     else:  # pragma: no cover - argparse constrains the command surface.
         raise ValueError(f"cannot manifest data command: {command}")
     _write_stage(root, cfg, stage, outputs, inputs, started_at)
+    if command == "panel":
+        # Retain command-specific ownership while keeping the aggregate panel
+        # manifest expected by downstream consumers complete.
+        _write_stage(
+            root,
+            cfg,
+            "data_panel",
+            [root / "data/panel"],
+            [root / "data/raw", root / "data/metadata"],
+            started_at,
+        )
 
 
 def _write_fetch_manifest(path: Path, results: list[object]) -> None:
