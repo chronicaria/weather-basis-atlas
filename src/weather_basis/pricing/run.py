@@ -174,6 +174,25 @@ def _draws_for_pair(root: Path, pair: str, n_series: int) -> np.ndarray:
     return draws
 
 
+def _site_station_ids(root: Path) -> np.ndarray:
+    """Return station labels in the production R2j axis order.
+
+    The daily panel also contains the five Nebraska diagnostic stations, but
+    site distributions and quotes are registered for the 13 CME stations.
+    Fixture projects without a role-bearing registry retain all station rows.
+    """
+
+    station_ids = np.asarray(load_npy(root / "data/panel/station_ids.npy"), dtype=str)
+    registry_path = root / "data/metadata/station_registry.csv"
+    if not registry_path.exists():
+        return station_ids
+    registry = pd.read_csv(registry_path, dtype={"ghcnd_id": str})
+    if not {"ghcnd_id", "role"}.issubset(registry.columns):
+        return station_ids
+    cme = set(registry.loc[registry["role"].eq("cme"), "ghcnd_id"].astype(str))
+    return np.asarray([station for station in station_ids if station in cme], dtype=str)
+
+
 def run_quotes(root: Path, cfg: Any) -> QuoteRunReport:
     """Build all standardized/percentile call and put quote indications.
 
@@ -184,7 +203,7 @@ def run_quotes(root: Path, cfg: Any) -> QuoteRunReport:
     """
     root = Path(root)
     fips = np.asarray(load_npy(root / "data/panel/fips.npy"), dtype=str)
-    station_ids = np.asarray(load_npy(root / "data/panel/station_ids.npy"), dtype=str)
+    station_ids = _site_station_ids(root)
     n_counties, n_stations = fips.size, station_ids.size
     if n_counties == 0:
         raise ValueError("fips.npy must not be empty")
@@ -335,7 +354,7 @@ def verify_quote_rows(
     if missing := required.difference(table.columns):
         raise ValueError(f"quote table missing recomputation columns: {sorted(missing)}")
     fips = np.asarray(load_npy(root / "data/panel/fips.npy"), dtype=str)
-    station_ids = np.asarray(load_npy(root / "data/panel/station_ids.npy"), dtype=str)
+    station_ids = _site_station_ids(root)
     county_positions = {code: i for i, code in enumerate(fips)}
     station_positions = {station: fips.size + i for i, station in enumerate(station_ids)}
     z_grid = np.asarray(_value(cfg, "quotes", "z_grid", (-1.5, -1, -0.5, 0, 0.5, 1, 1.5)))
@@ -445,7 +464,7 @@ def check_two_seed_agreement(root: Path, cfg: Any, alternate_dir: Path) -> dict[
     """
     root, alternate_dir = Path(root), Path(alternate_dir)
     fips = np.asarray(load_npy(root / "data/panel/fips.npy"), dtype=str)
-    station_ids = np.asarray(load_npy(root / "data/panel/station_ids.npy"), dtype=str)
+    station_ids = _site_station_ids(root)
     atlas = pd.read_parquet(root / "results/atlas/pairs.parquet")
     pairs = tuple(sorted(atlas["pair"].dropna().astype(str).unique()))
     county_positions = {code: i for i, code in enumerate(fips)}

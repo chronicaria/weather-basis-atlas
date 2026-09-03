@@ -11,6 +11,7 @@ import pytest
 from weather_basis.io import sha256, write_npy, write_parquet
 from weather_basis.pricing.run import (
     _model_load,
+    _site_station_ids,
     check_two_seed_agreement,
     run_quotes,
     verify_quote_rows,
@@ -93,6 +94,21 @@ def test_year_block_model_load_is_deterministic() -> None:
     first = _model_load(burn, payoff, B=32, seed=np.random.SeedSequence(11))
     second = _model_load(burn, payoff, B=32, seed=np.random.SeedSequence(11))
     assert first == second and first > 0
+
+
+def test_site_station_axis_excludes_diagnostic_only_stations(tmp_path) -> None:
+    panel = tmp_path / "data/panel"
+    metadata = tmp_path / "data/metadata"
+    panel.mkdir(parents=True)
+    metadata.mkdir(parents=True)
+    write_npy(np.array(["CME_A", "NE_A", "CME_B"]), panel / "station_ids.npy")
+    pd.DataFrame(
+        {
+            "ghcnd_id": ["CME_A", "NE_A", "CME_B"],
+            "role": ["cme", "nebraska", "cme"],
+        }
+    ).to_csv(metadata / "station_registry.csv", index=False)
+    assert _site_station_ids(tmp_path).tolist() == ["CME_A", "CME_B"]
 
 
 def test_two_seed_agreement_checks_mid_and_bootstrapped_ask(tmp_path) -> None:
