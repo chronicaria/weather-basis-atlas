@@ -1164,6 +1164,17 @@ def main(argv: Sequence[str] | None = None) -> int:
             [root / "results/indices"],
             started_at,
         )
+        if args.atlas_command == "headline":
+            # Keep the command-specific receipt while refreshing the aggregate
+            # atlas manifest consumed by Gate 3 and the site builder.
+            _write_stage(
+                root,
+                cfg,
+                "atlas",
+                [root / "results/atlas", root / "results/qc/atlas_determinism.json"],
+                [root / "results/indices"],
+                started_at,
+            )
         return result
     if args.command == "site":
         site_root = args.site_path.resolve().parent if args.fixture else root
