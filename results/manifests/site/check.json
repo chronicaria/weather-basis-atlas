@@ -1,6 +1,6 @@
 {
   "config_hash": "fdb7f34b315aa21c",
-  "created_utc": "2026-09-03T05:29:42.865412+00:00",
+  "created_utc": "2026-09-03T05:30:10.100293+00:00",
   "extra": {
     "allow_dirty": false,
     "self_excluded_from_sha256": "results/manifests/site/check.json",
@@ -114,7 +114,7 @@
       "results/manifests/quotes.json": "975464539c72ae28dd2156854d6660e6e31fe687090f8bb6eded6efc6fd6f5f4",
       "results/manifests/sensitivity.json": "9d80be0002036601aa467feb9e6f8f23d2fef27eab80ebc4a37f790e3ccee1cf",
       "results/manifests/site/build.json": "9271ca32466f27cac3940916ac08d5aa0986aa79f0b567440385320205c86709",
-      "results/manifests/site/check.json": "0bed42b396cab4e0debebf91da81eacac66df98f033b889a9d0238d3d4102b78",
+      "results/manifests/site/check.json": "d4eba46f5d63d28a2279e784f9cc7795eb436c49e99943c32e3c05bdae710987",
       "results/manifests/tournament.json": "8ef9db95afd2ff10c5acd49a31e221a89fa8216f21d13e119a56697daa6abb8f",
       "results/models/params/ar_CDD-04_1991.npz": "77fdbba744e38d1faaebf34e0116de2a307dc2bf8931fd964aaaf1a19f2ad9f7",
       "results/models/params/ar_CDD-04_1992.npz": "708a3bcff7bd5c6c0976af787520ba73c3db6586fd8c3915f4527708eaf62e21",
@@ -1082,7 +1082,7 @@
     }
   },
   "geography_vintage": "us-atlas@3",
-  "git_commit": "8748dd953a0ecf2b03fb552dc67dbf70429ae037",
+  "git_commit": "1abca2798ab6ff0ebdfdf9506637fa54721056a4",
   "holdout_unlocked": false,
   "paths_in": [
     "results/atlas/bootstrap.parquet",
