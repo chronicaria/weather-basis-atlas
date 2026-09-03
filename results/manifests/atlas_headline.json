@@ -1,6 +1,6 @@
 {
   "config_hash": "fdb7f34b315aa21c",
-  "created_utc": "2026-09-03T06:13:30.138066+00:00",
+  "created_utc": "2026-09-03T06:22:55.675182+00:00",
   "extra": {
     "allow_dirty": false,
     "self_excluded_from_sha256": "results/manifests/atlas_headline.json",
@@ -40,7 +40,7 @@
     }
   },
   "geography_vintage": "us-atlas@3",
-  "git_commit": "abd5656d52e787162185396341eed91333ab98b9",
+  "git_commit": "877886d32c4e14946c468ee562756a4d93b33d1a",
   "holdout_unlocked": false,
   "paths_in": [
     "results/indices/county_CDD-04.parquet",
@@ -84,7 +84,7 @@
   "run_id": "atlas_headline-fdb7f34b315aa21c",
   "seed": 20260901,
   "sha256_out": {
-    "results/atlas/headline.json": "e3a6c940bf73e06eee7992cd014c98dca07257845814c622ee537f32cbec94f9"
+    "results/atlas/headline.json": "b3cecbf5678ed4fe50f8a7f4247715b17c88d57499f383cfa6cbd4cb7a9c2268"
   },
   "stage": "atlas_headline",
   "vintages": {
