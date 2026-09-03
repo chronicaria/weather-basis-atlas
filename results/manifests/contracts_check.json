@@ -1,0 +1,49 @@
+{
+  "config_hash": "fdb7f34b315aa21c",
+  "created_utc": "2026-09-03T06:12:15.021089+00:00",
+  "extra": {
+    "allow_dirty": false,
+    "self_excluded_from_sha256": "results/manifests/contracts_check.json",
+    "sha256_in": {
+      "data/metadata/ghcnd-stations.txt": "91e4bd9b4c991c3ea9c19062eae73bca118cad0f4a436e33149ff345bffc8f9c"
+    }
+  },
+  "geography_vintage": "us-atlas@3",
+  "git_commit": "3e80947522567c0a0e77f0ac0cc9888de2b66700",
+  "holdout_unlocked": false,
+  "paths_in": [
+    "data/metadata/ghcnd-stations.txt"
+  ],
+  "paths_out": [
+    "data/contracts/README.md",
+    "data/contracts/cme_city_universe.csv",
+    "data/contracts/cme_contract_calendar.csv",
+    "data/contracts/cme_product_codes.csv",
+    "data/contracts/cme_strips.csv",
+    "data/contracts/station_county.csv",
+    "results/manifests/contracts_check.json"
+  ],
+  "prereg_sha256": "2b17ce6504cfe3c8178c2a7f5a09fd1b809c54cf000e904d32899b10e1e18bb1",
+  "run_id": "contracts_check-fdb7f34b315aa21c",
+  "seed": 20260901,
+  "sha256_out": {
+    "data/contracts/README.md": "8731f4fdb83d9add97956d5ad4ad22dfbaefcd79182dbff315a9c62d846c90fd",
+    "data/contracts/cme_city_universe.csv": "9c51d584015fbcd417e66f6e5e77cc4e4aa49d1c72e79a6f25b75a5237d45360",
+    "data/contracts/cme_contract_calendar.csv": "61aec994ed8c828a8e88dd4135748ade23541758f6e5f89697ab2d1f1fec5273",
+    "data/contracts/cme_product_codes.csv": "07d77777d24737dedcd68ed4a5cf83050291030020d3802d315c4f3ff4a7105d",
+    "data/contracts/cme_strips.csv": "30c2e41b02a581defb8834987821abaad233319179d5e12f6cefb6b5fdb93aef",
+    "data/contracts/station_county.csv": "09b52e688af10f3a7c88011102a61bccbc75505b61da520cc36ce4f024f4aa86"
+  },
+  "stage": "contracts_check",
+  "vintages": {
+    "gazetteer": "census_2020",
+    "geography": "us-atlas@3",
+    "ghcnd": "ghcnd_snap2026-09-02",
+    "ghcnd_meta": "ghcnd_meta_snap2026-09-02",
+    "homr": "homr_snap2026-09-02",
+    "nclimgrid_tavg": "nclimgrid-daily_v1-0-0_snap2026-07-30",
+    "nclimgrid_tmax": "nclimgrid-daily_v1-0-0_snap2026-09-02",
+    "nclimgrid_tmin": "nclimgrid-daily_v1-0-0_snap2026-09-02",
+    "population": "co-est2021-alldata"
+  }
+}
