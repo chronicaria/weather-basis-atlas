@@ -1066,10 +1066,10 @@ def run_tournament(root: Path, cfg: Any) -> dict[str, Path]:
                     "n_counties": n_counties,
                     "first_sha256": hashlib.sha256(first_bytes).hexdigest(),
                     "replay_sha256": hashlib.sha256(replay_bytes).hexdigest(),
-                    "byte_equal": first_bytes == replay_bytes,
-                    "rung": "R2_daily",
+                    "hash_equality": first_bytes == replay_bytes,
+                    "engine": "daily_R2",
                 }
-                if not determinism["byte_equal"]:
+                if not determinism["hash_equality"]:
                     raise RuntimeError("daily R2 replay was not byte-for-byte deterministic")
             origin_calibrations.append(
                 _daily_calibration_by_origin(daily_fit, labels, pair, int(origin))
@@ -1240,7 +1240,11 @@ def run_tournament(root: Path, cfg: Any) -> dict[str, Path]:
     )
     determinism_path = root / "results" / "tournament" / "determinism.json"
     determinism_path.write_text(
-        json.dumps(determinism or {"byte_equal": False}, sort_keys=True) + "\n", encoding="utf-8"
+        json.dumps(
+            determinism or {"engine": "daily_R2", "hash_equality": False}, sort_keys=True
+        )
+        + "\n",
+        encoding="utf-8",
     )
     peak_rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
     peak_rss_bytes = peak_rss if sys.platform == "darwin" else peak_rss * 1024

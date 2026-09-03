@@ -1,5 +1,5 @@
 {
-  "criterion": "mean R2j CRPS lower and exact one-sided binomial sign-test p < 0.01",
+  "diagnostic": "pooled mean CRPS and exact one-sided binomial sign test",
   "independent_r2_mean_crps": 24.775489148813,
   "mean_crps_improves": true,
   "n_rows": 252,

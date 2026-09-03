@@ -1,0 +1,1 @@
+{"execution": "serial daily fits; model state is not duplicated across workers", "max_rss_gb": 12.0, "peak_rss_bytes": 8766210048, "workers_configured": 1, "workers_effective": 1}
