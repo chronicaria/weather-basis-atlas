@@ -3,7 +3,7 @@
   "created_utc": "2026-09-04T13:07:46.530508+00:00",
   "extra": {
     "allow_dirty": false,
-    "self_excluded_from_sha256": "results/manifests/data_panel.json",
+    "self_excluded_from_sha256": "results/manifests/data_panel_tmax.json",
     "sha256_in": {
       "data/metadata/counties.csv": "7c445120c7bda71752ad4fbb68467e87d4cac41313c0fb865263e40f48d20045",
       "data/metadata/county_exceptions.csv": "9801498f15066a39cb525f8577f1d3c19ba1d96072338b24f468796ef91a06d3",
@@ -4183,30 +4183,18 @@
   "paths_out": [
     "data/panel/dates.npy",
     "data/panel/fips.npy",
-    "data/panel/mean_blocks.npz",
-    "data/panel/station_ids.npy",
-    "data/panel/station_qc.parquet",
-    "data/panel/stations_tbar_f32.npy",
-    "data/panel/tavg_f32.npy",
     "data/panel/tmax_f32.npy",
-    "data/panel/tmin_f32.npy",
-    "results/manifests/data_panel.json"
+    "results/manifests/data_panel_tmax.json"
   ],
   "prereg_sha256": "2b17ce6504cfe3c8178c2a7f5a09fd1b809c54cf000e904d32899b10e1e18bb1",
-  "run_id": "data_panel-fdb7f34b315aa21c",
+  "run_id": "data_panel_tmax-fdb7f34b315aa21c",
   "seed": 20260901,
   "sha256_out": {
     "data/panel/dates.npy": "7ea8961e3964dbb4ea7858c9cc693595245bb1fdf6436d3c988954def57906d6",
     "data/panel/fips.npy": "ef820d68eb74a7e67f943068cc1210d321c453182028ede01ceb6fb65eb417c3",
-    "data/panel/mean_blocks.npz": "40a8ba4abd39341974081752bb6a7b3a05ec5f6b466d388779ce77ad0e505077",
-    "data/panel/station_ids.npy": "6abdba54d9c04c9cd45f726eb6a516daab4481eddc445f694094093ba6413b91",
-    "data/panel/station_qc.parquet": "331227add7cc78c9a4156e5b939825f328827917a64d7c55434320f9a8af26e6",
-    "data/panel/stations_tbar_f32.npy": "18f9fb5843136bcd93854d1cee968c87154894871f6c0f4c34bee63d605256da",
-    "data/panel/tavg_f32.npy": "2b82c3c7c597ea936fbe4a69931156fa7241ec10b74e5c40acd1ed45a5adfd74",
-    "data/panel/tmax_f32.npy": "8a791ab6e6525c6c6f3c7f7b0970bebd6add40e948dfe8d4c97d693842985f8d",
-    "data/panel/tmin_f32.npy": "4e84e81c6f72bb31543b6983740f4359f73a0393727b7cc6b2be1cc947c84edd"
+    "data/panel/tmax_f32.npy": "8a791ab6e6525c6c6f3c7f7b0970bebd6add40e948dfe8d4c97d693842985f8d"
   },
-  "stage": "data_panel",
+  "stage": "data_panel_tmax",
   "vintages": {
     "gazetteer": "census_2020",
     "geography": "us-atlas@3",
