@@ -1,6 +1,6 @@
 {
   "config_hash": "fdb7f34b315aa21c",
-  "created_utc": "2026-09-04T12:47:33.404417+00:00",
+  "created_utc": "2026-09-04T13:08:14.254099+00:00",
   "extra": {
     "allow_dirty": false,
     "self_excluded_from_sha256": "results/manifests/data_qc.json",
@@ -2109,7 +2109,7 @@
     }
   },
   "geography_vintage": "us-atlas@3",
-  "git_commit": "50dff8761445e50e85dcb62e9a2399b2e927ce85",
+  "git_commit": "efd5a26ed5593a85e3345a40839b9401e88563d2",
   "holdout_unlocked": false,
   "paths_in": [
     "data/manifests/geography.json",
