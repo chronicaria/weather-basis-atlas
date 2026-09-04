@@ -941,6 +941,28 @@ def _fixture_reproduce(out: Path) -> int:
     return 0
 
 
+_SNAPSHOT_REPRODUCE_COMMANDS = (
+    ("data", "verify"),
+    ("data", "panel", "--variable", "tavg"),
+    ("data", "panel", "--variable", "tmax"),
+    ("data", "panel", "--variable", "tmin"),
+    ("data", "panel", "--variable", "stations"),
+    ("data", "qc"),
+    ("contracts", "check"),
+    ("indices", "build"),
+    ("atlas", "run"),
+    ("atlas", "run"),
+    ("atlas", "headline"),
+    ("models", "fit", "--origins", "1991-2022"),
+    ("models", "tournament"),
+    ("models", "simulate", "--as-of", "site"),
+    ("quotes", "build"),
+    ("nebraska", "run"),
+    ("site", "build"),
+    ("site", "check"),
+)
+
+
 def _snapshot_reproduce(root: Path, snapshot: Path, out: Path) -> int:
     """Rebuild a standalone checkout from a frozen raw-data snapshot.
 
@@ -980,31 +1002,13 @@ def _snapshot_reproduce(root: Path, snapshot: Path, out: Path) -> int:
     if not report.ok:
         raise RuntimeError(f"snapshot checksum verification failed: {', '.join(report.drift)}")
 
-    commands = (
-        ("data", "verify"),
-        ("data", "panel", "--variable", "tavg"),
-        ("data", "panel", "--variable", "stations"),
-        ("data", "qc"),
-        ("contracts", "check"),
-        ("indices", "build"),
-        ("atlas", "run"),
-        ("atlas", "run"),
-        ("atlas", "headline"),
-        ("models", "fit", "--origins", "1991-2022"),
-        ("models", "tournament"),
-        ("models", "simulate", "--as-of", "site"),
-        ("quotes", "build"),
-        ("nebraska", "run"),
-        ("site", "build"),
-        ("site", "check"),
-    )
     launcher = "from weather_basis.cli import main; raise SystemExit(main())"
     replay_env = os.environ.copy()
     replay_env["WBA_SOURCE_COMMIT"] = source_commit
     replay_env["PYTHONPATH"] = os.pathsep.join(
         [str(out / "src"), replay_env.get("PYTHONPATH", "")]
     ).rstrip(os.pathsep)
-    for command in commands:
+    for command in _SNAPSHOT_REPRODUCE_COMMANDS:
         command_env = replay_env.copy()
         if command[:2] == ("models", "tournament"):
             command_env["WBA_UNLOCK_HOLDOUT"] = "1"

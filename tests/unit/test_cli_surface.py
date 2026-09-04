@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from weather_basis.cli import build_parser
+from weather_basis.cli import _SNAPSHOT_REPRODUCE_COMMANDS, build_parser
 
 
 def test_data_fetch_extend_and_snapshot_reproduction_commands_parse() -> None:
@@ -34,3 +34,13 @@ def test_data_fetch_extend_and_snapshot_reproduction_commands_parse() -> None:
         ["reproduce", "--snapshot", "/tmp/frozen.tar.gz", "--out", "/tmp/reproduced"]
     )
     assert snapshot.snapshot.name == "frozen.tar.gz"
+
+
+def test_snapshot_reproduction_rebuilds_all_qc_panels() -> None:
+    """The clean replay must rebuild every panel consumed by data QC."""
+    panel_variables = {
+        command[-1]
+        for command in _SNAPSHOT_REPRODUCE_COMMANDS
+        if command[:2] == ("data", "panel")
+    }
+    assert {"tavg", "tmax", "tmin", "stations"} <= panel_variables
