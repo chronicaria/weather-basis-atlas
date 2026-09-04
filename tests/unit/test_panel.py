@@ -74,3 +74,32 @@ def test_build_panel_rejects_monthly_county_drift(
             tmp_path / "out",
             pd.DataFrame({"fips": ["01001", "31001"]}),
         )
+
+
+def test_build_partial_panel_on_canonical_date_axis(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Auxiliary vintages retain the full panel axis and leave other dates missing."""
+    raw = tmp_path / "raw" / "averages" / "2001"
+    raw.mkdir(parents=True)
+    (raw / "tmax-200102-cty-scaled.csv").touch()
+    monkeypatch.setattr(
+        panel,
+        "parse_month",
+        lambda *_args: (np.ones((28, 1), dtype=np.float32), [County("01001")]),
+    )
+    axis = pd.date_range("2001-01-01", "2001-03-31", freq="D").to_numpy(
+        dtype="datetime64[D]"
+    )
+    report = panel.build_panel(
+        "tmax",
+        [Month(2001, 2)],
+        tmp_path / "raw",
+        tmp_path / "out",
+        pd.DataFrame({"fips": ["01001"], "ncei_code": ["01001"]}),
+        date_axis=axis,
+    )
+    values = np.load(tmp_path / "out" / "tmax_f32.npy")
+    assert report.n_days == 90
+    assert np.isnan(values[:31]).all() and np.isnan(values[59:]).all()
+    assert np.isfinite(values[31:59]).all()

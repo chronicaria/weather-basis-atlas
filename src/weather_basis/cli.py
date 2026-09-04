@@ -178,12 +178,27 @@ def _run_data(args: argparse.Namespace, root: Path) -> int:
         cfg = load_config(root / "config/defaults.yaml")
         start = tuple(map(int, str(cfg.panel.start).split("-")[:2]))
         end = tuple(map(int, str(cfg.panel.end).split("-")[:2]))
+        date_axis = None
+        if args.variable in {"tmax", "tmin"}:
+            import yaml
+
+            vintages = yaml.safe_load(
+                (root / "config/data_vintage.yaml").read_text(encoding="utf-8")
+            )
+            vintage = vintages[f"nclimgrid_{args.variable}"]
+            start = tuple(map(int, str(vintage["start"]).split("-")[:2]))
+            usable_end = vintage.get("usable_through", vintage["end"])
+            end = tuple(map(int, str(usable_end).split("-")[:2]))
+            date_axis = pd.date_range(cfg.panel.start, cfg.panel.end, freq="D").to_numpy(
+                dtype="datetime64[D]"
+            )
         report = build_panel(
             args.variable,
             list(_months(start, end)),
             root / "data/raw/nclimgrid_daily",
             root / "data/panel",
             pd.read_csv(root / "data/metadata/counties.csv", dtype=str),
+            date_axis=date_axis,
         )
         print(report)
         return 0

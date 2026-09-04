@@ -85,6 +85,8 @@ def build_panel(
     raw_root: Path,
     out_dir: Path,
     counties: pd.DataFrame,
+    *,
+    date_axis: np.ndarray | None = None,
 ) -> PanelReport:
     """Build one date-major float32 county panel from validated monthly files."""
 
@@ -96,9 +98,17 @@ def build_panel(
     if len(set(ordered_months)) != len(ordered_months):
         raise PanelError("Panel months must be unique")
     fips = _county_fips(counties)
-    day_count = sum(calendar.monthrange(item.year, item.month)[1] for item in ordered_months)
+    if date_axis is None:
+        day_count = sum(calendar.monthrange(item.year, item.month)[1] for item in ordered_months)
+        dates = np.empty(day_count, dtype="datetime64[D]")
+    else:
+        dates = np.asarray(date_axis, dtype="datetime64[D]")
+        if dates.ndim != 1 or dates.size == 0:
+            raise PanelError("Panel date axis must be a non-empty vector")
+        if np.any(np.diff(dates.astype("int64")) != 1):
+            raise PanelError("Panel date axis must be calendar-contiguous")
+        day_count = dates.size
     values = np.full((day_count, len(fips)), np.nan, dtype=np.float32)
-    dates = np.empty(day_count, dtype="datetime64[D]")
     offset = 0
     state_codes = _state_codes(counties)
 
@@ -120,11 +130,16 @@ def build_panel(
             )
         indices = np.asarray([position[item] for item in fips], dtype=np.intp)
         width = parsed.shape[0]
+        start = np.datetime64(f"{month.year:04d}-{month.month:02d}-01")
+        if date_axis is not None:
+            offset = int(np.searchsorted(dates, start))
+            if offset >= dates.size or dates[offset] != start or offset + width > dates.size:
+                raise PanelError(f"{month} falls outside the requested panel date axis")
         # nClimGrid county files are Celsius; all public panel values are °F.
         values[offset : offset + width] = parsed[:, indices] * np.float32(9 / 5) + np.float32(32)
-        start = np.datetime64(f"{month.year:04d}-{month.month:02d}-01")
-        dates[offset : offset + width] = start + np.arange(width).astype("timedelta64[D]")
-        offset += width
+        if date_axis is None:
+            dates[offset : offset + width] = start + np.arange(width).astype("timedelta64[D]")
+            offset += width
 
     if np.any(np.diff(dates.astype("int64")) != 1):
         raise PanelError("Panel months are not calendar-contiguous")
