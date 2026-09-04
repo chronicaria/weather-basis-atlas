@@ -1,6 +1,6 @@
 {
   "config_hash": "fdb7f34b315aa21c",
-  "created_utc": "2026-09-03T06:27:45.040985+00:00",
+  "created_utc": "2026-09-04T12:48:48.113432+00:00",
   "extra": {
     "allow_dirty": false,
     "self_excluded_from_sha256": "results/manifests/contracts_check.json",
@@ -9,7 +9,7 @@
     }
   },
   "geography_vintage": "us-atlas@3",
-  "git_commit": "877886d32c4e14946c468ee562756a4d93b33d1a",
+  "git_commit": "654e0a2fdad5ad69e9713feaa28cf62b9a3ea4bd",
   "holdout_unlocked": false,
   "paths_in": [
     "data/metadata/ghcnd-stations.txt"
