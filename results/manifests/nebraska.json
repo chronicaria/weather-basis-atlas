@@ -1,22 +1,22 @@
 {
   "config_hash": "fdb7f34b315aa21c",
-  "created_utc": "2026-09-03T05:00:44.789959+00:00",
+  "created_utc": "2026-09-03T15:25:40.126625+00:00",
   "extra": {
     "allow_dirty": false,
     "self_excluded_from_sha256": "results/manifests/nebraska.json",
     "sha256_in": {
       "data/contracts/station_county.csv": "09b52e688af10f3a7c88011102a61bccbc75505b61da520cc36ce4f024f4aa86",
-      "results/atlas/bootstrap.parquet": "7d4563ff5a337f7cb0d227f6ec83c09625ca4e43d6708dc728306008eb09d1da",
-      "results/atlas/headline.json": "7c531f1c6e3b0f2b75b277f62e4163ff6a1b47db45da767eccb1582815b94121",
-      "results/atlas/oos.parquet": "48e10c9cd9d67bbeb4f13ec67f8724fcc84c770a561186c2b530735e36aaf6e3",
-      "results/atlas/pairs.parquet": "55d34f47ba4fe6349c461f3a1c8d47fc6af71f270bf42ce7403cb76d1086b772",
-      "results/atlas/stations.parquet": "4ceca8f13cfaab01c6e5e49e2dddd2ac906b44e45b8f37dd3a2c95cba1437e20",
+      "results/atlas/bootstrap.parquet": "4f0b9ee36fc83eaaccbebce04356638414d1832e7c10fdd7b54e8b2c914242e0",
+      "results/atlas/headline.json": "b65140b7eca1a1aa15e8a4fe9258e5421613d77a18a583205bca4d5d75349339",
+      "results/atlas/oos.parquet": "0c1e6b8159e8294163d60d555734e8598f0eeabaf68e9f2816f4c510c58bec3f",
+      "results/atlas/pairs.parquet": "72bae1cc3b560b420c270ab6bb179e542690e1974277a257075136a26de659cf",
+      "results/atlas/stations.parquet": "6b4db2bdcf36c565fc6f7e19687ccfea981049eb47f079833ba0faa061c95c7c",
       "results/atlas/strip_bootstrap.parquet": "cbd30ac803d16aad63b4df30ddd0500e9350bab1174215fe52111cb4f5e44c15",
       "results/atlas/strip_stations.parquet": "0412dd489eab7ada84af937dd8d354a106a69bcc1c8352bcdbf39597b640e37d",
       "results/atlas/strips.parquet": "ea772b50401e7893279f0a9eb5b72ed4d9a841ba5488239987fcb9cfb0011c32",
       "results/atlas/tensors/CDD-04.npz": "932b115aff6b2e7245e8f294466413d05025209b70731276e352d2cdb7d8f1df",
       "results/atlas/tensors/CDD-05.npz": "cc96ecd92ee453e096d87d13fd11a72321e71c2a14d0db1628ea83124090e77f",
-      "results/atlas/tensors/CDD-06.npz": "dd8f6f36f4fe1c6ee5c063f37b1eb5d9e1f1b9cf51c82d1477ae10824dad956a",
+      "results/atlas/tensors/CDD-06.npz": "f2f54c26fc2bc89c2045d9fa2d6748285d3f547ac2bed4cea32298963db6681c",
       "results/atlas/tensors/CDD-07.npz": "2119d9c5fa6812e0e08d1ce9a88e3e6110edd6ac1aed49bc11198045e7fd9351",
       "results/atlas/tensors/CDD-08.npz": "26c52ba6ed244bec99be0e7a149962972c6d171a50345351c7827ed3662e97a6",
       "results/atlas/tensors/CDD-09.npz": "84684449b7a806308f0d8ce0e5b9cbf29dbbe39a5b98fbbb11c862bf58997c1c",
@@ -28,11 +28,11 @@
       "results/atlas/tensors/HDD-10.npz": "54bbf25465f94b0e27060bc538e00b22dc7b66f5c50bcc0bc860c48d9fc1b33e",
       "results/atlas/tensors/HDD-11.npz": "7e6435876047e25d60b8d2471a4a1793ccd9e9ecdd00f92112d1bcb4f9e90c9e",
       "results/atlas/tensors/HDD-12.npz": "068a883a12ed54d00f0171670210ac6294417cb4b405475efa6137afa11e6455",
-      "results/atlas/zero_distance.parquet": "ca5a1b89120b5d169c0b2fcb2967072288614b468bd8e2caaca5d86989c6e429"
+      "results/atlas/zero_distance.parquet": "008cb3e5b2aed313d9504c7d0082b1f0135302b24f5a6b9cca863431c480428e"
     }
   },
   "geography_vintage": "us-atlas@3",
-  "git_commit": "45e9506d1f0a401a90b23d0f78ec156f8a485b23",
+  "git_commit": "877886d32c4e14946c468ee562756a4d93b33d1a",
   "holdout_unlocked": false,
   "paths_in": [
     "data/contracts/station_county.csv",
@@ -68,7 +68,7 @@
   "run_id": "nebraska-fdb7f34b315aa21c",
   "seed": 20260901,
   "sha256_out": {
-    "results/nebraska/basis.parquet": "7ca78fa7dfdcca6c731c022531c6a383d65f9bae4b8d8fb558a6c3527363b9b6"
+    "results/nebraska/basis.parquet": "89ec658012eb0f761383d1633a18e69531002b5e83ef5c2ac369759de7a6fc47"
   },
   "stage": "nebraska",
   "vintages": {

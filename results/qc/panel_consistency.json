@@ -1,7 +1,4 @@
 {
-  "max_deviation_f": 0.027008056640625,
-  "mean_deviation_f": 0.004533512517809868,
-  "n": 3405272,
-  "usable_from": "2023-01-01",
-  "usable_through": "2025-12-31"
+  "reason": "TMAX/TMIN panels unavailable",
+  "status": "not_assessed"
 }

@@ -1,6 +1,6 @@
 {
   "config_hash": "fdb7f34b315aa21c",
-  "created_utc": "2026-09-02T19:52:18.328582+00:00",
+  "created_utc": "2026-09-03T07:07:20.071912+00:00",
   "extra": {
     "allow_dirty": false,
     "self_excluded_from_sha256": "results/manifests/models_fit.json",
@@ -9,7 +9,7 @@
     }
   },
   "geography_vintage": "us-atlas@3",
-  "git_commit": "1761c04a42a87bc3203122996b27ed517bd43f22",
+  "git_commit": "877886d32c4e14946c468ee562756a4d93b33d1a",
   "holdout_unlocked": false,
   "paths_in": [
     "data/panel/tavg_f32.npy"
@@ -22,7 +22,7 @@
   "run_id": "models_fit-fdb7f34b315aa21c",
   "seed": 20260901,
   "sha256_out": {
-    "data/panel/mean_blocks.npz": "3bf5642d2e42b21a39ca0b942381b2d6aa25d599806ccf944f76cc9d213e4a5b"
+    "data/panel/mean_blocks.npz": "40a8ba4abd39341974081752bb6a7b3a05ec5f6b466d388779ce77ad0e505077"
   },
   "stage": "models_fit",
   "vintages": {

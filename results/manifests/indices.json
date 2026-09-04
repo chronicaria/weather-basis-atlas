@@ -1,34 +1,28 @@
 {
   "config_hash": "fdb7f34b315aa21c",
-  "created_utc": "2026-09-02T19:38:25.410180+00:00",
+  "created_utc": "2026-09-03T06:27:45.338879+00:00",
   "extra": {
     "allow_dirty": false,
     "self_excluded_from_sha256": "results/manifests/indices.json",
     "sha256_in": {
       "data/panel/dates.npy": "7ea8961e3964dbb4ea7858c9cc693595245bb1fdf6436d3c988954def57906d6",
       "data/panel/fips.npy": "ef820d68eb74a7e67f943068cc1210d321c453182028ede01ceb6fb65eb417c3",
-      "data/panel/mean_blocks.npz": "3bf5642d2e42b21a39ca0b942381b2d6aa25d599806ccf944f76cc9d213e4a5b",
       "data/panel/station_ids.npy": "6abdba54d9c04c9cd45f726eb6a516daab4481eddc445f694094093ba6413b91",
-      "data/panel/station_qc.parquet": "63d28ba7c52a7c4e1bd13fdd5ac9510a3dd3e9956bd8963b038bc3c8aeb71fdd",
-      "data/panel/stations_tbar_f32.npy": "66a9c7b12de35f11d600881ba3e644d440d7a5199896e21aa7051e0c09ffeda5",
-      "data/panel/tavg_f32.npy": "2b82c3c7c597ea936fbe4a69931156fa7241ec10b74e5c40acd1ed45a5adfd74",
-      "data/panel/tmax_f32.npy": "8a791ab6e6525c6c6f3c7f7b0970bebd6add40e948dfe8d4c97d693842985f8d",
-      "data/panel/tmin_f32.npy": "4e84e81c6f72bb31543b6983740f4359f73a0393727b7cc6b2be1cc947c84edd"
+      "data/panel/station_qc.parquet": "331227add7cc78c9a4156e5b939825f328827917a64d7c55434320f9a8af26e6",
+      "data/panel/stations_tbar_f32.npy": "18f9fb5843136bcd93854d1cee968c87154894871f6c0f4c34bee63d605256da",
+      "data/panel/tavg_f32.npy": "2b82c3c7c597ea936fbe4a69931156fa7241ec10b74e5c40acd1ed45a5adfd74"
     }
   },
   "geography_vintage": "us-atlas@3",
-  "git_commit": "405b4db60f6b12455c19014c3a81ac45fdf9ae15",
+  "git_commit": "877886d32c4e14946c468ee562756a4d93b33d1a",
   "holdout_unlocked": false,
   "paths_in": [
     "data/panel/dates.npy",
     "data/panel/fips.npy",
-    "data/panel/mean_blocks.npz",
     "data/panel/station_ids.npy",
     "data/panel/station_qc.parquet",
     "data/panel/stations_tbar_f32.npy",
-    "data/panel/tavg_f32.npy",
-    "data/panel/tmax_f32.npy",
-    "data/panel/tmin_f32.npy"
+    "data/panel/tavg_f32.npy"
   ],
   "paths_out": [
     "results/indices/county_CDD-04.parquet",
@@ -87,7 +81,7 @@
     "results/indices/county_HDD-X.parquet": "29442496a3db5fc65e602d874bed7718c48df62b20d4fbf531338756a4d4d51b",
     "results/indices/station_CDD-04.parquet": "3da51d68f98404758ba999ec81aa316cb4e0d61363df645bf8c6d9856006ea9f",
     "results/indices/station_CDD-05.parquet": "babf12da8331c2836ba664797b173f40e4bdccd06c294ef0a7b2126dd9f5bb39",
-    "results/indices/station_CDD-06.parquet": "05ccbb8f0a793eeeff47362dd85ae52ce6c8950d9f96f9f0ce6607d52f60979d",
+    "results/indices/station_CDD-06.parquet": "8337a5be1418f2e2035949df1d2f1b221385c5f8e7355784c760931faf1f5bc8",
     "results/indices/station_CDD-07.parquet": "18c1e6f6ba47ea2bddb402a5be17ca927f40d89a669e9242f0ffc3998c21a1c2",
     "results/indices/station_CDD-08.parquet": "eb412c87bc828c7547ebacc609f900836cc8f617451aad5110536421db8e41b5",
     "results/indices/station_CDD-09.parquet": "25bd57f3c0b083b525370b78a9f4400bae64a6d5a05bb4771fa3bb0faa4b61f6",

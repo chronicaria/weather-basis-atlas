@@ -1,6 +1,6 @@
 {
   "config_hash": "fdb7f34b315aa21c",
-  "created_utc": "2026-09-03T06:22:55.675182+00:00",
+  "created_utc": "2026-09-03T07:07:19.460109+00:00",
   "extra": {
     "allow_dirty": false,
     "self_excluded_from_sha256": "results/manifests/atlas_headline.json",
@@ -23,7 +23,7 @@
       "results/indices/county_HDD-X.parquet": "29442496a3db5fc65e602d874bed7718c48df62b20d4fbf531338756a4d4d51b",
       "results/indices/station_CDD-04.parquet": "3da51d68f98404758ba999ec81aa316cb4e0d61363df645bf8c6d9856006ea9f",
       "results/indices/station_CDD-05.parquet": "babf12da8331c2836ba664797b173f40e4bdccd06c294ef0a7b2126dd9f5bb39",
-      "results/indices/station_CDD-06.parquet": "05ccbb8f0a793eeeff47362dd85ae52ce6c8950d9f96f9f0ce6607d52f60979d",
+      "results/indices/station_CDD-06.parquet": "8337a5be1418f2e2035949df1d2f1b221385c5f8e7355784c760931faf1f5bc8",
       "results/indices/station_CDD-07.parquet": "18c1e6f6ba47ea2bddb402a5be17ca927f40d89a669e9242f0ffc3998c21a1c2",
       "results/indices/station_CDD-08.parquet": "eb412c87bc828c7547ebacc609f900836cc8f617451aad5110536421db8e41b5",
       "results/indices/station_CDD-09.parquet": "25bd57f3c0b083b525370b78a9f4400bae64a6d5a05bb4771fa3bb0faa4b61f6",
@@ -84,7 +84,7 @@
   "run_id": "atlas_headline-fdb7f34b315aa21c",
   "seed": 20260901,
   "sha256_out": {
-    "results/atlas/headline.json": "b3cecbf5678ed4fe50f8a7f4247715b17c88d57499f383cfa6cbd4cb7a9c2268"
+    "results/atlas/headline.json": "b65140b7eca1a1aa15e8a4fe9258e5421613d77a18a583205bca4d5d75349339"
   },
   "stage": "atlas_headline",
   "vintages": {
