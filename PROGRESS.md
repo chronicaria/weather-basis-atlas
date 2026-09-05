@@ -129,3 +129,47 @@
   identity at `https://github.com/chronicaria/weather-basis-atlas`.
 - GitHub Pages is configured to deploy the committed `site/` artifact through
   GitHub Actions at `https://chronicaria.github.io/weather-basis-atlas/`.
+
+## 2026-09-05 — Release complete
+
+- Gates 0–7 are green. Gates 0–6 were freshly re-attested on 2026-09-04;
+  Gate 7 passed on 2026-09-05 after independently fetching the deployed home,
+  metadata, and Lancaster County payload and validating the live-smoke record.
+- Live site: `https://chronicaria.github.io/weather-basis-atlas/`. Public
+  repository: `https://github.com/chronicaria/weather-basis-atlas`.
+- Rendered headline: For HDD January, 15% of CONUS counties (12% of
+  population) have no point-in-time-selected CME hedge whose out-of-sample
+  hedge effectiveness reaches the pre-registered threshold with the required
+  bootstrap lower bound; in 38% of counties the best station is not the
+  nearest (median gain -0.02 HE). For CDD July, 48% of CONUS counties (42% of
+  population) have no point-in-time-selected CME hedge whose out-of-sample
+  hedge effectiveness reaches the pre-registered threshold with the required
+  bootstrap lower bound; in 46% of counties the best station is not the
+  nearest (median gain -0.07 HE).
+- Release sizes: working tree approximately 9.5 GiB; Git object storage
+  approximately 1.1 GiB; site 196,229,318 logical bytes; largest gzipped
+  county payload 62,839 bytes. The fresh-clone snapshot reproduction took
+  12:20:53 wall time including host sleep/clock gaps; the uninterrupted
+  reference strict tournament took 7:37:57.
+- Decision records: 0001 auxiliary-temperature vintage drift; 0002 observed
+  station roundtrip and vendor count; 0003 degenerate-index hedge
+  effectiveness; 0004 joint-diagnostic observed exceptions; 0005 county
+  payload measured cap; 0006 serial rolling model fits; 0007 joint-diagnostic
+  short-record eligibility; 0008 non-artifact CLI manifest scope; 0009 release
+  manifest evidence location.
+- Known limitations (copied from the model card):
+  - The county temperature layer has the homogenization and vintage look-ahead
+    described above; it is not a historical real-time operational feed.
+  - GHCN-Daily has reporting gaps, quality flags, station changes, and archive
+    lag. The quality-control rule reduces but cannot erase those issues.
+  - County exposure is an area-average temperature index, which can differ
+    from a policyholder, crop, facility, or settlement location exposure.
+  - The analysis is historical and climatological. It omits live weather
+    forecasts, financing, transaction constraints beyond the stated
+    convention, and actual market microstructure.
+  - The model is evaluated on finite historical samples. Bootstrap intervals
+    and diagnostics describe that procedure's sampling variation, not a
+    guarantee.
+- Human-only status: H-1 CME browser downloads not supplied (optional for this
+  build); H-2 Databento pull not requested (optional); H-3 complete under the
+  `chronicaria` identity; H-4 walkthrough video not supplied (optional).
