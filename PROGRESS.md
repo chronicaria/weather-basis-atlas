@@ -122,3 +122,10 @@
   GitHub account or organization before the public repository, Pages site,
   live smoke evidence, release manifest, and final Gate 7 attestation can be
   created.
+
+## 2026-09-05 — Public release destination selected
+
+- H-3 is resolved: the public repository is owned by the `chronicaria`
+  identity at `https://github.com/chronicaria/weather-basis-atlas`.
+- GitHub Pages is configured to deploy the committed `site/` artifact through
+  GitHub Actions at `https://chronicaria.github.io/weather-basis-atlas/`.
