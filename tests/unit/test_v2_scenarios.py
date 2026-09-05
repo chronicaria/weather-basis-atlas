@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pandas as pd
 import pytest
 
+import weather_basis.scenarios.artifacts as scenario_artifacts
 from weather_basis.contracts.calendar import PAIRS
 from weather_basis.scenarios import (
     CommonScenarioPlan,
@@ -192,8 +193,25 @@ def test_lazy_store_requires_all_14_pairs_and_never_reseeds_missing_county():
         store.add_chunk("99999", incomplete)
 
 
-def test_streamed_artifact_uses_one_parent_and_exact_offline_prefix(tmp_path):
-    root = Path(__file__).resolve().parents[2]
+def test_streamed_artifact_uses_one_parent_and_exact_offline_prefix(tmp_path, monkeypatch):
+    root = tmp_path / "fixture-root"
+    panel = root / "data" / "panel"
+    panel.mkdir(parents=True)
+    dates = pd.date_range("2020-07-01", "2022-06-30", freq="D")
+    np.save(panel / "dates.npy", dates.values.astype("datetime64[D]"))
+    np.save(panel / "fips.npy", np.asarray(["31055"]))
+    np.save(panel / "station_ids.npy", np.asarray([f"station-{i:02d}" for i in range(18)]))
+    base = 60.0 + 10.0 * np.sin(np.arange(len(dates)) / 20.0)
+    np.save(panel / "tavg_f32.npy", base[:, None].astype(np.float32))
+    np.save(
+        panel / "stations_tbar_f32.npy",
+        np.column_stack([base + index for index in range(18)]).astype(np.float32),
+    )
+    monkeypatch.setattr(
+        scenario_artifacts,
+        "load_frozen_vintage",
+        lambda _root: SimpleNamespace(vintage_id="fixture-v1", data_vintage_sha256="fixture-lock"),
+    )
     research = {
         "offline_paths": 4,
         "public_paths": 2,
