@@ -111,3 +111,14 @@
   build); H-2 Databento pull not requested (optional); H-3 GitHub account or
   organization unresolved and required for public push/Pages; H-4 walkthrough
   video not supplied (optional).
+
+## 2026-09-04 — Final gate re-attestation
+
+- Gates 0–6 passed again on clean commits dated 2026-09-04. Gate 7 collected
+  three tests: its fresh-clone hash-equality test and rendered-release test
+  passed; only the live-release test failed because
+  `results/manifests/release.json` does not yet exist.
+- No local implementation or verification work remains. H-3 must select the
+  GitHub account or organization before the public repository, Pages site,
+  live smoke evidence, release manifest, and final Gate 7 attestation can be
+  created.
