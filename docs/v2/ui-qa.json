@@ -1,0 +1,300 @@
+{
+  "schema_version": "2.0",
+  "evidence_kind": "browser_ui_acceptance",
+  "fixture": {
+    "release_id": "release:56c226356c33bdb5117d3deae8e0bb287cb2e6916b4ac8bfa41305f9b813d5e3",
+    "bundle": "build/releases/v2-ui-fixture-8",
+    "scope": "artificial_fixture",
+    "statement": "This fixture is explicitly not empirical weather evidence."
+  },
+  "journeys": [
+    {
+      "name": "explore_map_and_equivalent_table",
+      "route": "/index.html",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "passed": true,
+      "observations": [
+        "release-aware URL resolved",
+        "map and searchable equivalent table rendered",
+        "no browser errors"
+      ],
+      "screenshot": "/tmp/wba-v2-ui8-explore-1280.png"
+    },
+    {
+      "name": "county_ambiguity_keyboard",
+      "route": "/index.html",
+      "viewport": {
+        "width": 320,
+        "height": 800
+      },
+      "keyboard": [
+        "fill Cook",
+        "Enter"
+      ],
+      "passed": true,
+      "observations": [
+        "committed FIPS remained 31109",
+        "Cook County IL and GA choices shown",
+        "document width equaled viewport width"
+      ],
+      "screenshot": "/tmp/wba-v2-ui8-explore-320-cook.png"
+    },
+    {
+      "name": "contract_ticket",
+      "route": "/contract.html?fips=31109&index=HDD-01&strike=62",
+      "passed": true,
+      "observations": [
+        "put strike 62",
+        "three scenario paths",
+        "expected physical payout 10.333333333333334",
+        "positive-payout probability 0.3333333333333333",
+        "unavailable station and market values remained explicit"
+      ],
+      "screenshot": "/tmp/wba-v2-ui8-contract.png"
+    },
+    {
+      "name": "portfolio_worker_and_export",
+      "route": "/portfolio.html",
+      "passed": true,
+      "observations": [
+        "regional heating, multi-location cooling, and underwriter capped-claim completed ES optimization",
+        "fixture ES 12",
+        "fixture deterministic cost 2",
+        "accepted decision had decision SHA-256 identity",
+        "JSON record and Markdown memo actions enabled"
+      ],
+      "screenshot": "/tmp/wba-v2-ui8-portfolio-underwriter.png"
+    },
+    {
+      "name": "portfolio_text_zoom",
+      "route": "/portfolio.html",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "text_zoom": "200%",
+      "passed": true,
+      "observations": [
+        "documentElement scrollWidth equaled innerWidth",
+        "holdings and result tables kept their own horizontal scroll regions"
+      ],
+      "screenshot": "/tmp/wba-v2-ui8-portfolio-200.png"
+    },
+    {
+      "name": "research_nested_route",
+      "route": "/research/index.html",
+      "passed": true,
+      "observations": [
+        "evidence library rendered",
+        "nested route did not duplicate research path",
+        "no browser errors"
+      ],
+      "screenshot": "/tmp/wba-v2-ui8-research.png"
+    },
+    {
+      "name": "csv_upload_and_dynamic_compilation",
+      "release_id": "release:fc1950c97b0339c33efbdd0dc0f4d026f0b5c20cb491e179c9cd3f0e91975d6c",
+      "scope": "artificial_fixture",
+      "passed": false,
+      "pending_reason": "Browser agent upload stalled, then Chrome's file chooser rejected setFiles as Not allowed."
+    }
+  ],
+  "automated_checks": [
+    {
+      "command": "uv run pytest tests/site/test_v2_state.py -q",
+      "outcome": "3 passed"
+    },
+    {
+      "command": "uv run ruff check apps/site/js tests/site/test_v2_state.py",
+      "outcome": "passed"
+    },
+    {
+      "command": "node --check apps/site/js/pages/portfolio.js",
+      "outcome": "passed"
+    },
+    {
+      "command": "node CSV parser smoke",
+      "outcome": "budget and unit_cost numeric preservation passed"
+    },
+    {
+      "command": "node canonical ScenarioMatrix + holdings compiler smoke",
+      "outcome": "fixture county/station envelopes compiled a put hedge with unit_cost 20; direct kernel evaluation preserved deterministic_cost 20"
+    }
+  ],
+  "post_fixture_source_checks": [
+    {
+      "release_id": "release:45c90efa1c14fc7439ab1c3f9c88f9d1647fc625f63cbf86c8af2eecf717bcb8",
+      "scope": "artificial_fixture",
+      "name": "two_strike_ticket_controls",
+      "outcome": "Chrome accessibility inspection observed spread selection and separate primary strike, second strike, cap, and multiplier controls."
+    },
+    {
+      "name": "min_cost_es_guard",
+      "outcome": "Optimize control is disabled until a finite ES target is present when min_cost_es is selected."
+    }
+  ],
+  "representative_real_preflight": {
+    "release_id": "release:acd0c0a3a8f4dfea6aafe43db708e2509b91f188badd5485e604f479fa991aa0",
+    "bundle": "build/releases/v2-real-ui-preflight-6",
+    "scope": "representative_real_ui",
+    "statement": "Seven-county, 2,000-path representative preflight; not a national release.",
+    "journeys": [
+      {
+        "name": "contract_monthly_and_declared_seasonal",
+        "release_id": "release:266032347cd01e4a4b540e694016ffcb44448fc8a6e241b477d4361fd8f347d7",
+        "passed": true,
+        "observations": [
+          "2,000 aligned paths",
+          "monthly, option-on-strip, and sum-of-monthly calculations",
+          "physical and station-linear residual distributions",
+          "unavailable market/assumed values explicit"
+        ],
+        "screenshots": [
+          "/tmp/wba-real-preflight-qa/preflight2-contract-monthly-result.png",
+          "/tmp/wba-real-preflight-qa/preflight2-contract-strip.png",
+          "/tmp/wba-real-preflight-qa/preflight2-contract-sum-monthly.png"
+        ]
+      },
+      {
+        "name": "contract_to_portfolio_claim",
+        "release_id": "release:266032347cd01e4a4b540e694016ffcb44448fc8a6e241b477d4361fd8f347d7",
+        "passed": true,
+        "observations": [
+          "appended exact contract_payoff claim to selected regional book",
+          "source scenario set and payoff DSL carried",
+          "no automatic hedge created",
+          "worker optimization completed"
+        ]
+      },
+      {
+        "name": "three_books_worker",
+        "release_id": "release:266032347cd01e4a4b540e694016ffcb44448fc8a6e241b477d4361fd8f347d7",
+        "passed": true,
+        "observations": [
+          "regional heating",
+          "multi-location cooling",
+          "underwriter capped claim",
+          "each completed ES worker optimization and accepted decision identity"
+        ]
+      },
+      {
+        "name": "csv_export_restore",
+        "release_id": "release:266032347cd01e4a4b540e694016ffcb44448fc8a6e241b477d4361fd8f347d7",
+        "passed": true,
+        "observations": [
+          "full-schema local CSV mapped three rows without conversion or dropping",
+          "worker optimization completed",
+          "downloaded JSON identity validated and restored without recalculation",
+          "compact producer excerpt rejected missing required columns"
+        ]
+      },
+      {
+        "name": "scenario_room_historical_and_stress",
+        "release_id": "release:266032347cd01e4a4b540e694016ffcb44448fc8a6e241b477d4361fd8f347d7",
+        "passed": true,
+        "observations": [
+          "historical cashflow rows and descriptive-only risk warning",
+          "uniform-cold stress null-weight warning",
+          "frozen cashflow components rendered"
+        ]
+      },
+      {
+        "name": "responsive_keyboard",
+        "release_id": "release:acd0c0a3a8f4dfea6aafe43db708e2509b91f188badd5485e604f479fa991aa0",
+        "passed": true,
+        "viewports": [
+          320,
+          390,
+          768,
+          1280
+        ],
+        "keyboard": [
+          "Tab reaches Skip to content",
+          "focus remained visible at device scale 2"
+        ],
+        "observations": [
+          "scrollWidth equals innerWidth at each viewport",
+          "holdings and result tables use local horizontal scrolling"
+        ],
+        "screenshot": "/tmp/wba-real-preflight-qa/preflight6-portfolio-320.png"
+      }
+    ],
+    "source_checks": [
+      "node --input-type=module --check for scenario, contract, portfolio, app",
+      "uv run pytest tests/site/test_v2_state.py -q: 3 passed",
+      "sealed build completed"
+    ]
+  },
+  "binary_wire_representative_preflight": {
+    "release_id": "release:ca0f01029fdac1696c3416fbbb34ac5d7cfcf85731b7600fd61ebef14f01ffbf",
+    "bundle": "build/releases/v2-real-ui-preflight-7",
+    "scope": "representative_real_ui",
+    "statement": "Seven-county representative wire-format preflight; not a national release.",
+    "matrix_decode": {
+      "passed": true,
+      "shape": [
+        2000,
+        14
+      ],
+      "scenario_set_id": "sha256:38e2708d2a7e5372a39e5ce7aca29a2984ac41550d6f69a86c09e12c1a0e8503",
+      "values_encoding_removed_after_decode": true,
+      "source_artifact_ids": [
+        "sha256:r2j-national",
+        "sha256:r01-corrected"
+      ]
+    },
+    "journeys": [
+      {
+        "name": "contract_binary_matrix",
+        "passed": true,
+        "observations": [
+          "2,000 paths",
+          "committed 2027 monthly call",
+          "physical payout and station-linear residual displayed"
+        ],
+        "screenshot": "docs/v2/ui-evidence/preflight7-contract.png"
+      },
+      {
+        "name": "portfolio_worker_binary_matrix",
+        "passed": true,
+        "observations": [
+          "supplied regional book displayed 2,000 paths",
+          "worker optimization accepted"
+        ],
+        "screenshot": "docs/v2/ui-evidence/preflight7-portfolio-worker.png"
+      },
+      {
+        "name": "csv_worker_export_restore",
+        "passed": true,
+        "observations": [
+          "full-schema CSV mapped three rows with no conversion or dropping",
+          "worker accepted decision dc190057216d61536e6aa91e06a953844c745530c6b7278316c0f716a6d7beda",
+          "same record restored without recalculation"
+        ],
+        "artifacts": [
+          "docs/v2/ui-evidence/preflight7-valid-local-holdings.csv",
+          "docs/v2/ui-evidence/preflight7-restorable-decision.json",
+          "docs/v2/ui-evidence/preflight7-csv-worker.png",
+          "docs/v2/ui-evidence/preflight7-decision-restored.png"
+        ]
+      },
+      {
+        "name": "scenario_room_stress",
+        "passed": true,
+        "observations": [
+          "uniform cold stress",
+          "null weights",
+          "no predictive risk metric"
+        ],
+        "screenshot": "docs/v2/ui-evidence/preflight7-scenario-room-stress.png"
+      }
+    ],
+    "bundle_verification": {
+      "passed": true,
+      "bundle_digest": "bundle:4c6a8a68169dcfe7c5cd2d7975fcfdde2a9e9a8fb1dd42f38e658300fc6e6b1e"
+    }
+  }
+}

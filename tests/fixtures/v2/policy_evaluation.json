@@ -1,0 +1,8 @@
+{
+  "label": "artificial B05 causal and common-support fixture",
+  "expected": {
+    "coverage": "2/3",
+    "failure_rate_evaluated": "1/2",
+    "degenerate_he": "unavailable"
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "ResearchConfig",
+  "properties": {
+    "schema_version": {
+      "const": "2.0"
+    },
+    "name": {
+      "type": "string"
+    },
+    "seed": {
+      "type": "integer"
+    },
+    "seed_schema_version": {
+      "type": "string"
+    },
+    "county_universe": {
+      "type": "string"
+    },
+    "station_universe": {
+      "type": "string"
+    },
+    "pairs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "first_test_year": {
+      "type": "integer"
+    },
+    "last_test_year": {
+      "type": "integer"
+    },
+    "training_window": {
+      "type": "integer"
+    },
+    "min_train": {
+      "type": "integer"
+    },
+    "valuation_asof": {
+      "type": "string"
+    },
+    "horizon_start": {
+      "type": "string"
+    },
+    "horizon_end": {
+      "type": "string"
+    },
+    "scenario_generator": {
+      "type": "string"
+    },
+    "offline_paths": {
+      "type": "integer"
+    },
+    "public_paths": {
+      "type": "integer"
+    },
+    "tail_level": {
+      "type": "number"
+    },
+    "equivalence_bands": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
+    "loss_convention": {
+      "type": "string"
+    },
+    "he_convention": {
+      "type": "string"
+    },
+    "currency": {
+      "type": "string"
+    },
+    "numerical_tolerance": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "schema_version"
+  ],
+  "additionalProperties": false
+}

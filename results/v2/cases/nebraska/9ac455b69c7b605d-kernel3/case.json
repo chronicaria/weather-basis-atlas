@@ -1,0 +1,38 @@
+{
+  "case": "Nebraska",
+  "interpretation": "Includes all five locations and retains inconclusive outcomes.",
+  "mapping": [
+    {
+      "county": "Douglas County",
+      "fips": "31055",
+      "place": "Omaha",
+      "station": "USW00014942"
+    },
+    {
+      "county": "Lancaster County",
+      "fips": "31109",
+      "place": "Lincoln",
+      "station": "USW00014939"
+    },
+    {
+      "county": "Hall County",
+      "fips": "31079",
+      "place": "Grand Island",
+      "station": "USW00014935"
+    },
+    {
+      "county": "Lincoln County",
+      "fips": "31111",
+      "place": "North Platte",
+      "station": "USW00024023"
+    },
+    {
+      "county": "Scotts Bluff County",
+      "fips": "31157",
+      "place": "Scottsbluff",
+      "station": "USW00024028"
+    }
+  ],
+  "protocol_id": "sha256:731f3bbadfa3da075576935455bdf619ed8b1a96d2b16a37843907e26ab17b1e",
+  "scope": "HDD-01 and CDD-07; local station baseline versus prior-only sparse basket"
+}

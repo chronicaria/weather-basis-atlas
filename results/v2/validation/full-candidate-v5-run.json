@@ -1,0 +1,291 @@
+{
+  "plan_id": "sha256:f9dc32b6bbd3e6360cf0019e5190ac7242dad72f20f020942ee3424d996940f0",
+  "scope": "full",
+  "stages": [
+    {
+      "directory": "/Users/andrewpark/Desktop/Code/weather-basis-atlas/var/shards/v2/inputs.audit/sha256-2fed4713dc5585eadc3ab2947eadf8a40c04f4c22d52a8c268d563f19d8249b7",
+      "quarantine_directory": null,
+      "shard_id": "sha256:2fed4713dc5585eadc3ab2947eadf8a40c04f4c22d52a8c268d563f19d8249b7",
+      "status": "reused",
+      "artifact_id": "sha256:d828fa24f1edf63923126500e81f0177c0edd8e95b9b54ca7fd7694f10476f04",
+      "stage_id": "inputs.audit",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 0.002322999999999964,
+        "peak_rss_bytes": 102170624,
+        "phases_seconds": {
+          "kernel": 0.002289957999892067
+        },
+        "pid": 18952,
+        "wall_seconds": 0.002323666005395353
+      },
+      "files": 1
+    },
+    {
+      "directory": "/Users/andrewpark/Desktop/Code/weather-basis-atlas/var/shards/v2/panels.prepare/sha256-39d6c5420799a7c29f0a6b7d457e62650f5d33c87de5f4e516e7256bcfb868e9",
+      "quarantine_directory": null,
+      "shard_id": "sha256:39d6c5420799a7c29f0a6b7d457e62650f5d33c87de5f4e516e7256bcfb868e9",
+      "status": "reused",
+      "artifact_id": "sha256:719adc13f516ba5a6deba037fcc67a7ece7a672fc1522a8bcfb013ec80c38d49",
+      "stage_id": "panels.prepare",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 0.030652000000000013,
+        "peak_rss_bytes": 104218624,
+        "phases_seconds": {
+          "kernel": 0.03220233300089603
+        },
+        "pid": 18952,
+        "wall_seconds": 0.03223799999977928
+      },
+      "files": 1
+    },
+    {
+      "directory": "/Users/andrewpark/Desktop/Code/weather-basis-atlas/var/shards/v2/models.fit/sha256-23b923c14d5e11319d47c36584475b4146c8a17611a90e98b4571c6ecde064e6",
+      "quarantine_directory": null,
+      "shard_id": "sha256:23b923c14d5e11319d47c36584475b4146c8a17611a90e98b4571c6ecde064e6",
+      "status": "reused",
+      "artifact_id": "sha256:5490452113e960f0618ef2ab8c4ac06a7848aed7aab364f6b0e5cf299f4e7da6",
+      "stage_id": "models.fit",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 11.376716,
+        "peak_rss_bytes": 5458526208,
+        "phases_seconds": {
+          "kernel": 12.141919000001508
+        },
+        "pid": 20501,
+        "wall_seconds": 12.142022665997501
+      },
+      "files": 1
+    },
+    {
+      "directory": "/Users/andrewpark/Desktop/Code/weather-basis-atlas/var/shards/v2/tournament.execute/sha256-a0af77f88ae759ccfb633b69d24ab9d3c3c8215c91390661aeb99e521c112b2d",
+      "quarantine_directory": null,
+      "shard_id": "sha256:a0af77f88ae759ccfb633b69d24ab9d3c3c8215c91390661aeb99e521c112b2d",
+      "status": "reused",
+      "artifact_id": "sha256:073f2989836aeb2a723f936d2c1768d79c693f924ab278454517b5849a3e4694",
+      "stage_id": "tournament.execute",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 0.009297999999999362,
+        "peak_rss_bytes": 5458526208,
+        "phases_seconds": {
+          "kernel": 0.021295459002431016
+        },
+        "pid": 20501,
+        "wall_seconds": 0.021338583996111993
+      },
+      "files": 1
+    },
+    {
+      "directory": "/Users/andrewpark/Desktop/Code/weather-basis-atlas/var/shards/v2/models.select/sha256-f478274fde0185fdf7be3a07fc81a318f1a6b861531132372a52c270180c1c86",
+      "quarantine_directory": null,
+      "shard_id": "sha256:f478274fde0185fdf7be3a07fc81a318f1a6b861531132372a52c270180c1c86",
+      "status": "reused",
+      "artifact_id": "sha256:b48a63b9dac89afe4718e15275f3762edf7e5d1186c1dae6df7721211a8ae0f2",
+      "stage_id": "models.select",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 0.006713000000001301,
+        "peak_rss_bytes": 5458526208,
+        "phases_seconds": {
+          "kernel": 0.006687583998427726
+        },
+        "pid": 20501,
+        "wall_seconds": 0.0067262499942444265
+      },
+      "files": 1
+    },
+    {
+      "directory": "/Users/andrewpark/Desktop/Code/weather-basis-atlas/var/shards/v2/scenarios.build/sha256-750b533a8f349990e6b01b1bb9853e32a163c111291a468417ea8d17f63cf609",
+      "quarantine_directory": null,
+      "shard_id": "sha256:750b533a8f349990e6b01b1bb9853e32a163c111291a468417ea8d17f63cf609",
+      "status": "reused",
+      "artifact_id": "sha256:45a9f8c29ab9a726c46788a52e8fdb6d9a55eabd891efa6076a45f8817d8b996",
+      "stage_id": "scenarios.build",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 290.355822,
+        "peak_rss_bytes": 3000172544,
+        "phases_seconds": {
+          "kernel": 293.1921663750036
+        },
+        "pid": 21292,
+        "wall_seconds": 293.19221174999984
+      },
+      "files": 3112
+    },
+    {
+      "directory": "/Users/andrewpark/Desktop/Code/weather-basis-atlas/var/shards/v2/payoffs.build/sha256-72aa2c91204c86c30d2af8f0df226670df30cd6da34eb80c52827871b496df68",
+      "quarantine_directory": null,
+      "shard_id": "sha256:72aa2c91204c86c30d2af8f0df226670df30cd6da34eb80c52827871b496df68",
+      "status": "reused",
+      "artifact_id": "sha256:15a0f8e71985e6cd9cd5ca21259ab2bf879007c211d128d0724834914f071d5b",
+      "stage_id": "payoffs.build",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 21.495483,
+        "peak_rss_bytes": 343343104,
+        "phases_seconds": {
+          "kernel": 21.553619708000042
+        },
+        "pid": 26592,
+        "wall_seconds": 21.55366545799916
+      },
+      "files": 25
+    },
+    {
+      "directory": "/Users/andrewpark/Desktop/Code/weather-basis-atlas/var/shards/v2/atlas.evaluate/sha256-2ec802f17709f889b2abb5db9305ff788eb20dc5296babdeb6f872b3396a8f88",
+      "quarantine_directory": null,
+      "shard_id": "sha256:2ec802f17709f889b2abb5db9305ff788eb20dc5296babdeb6f872b3396a8f88",
+      "status": "reused",
+      "artifact_id": "sha256:1991fc9542d7b79cfd6b78e24a2b6ceb7c2ddfbf93ef278b4ba4797a6498c8b1",
+      "stage_id": "atlas.evaluate",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 329.68159199999997,
+        "peak_rss_bytes": 1415856128,
+        "phases_seconds": {
+          "kernel": 328.4927156669946
+        },
+        "pid": 21488,
+        "wall_seconds": 328.49276229199313
+      },
+      "files": 33
+    },
+    {
+      "directory": "/Users/andrewpark/Desktop/Code/weather-basis-atlas/var/shards/v2/atlas.select_asof/sha256-26dc722d06a95ecf8c72dab0b61ef7cd8d75fe0a4ca5c19339ebd3b2e5927777",
+      "quarantine_directory": null,
+      "shard_id": "sha256:26dc722d06a95ecf8c72dab0b61ef7cd8d75fe0a4ca5c19339ebd3b2e5927777",
+      "status": "reused",
+      "artifact_id": "sha256:609279ea71fa209a3e98c62e67bdd6f867b5bbafb2bf879d2a4b98d0a84d40ea",
+      "stage_id": "atlas.select_asof",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 11.477645,
+        "peak_rss_bytes": 999751680,
+        "phases_seconds": {
+          "kernel": 10.208698500005994
+        },
+        "pid": 22579,
+        "wall_seconds": 10.208746500000416
+      },
+      "files": 14
+    },
+    {
+      "directory": "/Users/andrewpark/Desktop/Code/weather-basis-atlas/var/shards/v2/quotes.build/sha256-ec30302853d44c7b103a0888728d41fe3436d6b4772734c38e11a5724e374199",
+      "quarantine_directory": null,
+      "shard_id": "sha256:ec30302853d44c7b103a0888728d41fe3436d6b4772734c38e11a5724e374199",
+      "status": "reused",
+      "artifact_id": "sha256:b09ef8c05c2c2b16524848b22d6b151ab4a52a0ac45c2f734bd103c9806b73a0",
+      "stage_id": "quotes.build",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 13.781160999999997,
+        "peak_rss_bytes": 936509440,
+        "phases_seconds": {
+          "kernel": 16.127542499998526
+        },
+        "pid": 26592,
+        "wall_seconds": 16.127638958001626
+      },
+      "files": 1
+    },
+    {
+      "directory": "/Users/andrewpark/Desktop/Code/weather-basis-atlas/var/shards/v2/portfolios.evaluate/sha256-1a9137abef9c3cb118e6856af5bea39f437846eab3e3bf32d67ff295c37095c1",
+      "quarantine_directory": null,
+      "shard_id": "sha256:1a9137abef9c3cb118e6856af5bea39f437846eab3e3bf32d67ff295c37095c1",
+      "status": "reused",
+      "artifact_id": "sha256:c9309ea5f7f8c512d744979a8df88ce575cc74fd30fde2616304a0533b2c1e73",
+      "stage_id": "portfolios.evaluate",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 0.4215859999999978,
+        "peak_rss_bytes": 936509440,
+        "phases_seconds": {
+          "kernel": 0.42816412500542356
+        },
+        "pid": 26592,
+        "wall_seconds": 0.4281977909995476
+      },
+      "files": 4
+    },
+    {
+      "directory": "/Users/andrewpark/Desktop/Code/weather-basis-atlas/var/shards/v2/portfolios.optimize/sha256-dca3a77fc87bcf6ec966c31cd6be1057ee4ea0e5745f2bf15f8458815b8fa25b",
+      "quarantine_directory": null,
+      "shard_id": "sha256:dca3a77fc87bcf6ec966c31cd6be1057ee4ea0e5745f2bf15f8458815b8fa25b",
+      "status": "reused",
+      "artifact_id": "sha256:7c0691826056d922e3fef15204ebf3642d9c5a6e749a40afc80a000c11a85f1a",
+      "stage_id": "portfolios.optimize",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 0.41631399999999985,
+        "peak_rss_bytes": 936509440,
+        "phases_seconds": {
+          "kernel": 0.42114637499616947
+        },
+        "pid": 26592,
+        "wall_seconds": 0.42118137500074226
+      },
+      "files": 4
+    },
+    {
+      "directory": "/Users/andrewpark/Desktop/Code/weather-basis-atlas/var/shards/v2/cases.build/sha256-3e93341bd1964f079103d0f7614b7053b37eef11851d22550c9485d4313bd997",
+      "quarantine_directory": null,
+      "shard_id": "sha256:3e93341bd1964f079103d0f7614b7053b37eef11851d22550c9485d4313bd997",
+      "status": "recomputed",
+      "artifact_id": "sha256:2fb829969af9ca6a62062adf74e0024a4fbc0234612483f66df6e4b80181b2e7",
+      "stage_id": "cases.build",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 272.75987699999996,
+        "peak_rss_bytes": 1702445056,
+        "phases_seconds": {
+          "kernel": 279.722313667
+        },
+        "pid": 26760,
+        "wall_seconds": 279.72235404099774
+      },
+      "files": 90174
+    },
+    {
+      "directory": "/Users/andrewpark/Desktop/Code/weather-basis-atlas/var/shards/v2/site.build/sha256-ab6e624b19297c8e76e838595b7e871e6c13aa429f4dfee9656f653dbcf849e8",
+      "quarantine_directory": null,
+      "shard_id": "sha256:ab6e624b19297c8e76e838595b7e871e6c13aa429f4dfee9656f653dbcf849e8",
+      "status": "recomputed",
+      "artifact_id": "sha256:a44411073ccbe74aa9d25e54b84df129a9ea1e65eb6f124e9cd981a0d9fe550f",
+      "stage_id": "site.build",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 292.186319,
+        "peak_rss_bytes": 1702445056,
+        "phases_seconds": {
+          "kernel": 321.04936050000106
+        },
+        "pid": 26760,
+        "wall_seconds": 321.0494169579979
+      },
+      "files": 93496
+    },
+    {
+      "directory": "/Users/andrewpark/Desktop/Code/weather-basis-atlas/var/shards/v2/release.verify/sha256-3a46989d7b7478b129cdfbac98669f3cc8b536f42985a8b488dbe61b0d234338",
+      "quarantine_directory": null,
+      "shard_id": "sha256:3a46989d7b7478b129cdfbac98669f3cc8b536f42985a8b488dbe61b0d234338",
+      "status": "recomputed",
+      "artifact_id": "sha256:586b1ddeeab95f37823bba87b8e685f47945c2e1e152818770f7728446c2f700",
+      "stage_id": "release.verify",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 6.969737000000009,
+        "peak_rss_bytes": 1702445056,
+        "phases_seconds": {
+          "kernel": 10.39279562500451
+        },
+        "pid": 26760,
+        "wall_seconds": 10.392881375002617
+      },
+      "files": 1
+    }
+  ]
+}

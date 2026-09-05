@@ -1,0 +1,113 @@
+{
+  "books": {
+    "multi-location-cooling-v1": {
+      "candidate_ids": [
+        "candidate-contract:e99e1e11d67f3405fde7e1a6059d05beb9e85b981163344158369b51777ab9f6",
+        "candidate-contract:8a0a8f28c79104ed8ff170b3e0755a7dae336f454bfe81272f680d377331ed5f",
+        "candidate-contract:0b4aad870188b67701a1c259fdb537e86206bade8cbb3ef516817e0cb5c78fa6",
+        "candidate-contract:4d803420de1b45583b81a4469b98474688410b4cd9d7500e361cd10e25e09fcc"
+      ],
+      "offline_cost": 23453.073247617223,
+      "offline_es": 27668.285101293277,
+      "offline_positions": [
+        4.6205112453188075,
+        9.506492443934514,
+        2.1134812890405374,
+        1.5098517971641148
+      ],
+      "offline_result_id": "book-result:6f56c97d9a18f3b6f5dc7752168bec28162892264c2b935af30bc5b84a84d79a",
+      "offline_scenario_set_id": "sha256:ac7236e86321bb268817ecc41bf11d1eb438167651b38160ad1ddb12103f5ed3",
+      "public_cost": 24036.99150710286,
+      "public_es": 28240.112751684013,
+      "public_positions": [
+        5.963548013723859,
+        7.457341415122844,
+        1.5132944853465147,
+        2.22565484411011
+      ],
+      "public_result_id": "book-result:a5eded926f367244c7704dded42085d38abab184651c26049b4258a62b0a150e",
+      "public_scenario_set_id": "sha256:38e2708d2a7e5372a39e5ce7aca29a2984ac41550d6f69a86c09e12c1a0e8503"
+    },
+    "regional-heating-v1": {
+      "candidate_ids": [
+        "candidate-contract:9738719d6e015458491639104b845937165109c1649a31c51b933d2d9ea6de08",
+        "candidate-contract:3d953e1d3a17a5fdf40b29f845c04c28db0897407b27a1fce5c9b9afc7080a48",
+        "candidate-contract:2c5fee979986dd0fa67592b7181478ccbd16375232ebe4d46678c9244a5f7f09"
+      ],
+      "offline_cost": 29582.58498597853,
+      "offline_es": 55420.262379126616,
+      "offline_positions": [
+        8.522337219296894,
+        8.276770237881294,
+        -0.0
+      ],
+      "offline_result_id": "book-result:59bcc4ddc55643e1b38fc333d22b42eb61024c5a15430cd784dd9e7119543c6c",
+      "offline_scenario_set_id": "sha256:ac7236e86321bb268817ecc41bf11d1eb438167651b38160ad1ddb12103f5ed3",
+      "public_cost": 29054.338905868975,
+      "public_es": 56155.887021543575,
+      "public_positions": [
+        9.725319510918746,
+        6.692459749169768,
+        -0.0
+      ],
+      "public_result_id": "book-result:eab9a7a82d753307293c9623eac232737094f8e7ec16f064e5ea536b27b5e611",
+      "public_scenario_set_id": "sha256:38e2708d2a7e5372a39e5ce7aca29a2984ac41550d6f69a86c09e12c1a0e8503"
+    },
+    "underwriter-capped-claim-v1": {
+      "candidate_ids": [
+        "candidate-contract:e99e1e11d67f3405fde7e1a6059d05beb9e85b981163344158369b51777ab9f6",
+        "candidate-contract:87b7652719a9225d4ee163088dc3c22e24e231328212763333805fbefcfcd819"
+      ],
+      "offline_cost": 15867.181794696504,
+      "offline_es": 18642.228705987436,
+      "offline_positions": [
+        6.946623858844223,
+        2.570812150294591
+      ],
+      "offline_result_id": "book-result:505c543762f1534999a0784a183161415d25219e9d554761e28f129886625db9",
+      "offline_scenario_set_id": "sha256:ac7236e86321bb268817ecc41bf11d1eb438167651b38160ad1ddb12103f5ed3",
+      "public_cost": 16143.840976439351,
+      "public_es": 18735.287517509096,
+      "public_positions": [
+        7.030229784275416,
+        2.484090107375991
+      ],
+      "public_result_id": "book-result:6c43103d15a028ff90a5fdfb0956bf4b0ca7f7f5abb392cb7e704bab2e8ac5fc",
+      "public_scenario_set_id": "sha256:38e2708d2a7e5372a39e5ce7aca29a2984ac41550d6f69a86c09e12c1a0e8503"
+    }
+  },
+  "browser_parity": [
+    {
+      "book_id": "multi-location-cooling-v1",
+      "candidate_ids": [
+        "candidate-contract:e99e1e11d67f3405fde7e1a6059d05beb9e85b981163344158369b51777ab9f6",
+        "candidate-contract:8a0a8f28c79104ed8ff170b3e0755a7dae336f454bfe81272f680d377331ed5f",
+        "candidate-contract:0b4aad870188b67701a1c259fdb537e86206bade8cbb3ef516817e0cb5c78fa6",
+        "candidate-contract:4d803420de1b45583b81a4469b98474688410b4cd9d7500e361cd10e25e09fcc"
+      ],
+      "deterministic_cost": 24036.99150710286,
+      "expected_shortfall": 28240.112751684013
+    },
+    {
+      "book_id": "regional-heating-v1",
+      "candidate_ids": [
+        "candidate-contract:9738719d6e015458491639104b845937165109c1649a31c51b933d2d9ea6de08",
+        "candidate-contract:3d953e1d3a17a5fdf40b29f845c04c28db0897407b27a1fce5c9b9afc7080a48",
+        "candidate-contract:2c5fee979986dd0fa67592b7181478ccbd16375232ebe4d46678c9244a5f7f09"
+      ],
+      "deterministic_cost": 29054.338905868975,
+      "expected_shortfall": 56155.887021543575
+    },
+    {
+      "book_id": "underwriter-capped-claim-v1",
+      "candidate_ids": [
+        "candidate-contract:e99e1e11d67f3405fde7e1a6059d05beb9e85b981163344158369b51777ab9f6",
+        "candidate-contract:87b7652719a9225d4ee163088dc3c22e24e231328212763333805fbefcfcd819"
+      ],
+      "deterministic_cost": 16143.840976439351,
+      "expected_shortfall": 18735.287517509096
+    }
+  ],
+  "schema_version": "2.0",
+  "scope": "registered public 2000 prefix versus offline 10000"
+}

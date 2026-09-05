@@ -1,0 +1,4 @@
+row_id,kind,entity_id,amount,units,currency
+existing-omaha,exposure,31055:CDD-07,85,USD/degree_day,USD
+existing-grand-island,exposure,31079:CDD-07,65,USD/degree_day,USD
+new-lincoln-capped-claim,claim,31109:CDD-07,120,USD/degree_day,USD

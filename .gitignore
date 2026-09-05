@@ -9,3 +9,8 @@ results/draws/
 results/models/
 results/atlas/tensors/
 results/tournament/scores/
+# V2 immutable run artifacts and release bundles (retained by manifests)
+var/
+build/
+results/v2/scenarios/
+results/v2/atlas/

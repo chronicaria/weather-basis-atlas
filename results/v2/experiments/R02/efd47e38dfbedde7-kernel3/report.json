@@ -1,0 +1,247 @@
+{
+  "experiment": "R02",
+  "protocol_id": "sha256:731f3bbadfa3da075576935455bdf619ed8b1a96d2b16a37843907e26ab17b1e",
+  "results": [
+    {
+      "basket": {
+        "es": 348.1192499172125,
+        "mse": 120.26043129860355,
+        "n": 20
+      },
+      "disposition": "representative_improvement_needs_confirmation",
+      "mean_paired_squared_loss_change": -100.4406867780975,
+      "nearest": {
+        "es": 707.9051616899874,
+        "mse": 220.70111807670105,
+        "n": 20
+      },
+      "origins": 20,
+      "pair": "CDD-07",
+      "paired_mean_ci95": [
+        -169.4512104194852,
+        -39.55168823124839
+      ],
+      "place": "Grand Island",
+      "top_basket_frequency": {
+        "USW00014942|USW00014939|USW00014935": 20
+      }
+    },
+    {
+      "basket": {
+        "es": 1236.9506957856147,
+        "mse": 321.86240796691266,
+        "n": 20
+      },
+      "disposition": "inconclusive_or_retain_simple",
+      "mean_paired_squared_loss_change": 70.29318629384078,
+      "nearest": {
+        "es": 1415.1135992843986,
+        "mse": 251.56922167307192,
+        "n": 20
+      },
+      "origins": 20,
+      "pair": "CDD-07",
+      "paired_mean_ci95": [
+        -37.13048009882111,
+        187.89158828552968
+      ],
+      "place": "Lincoln",
+      "top_basket_frequency": {
+        "USW00014942|USW00014935|USW00014939": 20
+      }
+    },
+    {
+      "basket": {
+        "es": 2283.5500617627094,
+        "mse": 700.341378957759,
+        "n": 20
+      },
+      "disposition": "representative_improvement_needs_confirmation",
+      "mean_paired_squared_loss_change": -577.4814052730814,
+      "nearest": {
+        "es": 4261.959613801691,
+        "mse": 1277.8227842308404,
+        "n": 20
+      },
+      "origins": 20,
+      "pair": "CDD-07",
+      "paired_mean_ci95": [
+        -989.4874600200382,
+        -254.42855984479257
+      ],
+      "place": "North Platte",
+      "top_basket_frequency": {
+        "USW00014942|USW00014935|USW00024023": 15
+      }
+    },
+    {
+      "basket": {
+        "es": 989.9518445699221,
+        "mse": 223.52195502560272,
+        "n": 20
+      },
+      "disposition": "inconclusive_or_retain_simple",
+      "mean_paired_squared_loss_change": 35.32330323648303,
+      "nearest": {
+        "es": 585.8223903548961,
+        "mse": 188.19865178911974,
+        "n": 20
+      },
+      "origins": 20,
+      "pair": "CDD-07",
+      "paired_mean_ci95": [
+        -107.82480601087491,
+        201.29087191342612
+      ],
+      "place": "Omaha",
+      "top_basket_frequency": {
+        "USW00014935|USW00014942|USW00014939": 15
+      }
+    },
+    {
+      "basket": {
+        "es": 991.6208047922644,
+        "mse": 194.16335629522334,
+        "n": 20
+      },
+      "disposition": "inconclusive_or_retain_simple",
+      "mean_paired_squared_loss_change": 11.566994892399503,
+      "nearest": {
+        "es": 862.7057154823917,
+        "mse": 182.59636140282385,
+        "n": 20
+      },
+      "origins": 20,
+      "pair": "CDD-07",
+      "paired_mean_ci95": [
+        -39.74687710232734,
+        75.14547093375175
+      ],
+      "place": "Scottsbluff",
+      "top_basket_frequency": {
+        "USW00014935|USW00024023|USW00024028": 19
+      }
+    },
+    {
+      "basket": {
+        "es": 519.595947541448,
+        "mse": 154.81024307979015,
+        "n": 20
+      },
+      "disposition": "inconclusive_or_retain_simple",
+      "mean_paired_squared_loss_change": 40.157834933549644,
+      "nearest": {
+        "es": 536.35043808871,
+        "mse": 114.6524081462405,
+        "n": 20
+      },
+      "origins": 20,
+      "pair": "HDD-01",
+      "paired_mean_ci95": [
+        -6.292626835932964,
+        87.61571862054706
+      ],
+      "place": "Grand Island",
+      "top_basket_frequency": {
+        "USW00014942|USW00014939|USW00014935": 20
+      }
+    },
+    {
+      "basket": {
+        "es": 2386.578605548416,
+        "mse": 450.68416877619165,
+        "n": 20
+      },
+      "disposition": "representative_improvement_needs_confirmation",
+      "mean_paired_squared_loss_change": -300.85760470198295,
+      "nearest": {
+        "es": 3438.539593239183,
+        "mse": 751.5417734781746,
+        "n": 20
+      },
+      "origins": 20,
+      "pair": "HDD-01",
+      "paired_mean_ci95": [
+        -547.5531382517565,
+        -82.40815687308339
+      ],
+      "place": "Lincoln",
+      "top_basket_frequency": {
+        "USW00014935|USW00014942|USW00014939": 20
+      }
+    },
+    {
+      "basket": {
+        "es": 2301.535376712698,
+        "mse": 667.2789670301014,
+        "n": 20
+      },
+      "disposition": "inconclusive_or_retain_simple",
+      "mean_paired_squared_loss_change": 24.345446835653227,
+      "nearest": {
+        "es": 2438.979457143074,
+        "mse": 642.9335201944482,
+        "n": 20
+      },
+      "origins": 20,
+      "pair": "HDD-01",
+      "paired_mean_ci95": [
+        -333.19329341830456,
+        439.62621833877483
+      ],
+      "place": "North Platte",
+      "top_basket_frequency": {
+        "USW00024028|USW00014935|USW00024023": 18
+      }
+    },
+    {
+      "basket": {
+        "es": 1195.8869977375657,
+        "mse": 266.66056597633576,
+        "n": 20
+      },
+      "disposition": "inconclusive_or_retain_simple",
+      "mean_paired_squared_loss_change": -7.179090744162814,
+      "nearest": {
+        "es": 902.6774808323821,
+        "mse": 273.83965672049857,
+        "n": 20
+      },
+      "origins": 20,
+      "pair": "HDD-01",
+      "paired_mean_ci95": [
+        -179.0575864048847,
+        170.20567622364698
+      ],
+      "place": "Omaha",
+      "top_basket_frequency": {
+        "USW00014935|USW00014942|USW00014939": 20
+      }
+    },
+    {
+      "basket": {
+        "es": 2018.3073643844014,
+        "mse": 368.3535643509964,
+        "n": 20
+      },
+      "disposition": "inconclusive_or_retain_simple",
+      "mean_paired_squared_loss_change": -178.53647946998407,
+      "nearest": {
+        "es": 3865.9600140483976,
+        "mse": 546.8900438209805,
+        "n": 20
+      },
+      "origins": 20,
+      "pair": "HDD-01",
+      "paired_mean_ci95": [
+        -544.3920267462111,
+        45.20912110560406
+      ],
+      "place": "Scottsbluff",
+      "top_basket_frequency": {
+        "USW00014935|USW00024023|USW00024028": 20
+      }
+    }
+  ],
+  "scope": "five Nebraska county/station mappings; actual annual index panels"
+}

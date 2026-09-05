@@ -1,32 +1,27 @@
 # Weather Basis Atlas
 
-For HDD January, 15% of
-CONUS counties (12% of
-population) have no point-in-time-selected CME hedge whose out-of-sample hedge
-effectiveness reaches the pre-registered threshold with the required bootstrap
-lower bound; in 38% of
-counties the best station is not the nearest (median gain
--0.02 HE).
-
-For CDD July, 48% of
-CONUS counties (42% of
-population) have no point-in-time-selected CME hedge whose out-of-sample hedge
-effectiveness reaches the pre-registered threshold with the required bootstrap
-lower bound; in 46% of
-counties the best station is not the nearest (median gain
--0.07 HE).
-
 Weather Basis Atlas is a reproducible county-to-weather-station basis-risk
-research instrument. The complete release headline table comes directly from
-`results/atlas/headline.json`; this README is rendered only as part of the site
-build, never hand-edited with computed values.
+research instrument. V2 candidate validation is underway; the public release
+remains V1 until a V2 candidate is accepted, sealed, and deployed.
+
+The current V2 national evaluation ledger contains 43,498 county/pair records:
+43,148 evaluable records, 350 unavailable records, and 6,355 records where the
+prior best is better. These are ledger counts, not a release headline or a
+general performance claim.
+
+The current V2 plan has valuation as-of 2026-07-01 and a 2026-05-31 observation
+cutoff. It uses one joint 10,000-path offline scenario set and its deterministic
+2,000-path public prefix. The three supplied portfolio books retain declared
+constraints and local-CSV inputs; physical pricing, assumed loads, and absent
+market observations remain distinct regimes. The 2023--2025 outcomes have
+already been consumed for development and are exploratory evidence.
 
 ## What is in this repository
 
 - `data/` contains manifests, metadata, contracts, and reproducible input
   records. Raw source files are versioned separately from derived panels.
-- `results/atlas/` contains the county and station-level out-of-sample atlas,
-  bootstrap output, zero-distance checks, and the release headline source.
+- `results/atlas/` is retained V1 atlas evidence. `results/v2/` contains V2
+  candidate artifacts and validation ledgers.
 - `results/indices/` contains monthly county and station index panels.
 - `results/qc/` records panel, station, geography, and vintage checks.
 - `docs/site/` contains methodological, provenance, model-card, and Nebraska
@@ -50,7 +45,7 @@ point-in-time effectiveness and bootstrap-lower-bound rule. Definitions,
 selection, and uncertainty procedures are fixed in
 [the pre-registration](docs/preregistration.md).
 
-## Reproduce locally
+## V1 archive workflow
 
 ```bash
 uv sync --frozen
@@ -62,8 +57,30 @@ uv run wba site build
 uv run wba site check
 ```
 
-The complete command sequence, snapshot workflow, deterministic checks, and
-release checklist are in [docs/runbook.md](docs/runbook.md).
+These commands reproduce the retained V1 workflow. The V2 candidate commands,
+artifact locators, and release requirements are in [docs/v2](docs/v2/).
+
+## V2 sealed release commands
+
+After a national candidate is accepted and its lock exists, build a fresh
+bundle and verify it before packaging a pinned GitHub Release asset:
+
+```bash
+uv run wba v2 release build --lock config/releases/v2-candidate.lock.json --out build/releases/v2-candidate
+uv run wba v2 release verify --bundle build/releases/v2-candidate
+uv run wba v2 release inspect --bundle build/releases/v2-candidate
+uv run python scripts/package_release.py --bundle build/releases/v2-candidate --out build/release-assets/weather-basis-atlas-v2.tar.gz
+```
+
+Recovery verifies a prior sealed bundle before copying it to an explicit target:
+
+```bash
+uv run wba v2 release rollback --bundle build/releases/v2-prior --target build/recovery/v2-prior
+```
+
+The manual Pages workflow accepts only a pinned GitHub Release asset URL, its
+SHA-256, and its embedded release ID. It does not deploy the tracked `site/`
+directory. See [the V2 release runbook](docs/v2/release.md).
 
 ## Source and release discipline
 

@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "ScenarioSet",
+  "properties": {
+    "schema_version": {
+      "const": "2.0"
+    },
+    "scenario_set_id": {
+      "type": "string"
+    },
+    "scenario_type": {
+      "type": "string"
+    },
+    "scenario_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "probability_weights": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "calendar_id": {
+      "type": "string"
+    },
+    "date_start": {
+      "type": "string"
+    },
+    "date_end": {
+      "type": "string"
+    },
+    "location_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "generator_spec_id": {
+      "type": "string"
+    },
+    "common_random_plan_id": {
+      "type": "string"
+    },
+    "data_vintage_id": {
+      "type": "string"
+    },
+    "model_spec_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "valuation_asof": {
+      "type": "string"
+    },
+    "scenario_id_hash": {
+      "type": "string"
+    },
+    "seed_schema_version": {
+      "type": "string"
+    },
+    "local_date_policy": {
+      "type": "string"
+    },
+    "variable_units": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "conditioning_information_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "support_policy": {
+      "type": "string"
+    },
+    "dtype": {
+      "type": "string"
+    },
+    "content_artifact_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "calibration_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "scenario_set_id",
+    "scenario_type",
+    "scenario_ids",
+    "probability_weights",
+    "calendar_id",
+    "date_start",
+    "date_end",
+    "location_ids",
+    "generator_spec_id",
+    "common_random_plan_id",
+    "data_vintage_id",
+    "model_spec_ids",
+    "valuation_asof"
+  ],
+  "additionalProperties": false
+}

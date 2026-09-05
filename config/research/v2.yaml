@@ -1,0 +1,8 @@
+schema_version: "2.0"
+name: weather - basis - atlas - v2
+seed: 20260905
+scenario_generator: r2j-raw-residual-before-ar-v1
+offline_paths: 10000
+public_paths: 2000
+tail_level: 0.90
+equivalence_bands: [0.0, 0.02, 0.05]

@@ -1,0 +1,48 @@
+{
+  "schema_version": "2.0",
+  "release_id": "v2-fixture-r1",
+  "route_map": {
+    "explore": "index.html",
+    "compare": "compare.html",
+    "contract": "contract.html",
+    "portfolio": "portfolio.html",
+    "research": "research/index.html"
+  },
+  "scenario_sets": [],
+  "capabilities": {
+    "public_scenario_paths": 2000,
+    "maximum_locations": 6,
+    "maximum_exposure_rows": 24,
+    "maximum_hedge_columns": 39,
+    "maximum_months": 12
+  },
+  "objects": {
+    "county-registry-fixture": {
+      "schema_version": "2.0",
+      "release_id": "v2-fixture-r1",
+      "object_id": "county-registry-fixture",
+      "result_type": "county_registry",
+      "analysis_id": "fixture-identity-only",
+      "source_artifact_ids": ["fixture-county-registry"],
+      "data_vintage_id": "fixture-vintage",
+      "model_spec_ids": ["not-applicable"],
+      "scenario_set_id": null,
+      "valuation_asof": "2026-07-01",
+      "index_definition_id": "not-applicable",
+      "units": "identity",
+      "currency": null,
+      "payload": {
+        "counties": [
+          {"fips": "13051", "name": "Cook", "state": "GA"},
+          {"fips": "17031", "name": "Cook", "state": "IL"},
+          {"fips": "31109", "name": "Lancaster", "state": "NE"}
+        ]
+      },
+      "status": "available",
+      "reason_code": null,
+      "evidence_reference": "tests/fixtures/v2/public_bootstrap.json"
+    },
+    "county:31109:HDD-01": {"path":"objects/county_31109_hdd01.json","hash":"fixture"},
+    "summary:HDD-01": {"path":"objects/summary_hdd01.json","hash":"fixture"}
+  }
+}

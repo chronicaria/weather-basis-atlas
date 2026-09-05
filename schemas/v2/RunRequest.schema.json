@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "RunRequest",
+  "properties": {
+    "schema_version": {
+      "const": "2.0"
+    },
+    "stage": {
+      "type": "string"
+    },
+    "mode": {
+      "type": "string"
+    },
+    "pairs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "origins": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "county_panel": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "book_path": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "objective": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "stage"
+  ],
+  "additionalProperties": false
+}

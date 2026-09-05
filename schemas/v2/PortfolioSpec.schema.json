@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "PortfolioSpec",
+  "properties": {
+    "schema_version": {
+      "const": "2.0"
+    },
+    "portfolio_id": {
+      "type": "string"
+    },
+    "scenario_set_id": {
+      "type": "string"
+    },
+    "currency": {
+      "type": "string"
+    },
+    "objective": {
+      "type": "string"
+    },
+    "tail_level": {
+      "type": "number"
+    },
+    "candidate_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "exposure_row_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "position_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "contract_window_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "cost_profile_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "reference_book_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "constraints": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "title": "PortfolioConstraints",
+      "properties": {
+        "schema_version": {
+          "const": "2.0"
+        },
+        "cash_budget": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "gross_limit": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "net_lower": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "net_upper": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "max_active": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "allow_short": {
+          "type": "boolean"
+        },
+        "turnover_limit": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "max_stations": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "schema_version"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "portfolio_id",
+    "scenario_set_id"
+  ],
+  "additionalProperties": false
+}

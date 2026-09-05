@@ -1,0 +1,4 @@
+row_id,kind,entity_id,amount,units,currency
+heating-omaha,exposure,31055:HDD-01,115,USD/degree_day,USD
+heating-lincoln,exposure,31109:HDD-01,140,USD/degree_day,USD
+heating-grand-island,exposure,31079:HDD-01,75,USD/degree_day,USD

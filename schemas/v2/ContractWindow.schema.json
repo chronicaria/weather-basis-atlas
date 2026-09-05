@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "ContractWindow",
+  "properties": {
+    "schema_version": {
+      "const": "2.0"
+    },
+    "contract_window_id": {
+      "type": "string"
+    },
+    "contract_year": {
+      "type": "integer"
+    },
+    "index": {
+      "type": "string"
+    },
+    "month": {
+      "type": "integer"
+    },
+    "observation_start": {
+      "type": "string"
+    },
+    "observation_end": {
+      "type": "string"
+    },
+    "valuation_date": {
+      "type": "string"
+    },
+    "timing_status": {
+      "type": "string"
+    },
+    "observed_start": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "observed_end": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "remaining_start": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "remaining_end": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "research_settlement_date": {
+      "type": "string"
+    },
+    "settlement_timing_status": {
+      "type": "string"
+    },
+    "exact_settlement_available": {
+      "type": "boolean"
+    },
+    "exact_settlement_unavailable_reason": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "contract_window_id",
+    "contract_year",
+    "index",
+    "month",
+    "observation_start",
+    "observation_end",
+    "valuation_date",
+    "timing_status",
+    "observed_start",
+    "observed_end",
+    "remaining_start",
+    "remaining_end",
+    "research_settlement_date",
+    "settlement_timing_status",
+    "exact_settlement_available",
+    "exact_settlement_unavailable_reason"
+  ],
+  "additionalProperties": false
+}

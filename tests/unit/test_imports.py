@@ -14,12 +14,21 @@ _ALLOWED = {
     "manifest": set(),
     "manifest_stage": {"config", "io", "manifest"},
     "http": set(),
-    "contracts": {"config"},
+    "contracts": {"config", "schemas"},
     "ingest": {"config", "io", "manifest", "http", "contracts"},
     "indices": {"config", "io", "manifest", "contracts", "ingest.panel"},
-    "hedge": {"config", "io", "manifest", "contracts", "indices"},
-    "models": {"config", "io", "manifest", "contracts", "indices"},
-    "pricing": {"config", "io", "manifest", "contracts"},
+    "hedge": {"config", "io", "manifest", "contracts", "indices", "provenance"},
+    "models": {"config", "io", "manifest", "contracts", "indices", "provenance"},
+    "pricing": {
+        "config",
+        "io",
+        "manifest",
+        "contracts",
+        "hedge.asof",
+        "hedge.policies",
+        "portfolio.payoffs",
+        "provenance",
+    },
     "site": {
         "config",
         "io",
@@ -31,6 +40,27 @@ _ALLOWED = {
     },
     "validation": {"*"},
     "cli": {"*"},
+    # V2 layers.  The application package is the only orchestration boundary;
+    # domain packages remain unable to import it or the CLI.
+    "application": {
+        "contracts.calendar",
+        "execution",
+        "hedge",
+        "portfolio",
+        "pricing",
+        "provenance",
+        "publishing",
+        "research",
+        "scenarios",
+        "schemas",
+    },
+    "execution": {"provenance"},
+    "provenance": set(),
+    "scenarios": {"contracts", "models", "provenance", "schemas"},
+    "portfolio": set(),
+    "publishing": {"provenance", "schemas"},
+    "research": {"contracts", "portfolio", "provenance", "publishing", "schemas"},
+    "schemas": {"provenance"},
 }
 
 

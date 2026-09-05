@@ -1,0 +1,10 @@
+{
+  "disposition": "inconclusive_small_registered_origin_count; retain R2j for daily/strip support and common-year trend as tested monthly baseline",
+  "experiment_id": "R04-common-marginal-dependence-v2",
+  "monthly_alternative": "common-year-trend-bootstrap-v1",
+  "protocol_id": "sha256:c8dc43dab7f57de1c95a5ac92051c0f433c9a0c594ff08c065d07e33fdb440ef",
+  "rank_candidate": "monthly-index-only",
+  "report_id": "sha256:640c535834feb7815bb59ba9c0aaf2e1d3fb1b1dbf45ca98d5498576147be306",
+  "schema_version": "2.0",
+  "selected_generator": "r2j-common-horizon-v1"
+}

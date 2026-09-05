@@ -1,0 +1,12 @@
+{
+  "schema_version": "2.0",
+  "scope": "national",
+  "r01_directory": "var/shards/v2/atlas.evaluate/sha256-2ec802f17709f889b2abb5db9305ff788eb20dc5296babdeb6f872b3396a8f88",
+  "scenario_directory": "var/shards/v2/scenarios.build/sha256-750b533a8f349990e6b01b1bb9853e32a163c111291a468417ea8d17f63cf609/chunks",
+  "quotes_directory": "var/shards/v2/quotes.build/sha256-ec30302853d44c7b103a0888728d41fe3436d6b4772734c38e11a5724e374199",
+  "asof_directory": "var/shards/v2/atlas.select_asof/sha256-26dc722d06a95ecf8c72dab0b61ef7cd8d75fe0a4ca5c19339ebd3b2e5927777",
+  "books_directory": "results/v2/books/r2j-production-final",
+  "portfolio_comparison": "results/v2/books/r2j-production-final/public-vs-offline-comparison.json",
+  "public_source": "var/shards/v2/cases.build/sha256-3e93341bd1964f079103d0f7614b7053b37eef11851d22550c9485d4313bd997/public-source.json",
+  "bundle": "var/shards/v2/site.build/sha256-ab6e624b19297c8e76e838595b7e871e6c13aa429f4dfee9656f653dbcf849e8/bundle"
+}

@@ -36,6 +36,23 @@ def test_data_fetch_extend_and_snapshot_reproduction_commands_parse() -> None:
     assert snapshot.snapshot.name == "frozen.tar.gz"
 
 
+def test_v2_candidate_verification_command_parses_without_executing() -> None:
+    parsed = build_parser().parse_args(
+        [
+            "v2",
+            "verify",
+            "--candidate",
+            "results/v2/candidate-evidence.json",
+            "--seed-validation",
+            "var/r2j-primary/manifest.json",
+            "var/r2j-secondary/manifest.json",
+        ]
+    )
+    assert parsed.v2_command == "verify"
+    assert parsed.candidate.name == "candidate-evidence.json"
+    assert [path.parent.name for path in parsed.seed_validation] == ["r2j-primary", "r2j-secondary"]
+
+
 def test_snapshot_reproduction_rebuilds_all_qc_panels() -> None:
     """The clean replay must rebuild every panel consumed by data QC."""
     panel_variables = {

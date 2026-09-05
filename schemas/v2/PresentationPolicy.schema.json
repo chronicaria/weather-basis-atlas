@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "PresentationPolicy",
+  "properties": {
+    "schema_version": {
+      "const": "2.0"
+    },
+    "max_locations": {
+      "type": "integer"
+    },
+    "max_exposure_rows": {
+      "type": "integer"
+    },
+    "max_hedge_columns": {
+      "type": "integer"
+    },
+    "max_horizon_months": {
+      "type": "integer"
+    },
+    "default_fips": {
+      "type": "string"
+    },
+    "default_pair": {
+      "type": "string"
+    },
+    "default_route": {
+      "type": "string"
+    },
+    "money_decimals": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "schema_version"
+  ],
+  "additionalProperties": false
+}
