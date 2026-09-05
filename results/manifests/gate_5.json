@@ -1,6 +1,6 @@
 {
   "config_hash": "fdb7f34b315aa21c",
-  "created_utc": "2026-09-04T12:53:50.810650+00:00",
+  "created_utc": "2026-09-05T01:42:17.265491+00:00",
   "extra": {
     "allow_dirty": false,
     "self_excluded_from_sha256": "results/manifests/gate_5.json",
@@ -9,7 +9,7 @@
     }
   },
   "geography_vintage": "us-atlas@3",
-  "git_commit": "11324c18e7e2af957520b77333dde5f274e44595",
+  "git_commit": "dfda81c38538eae90e61fc7011300b3748c54645",
   "holdout_unlocked": false,
   "paths_in": [
     "tests/gates/test_phase5.py"
