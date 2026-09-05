@@ -1,6 +1,6 @@
 {
   "config_hash": "fdb7f34b315aa21c",
-  "created_utc": "2026-09-05T01:38:00.373162+00:00",
+  "created_utc": "2026-09-05T01:42:33.349943+00:00",
   "extra": {
     "allow_dirty": false,
     "self_excluded_from_sha256": "results/manifests/site/check.json",
@@ -126,8 +126,8 @@
       "results/manifests/gate_1.json": "f9ec6d82195ef0e630acb6b715016df3c4b5132fca38ea04c0f89be490eeb56c",
       "results/manifests/gate_2.json": "74a348f0c0bf5f4b0268cd92ad9244f7d2ed14beb577b47645d944b1f39759fa",
       "results/manifests/gate_3.json": "a3ab969ffec99c7816ce42d83ed9a925379489eeb8e80b2934de06fa62ba1de7",
-      "results/manifests/gate_4.json": "43048f8c59c2a818a40923fef6367ee6134734a4d4643113358c5c5bcef9a0b2",
-      "results/manifests/gate_5.json": "a38f1ab2332c97316e9c892e3818dbeacbdf02877bd32173e2b65f408fdbf551",
+      "results/manifests/gate_4.json": "d5d2be56226681df2d25a33543e70b6ad372569b25b71ba2895b515f81353d70",
+      "results/manifests/gate_5.json": "5c246d8654fadd886e4f5a9c2a2285c17c7beada877f4867d536abcffb40daba",
       "results/manifests/gate_6.json": "0465455d12e4e15c4af9d7c5a1b2aaf9d47d076c754d49d0c18ca97b56db20bb",
       "results/manifests/indices.json": "6622fb37ca9113ae9fe5443e26dd5f6b64a4eb2470436ec74c63c5fd622805a2",
       "results/manifests/models_fit.json": "6b236eeba382416abc4d5aa6e7957ef9d50cb617af4916950654fc2b7f096fc6",
@@ -137,7 +137,7 @@
       "results/manifests/reproduce.json": "fc2f6d30b189fd12cdaf101c667e50097661726bc7c7de58843f2da8e0cc6471",
       "results/manifests/sensitivity.json": "d4abbb8dce8ee315b23af84922c8ead83b3980c9726939020309eecba6968794",
       "results/manifests/site/build.json": "39310bf10806ac214d6c314cade7751504f6ffa622050f4bf88ffa1a351f8cfc",
-      "results/manifests/site/check.json": "937fd353d5054436d83ad474135aecef72c03ba344ba37d52666dd152b311932",
+      "results/manifests/site/check.json": "84bafad2e848c56fd87ea116b065c60f41ece4ba7bc2ab5f0697014071c57053",
       "results/manifests/tournament.json": "c8b0ac4ea22d2fc736d1e5c0b85609fe4840a4814acac17fd448fbedb84984fa",
       "results/models/params/ar_CDD-04_1991.npz": "77fdbba744e38d1faaebf34e0116de2a307dc2bf8931fd964aaaf1a19f2ad9f7",
       "results/models/params/ar_CDD-04_1992.npz": "708a3bcff7bd5c6c0976af787520ba73c3db6586fd8c3915f4527708eaf62e21",
@@ -1105,7 +1105,7 @@
     }
   },
   "geography_vintage": "us-atlas@3",
-  "git_commit": "a4a879494adc1adf9a55bce2fa8bda3497c83122",
+  "git_commit": "b5579d4425d4dcaa33bb727ae225aadcfea05dde",
   "holdout_unlocked": false,
   "paths_in": [
     "results/atlas/bootstrap.parquet",
