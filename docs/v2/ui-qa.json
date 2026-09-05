@@ -296,5 +296,58 @@
       "passed": true,
       "bundle_digest": "bundle:4c6a8a68169dcfe7c5cd2d7975fcfdde2a9e9a8fb1dd42f38e658300fc6e6b1e"
     }
+  },
+  "national_v5_base_candidate": {
+    "release_id": "release:d0462d9c2a162a362743bc3bfee9c2547ef912e0d7ed19404a00b1ba9b0dbc0a",
+    "bundle": "var/shards/v2/site.build/sha256-ab6e624b19297c8e76e838595b7e871e6c13aa429f4dfee9656f653dbcf849e8/bundle",
+    "scope": "national base candidate; enhanced B21 export UI not included",
+    "journeys": [
+      {
+        "name": "explore",
+        "passed": true,
+        "screenshot": "docs/v2/ui-evidence/national-v5-explore.png"
+      },
+      {
+        "name": "contract",
+        "passed": true,
+        "observations": [
+          "2,000 paths",
+          "committed ticket"
+        ],
+        "screenshot": "docs/v2/ui-evidence/national-v5-contract.png"
+      },
+      {
+        "name": "portfolio_worker",
+        "passed": true,
+        "observations": [
+          "accepted decision 2feab53dcdcb5b180755501b69db06b8b587fa615fc762470761e5edb8a74a36"
+        ],
+        "screenshot": "docs/v2/ui-evidence/national-v5-portfolio.png"
+      }
+    ]
+  },
+  "enhanced_export_preflight": {
+    "release_id": "release:7224ce362c35b3da4eae71819cd7cbd54442bd4c466dbaa4af801260a82ce63e",
+    "bundle": "build/releases/v2-real-ui-preflight-8",
+    "scope": "representative_real_ui; not national",
+    "decision_id": "decision:44fb5f0715df168dbdda03754e5ee1c2594d6aded05ee893ebb8ce4c043fdf98",
+    "replay": {
+      "passed": true,
+      "maximum_residual_difference": 0.0,
+      "command": "uv run python scripts/replay_portfolio_decision.py docs/v2/ui-evidence/preflight8-decision.json"
+    },
+    "artifacts": [
+      "docs/v2/ui-evidence/preflight8-decision.json",
+      "docs/v2/ui-evidence/preflight8-decision-memo.md",
+      "docs/v2/ui-evidence/preflight8-positions.csv",
+      "docs/v2/ui-evidence/preflight8-result-rows.csv",
+      "docs/v2/ui-evidence/preflight8-holdings.csv",
+      "docs/v2/ui-evidence/preflight8-restored.png"
+    ],
+    "observations": [
+      "manifest includes 2,000-scenario compiled problem, baseline, three adverse rows, source/model/object identities",
+      "all accepted CSV actions enabled after optimization and restore",
+      "Python frozen-position replay passed"
+    ]
   }
 }

@@ -81,3 +81,25 @@ Room displayed the null-weight uniform-cold stress as descriptive only. Durable
 artifacts: `docs/v2/ui-evidence/preflight7-contract.png`,
 `preflight7-portfolio-worker.png`, `preflight7-csv-worker.png`,
 `preflight7-decision-restored.png`, and `preflight7-scenario-room-stress.png`.
+
+## National V5 base and enhanced export preflight
+
+The national base candidate is release
+`release:d0462d9c2a162a362743bc3bfee9c2547ef912e0d7ed19404a00b1ba9b0dbc0a`,
+served from `var/shards/v2/site.build/sha256-ab6e624b19297c8e76e838595b7e871e6c13aa429f4dfee9656f653dbcf849e8/bundle`
+at `http://127.0.0.1:8782`. Explore loaded Lancaster County from that release;
+Contract Lab calculated the identified 2,000-path ticket; Portfolio Lab
+completed the regional-heating worker optimization. Evidence is retained as
+`docs/v2/ui-evidence/national-v5-{explore,contract,portfolio}.png`. This is the
+base candidate; it predates the B21 enhanced-export UI.
+
+The enhanced export UI was sealed separately as representative-only preflight-8,
+`release:7224ce362c35b3da4eae71819cd7cbd54442bd4c466dbaa4af801260a82ce63e`,
+at `http://127.0.0.1:8783`. Its accepted record
+`decision:44fb5f0715df168dbdda03754e5ee1c2594d6aded05ee893ebb8ce4c043fdf98`
+contains the compiled 2,000-path problem, baseline, constraints, adverse rows,
+and source/model/object identities. Decision JSON, memo, holdings, positions,
+and result-row CSVs are retained in `docs/v2/ui-evidence/preflight8-*`.
+`uv run python scripts/replay_portfolio_decision.py docs/v2/ui-evidence/preflight8-decision.json`
+passed with maximum residual difference `0.0`; the same downloaded record also
+restored in the browser without recalculation.

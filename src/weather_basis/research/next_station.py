@@ -29,7 +29,7 @@ def load_protocol(root: Path) -> dict[str, Any]:
     protocol = yaml.safe_load((Path(root) / PROTOCOL_PATH).read_text())
     if (
         not isinstance(protocol, dict)
-        or protocol.get("experiment_id") != "B26-next-station-nebraska-v1"
+        or protocol.get("experiment_id") != "B26-next-station-nebraska-v2-individual-admission"
     ):
         raise ValueError("invalid B26 next-station protocol")
     if len(protocol["baseline"]["station_ids"]) != 13:
@@ -102,15 +102,22 @@ def admission_table(root: Path, protocol: dict[str, Any]) -> list[dict[str, Any]
     return result
 
 
-def _origin_qc_ok(qc: pd.DataFrame, station_ids: list[str], years: np.ndarray) -> bool:
-    """January HDD has a complete, unfilled raw monthly observation for every train season."""
-    rows = qc.loc[(qc.ghcnd_id.isin(station_ids)) & (qc.year.isin(years)) & (qc.month == 1)]
-    expected = len(station_ids) * len(years)
-    return (
-        len(rows) == expected
-        and rows.qc_status.eq("complete").all()
-        and rows.n_gap_filled.fillna(0).eq(0).all()
+def _prior_good_masks(
+    qc: pd.DataFrame, station_ids: list[str], years: np.ndarray, values: np.ndarray
+) -> np.ndarray:
+    """Return prior station-year observations that are finite, complete, and unfilled."""
+    january = qc.loc[(qc.ghcnd_id.isin(station_ids)) & (qc.year.isin(years)) & (qc.month == 1)]
+    good = january.qc_status.eq("complete") & january.n_gap_filled.fillna(0).eq(0)
+    lookup = pd.Series(
+        good.to_numpy(), index=pd.MultiIndex.from_frame(january[["year", "ghcnd_id"]])
     )
+    return np.asarray(
+        [
+            [bool(lookup.get((int(year), station), False)) for station in station_ids]
+            for year in years
+        ],
+        dtype=bool,
+    ) & np.isfinite(values)
 
 
 def _problem(
@@ -473,10 +480,22 @@ def run_pilot(
         heldout_ix = np.flatnonzero(years == origin)
         if len(heldout_ix) != 1:
             continue
-        common = np.isfinite(y[train_ix]).all(axis=1) & np.isfinite(x[train_ix]).all(axis=1)
-        qc_ok = _origin_qc_ok(qc, all_ids, train_years)
+        prior_good = _prior_good_masks(qc, all_ids, train_years, x[train_ix])
+        individually_admitted = {
+            station_id: int(prior_good[:, column].sum()) >= common_min
+            for column, station_id in enumerate(all_ids)
+        }
+        active_baseline = [item for item in baseline if individually_admitted[item]]
+        active_candidates = [item for item in candidates if individually_admitted[item]]
+        active_ids = active_baseline + active_candidates
+        active_columns = [all_ids.index(item) for item in active_ids]
+        common = np.isfinite(y[train_ix]).all(axis=1)
+        if active_columns:
+            common &= prior_good[:, active_columns].all(axis=1)
         admission = (
-            "admitted" if common.sum() >= common_min and qc_ok else "ineligible_prior_support_or_qc"
+            "admitted"
+            if active_baseline and common.sum() >= common_min
+            else "ineligible_prior_support_or_qc"
         )
         for objective in protocol["objectives"]:
             if admission != "admitted":
@@ -486,6 +505,9 @@ def run_pilot(
                         "objective": objective,
                         "strategy": "all",
                         "admission": admission,
+                        "admitted_baseline_count": len(active_baseline),
+                        "admitted_candidate_count": len(active_candidates),
+                        "common_training_seasons": int(common.sum()),
                         "status": "not_run",
                     }
                 )
@@ -495,16 +517,25 @@ def run_pilot(
                 common
             ]
             train_x = x[train_ix][common]
-            strategies: list[tuple[str, list[str]]] = [("baseline", baseline)]
-            strategies += [(f"add_{item}", baseline + [item]) for item in candidates]
-            strategies.append(
-                ("fixed_combo_omaha_scottsbluff", baseline + ["USW00014942", "USW00024028"])
-            )
+            strategies: list[tuple[str, list[str]]] = [("baseline", active_baseline)]
+            strategies += [(f"add_{item}", active_baseline + [item]) for item in active_candidates]
+            if {"USW00014942", "USW00024028"} <= set(active_candidates):
+                strategies.append(
+                    (
+                        "fixed_combo_omaha_scottsbluff",
+                        active_baseline + ["USW00014942", "USW00024028"],
+                    )
+                )
             selected = _select_addition(
-                train_loss, train_x, baseline, candidates, objective=objective, protocol=protocol
+                train_loss,
+                train_x[:, active_columns],
+                active_baseline,
+                active_candidates,
+                objective=objective,
+                protocol=protocol,
             )
             if selected is not None:
-                strategies.append(("training_selected_one_addition", baseline + [selected]))
+                strategies.append(("training_selected_one_addition", active_baseline + [selected]))
             for strategy, ids in strategies:
                 columns = [all_ids.index(item) for item in ids]
                 choice = freeze_choice(
@@ -556,6 +587,12 @@ def run_pilot(
                             "sensitivity": sensitivity,
                             "admission": admission,
                             "common_training_seasons": int(common.sum()),
+                            "admitted_baseline_count": len(active_baseline),
+                            "admitted_candidate_count": len(active_candidates),
+                            "individually_admitted_station_years": {
+                                item: int(prior_good[:, all_ids.index(item)].sum())
+                                for item in all_ids
+                            },
                             "choice": active_choice,
                             **active_score,
                         }
@@ -567,6 +604,7 @@ def run_pilot(
         "experiment": "B26",
         "protocol_id": content_id(protocol),
         "scope": protocol["scope_disclosure"],
+        "supersedes": protocol["supersedes"],
         "admission_table": station_table,
         "consumed_development_years": protocol["reporting"]["consumed_development_years"],
         "disposition": disposition,

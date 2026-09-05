@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "status": "partial_evidence; final_full_dag_v5_pending",
+  "status": "passed_correctness_measured_targets",
   "scope": "bounded compute, cache, resume, and scenario-streaming evidence",
   "executed_evidence": {
     "atomic_resume_and_corruption": {
@@ -76,8 +76,12 @@
       "reason": "Intentionally stopped after size estimate remained above hosting cap; superseded by lossless compact float32 wire projection."
     },
     "v5": {
-      "status": "pending",
-      "record": "var/runs/v2-candidate-run-v5.json"
+      "status": "completed",
+      "record": "results/v2/validation/full-candidate-v5-run.json",
+      "plan_id": "sha256:f9dc32b6bbd3e6360cf0019e5190ac7242dad72f20f020942ee3424d996940f0",
+      "reused_stages": 12,
+      "recomputed_stages": 3,
+      "served_bytes": 749107719
     }
   },
   "performance_disposition": "The recorded profiles establish bounded one- and two-worker behavior and one full national scenario stream. They do not establish a general full-DAG throughput target or establish four-worker scaling."

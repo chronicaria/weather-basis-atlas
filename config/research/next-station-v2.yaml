@@ -1,6 +1,13 @@
 schema_version: '1.0'
-experiment_id: B26-next-station-nebraska-v1
-status: registered_pending_accepted_core
+experiment_id: B26-next-station-nebraska-v2-individual-admission
+status: registered_corrected_admission_pending_execution
+supersedes:
+  protocol: B26-next-station-nebraska-v1
+  artifact_id: sha256:1eaad37e27c5de78e6c71c405565b4f5b5f26ea424034976c1dd070d98c255df
+  reason: >-
+    The prior protocol required every raw January observation for all 18 series in
+    every preceding season. That was stricter than the registered 20-season
+    support rule and blocked otherwise admissible individual stations.
 frozen_on: '2026-09-05'
 parent_evidence: R05 bounded sensitivity screen; B26 is a separate, conditional pilot
 question: Which one additional observed Nebraska station reference, if any, reduces the declared regional HDD book's held-out residual risk?
@@ -25,7 +32,7 @@ candidate_admission:
   required_pair: HDD-01
   minimum_common_prior_seasons: 20
   metadata_rule: station ID, coordinates, registry role, source coverage and monthly QC must be present at the origin cutoff
-  qc_rule: each candidate must have a complete, unfilled January observation in every common training season; otherwise it is ineligible at that origin
+  qc_rule: a station is individually eligible when at least 20 of its preceding 30 January observations are complete and unfilled; bad prior seasons are excluded from aligned training rows
   historical_availability: retrospective metadata and QC snapshot; it cannot establish historical exchange availability
 comparisons:
   - {id: baseline, additions: []}

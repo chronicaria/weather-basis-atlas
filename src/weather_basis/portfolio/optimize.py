@@ -167,7 +167,7 @@ def _continuous_qp(
             {"type": "ineq", "fun": lambda h, m=mask, cap=limit: cap - np.abs(h[m]).sum()}
         )
 
-    def fn(h: np.ndarray) -> float:
+    def raw_fn(h: np.ndarray) -> float:
         residual = residual_loss(problem, h)
         if objective == "variance":
             mean = np.dot(problem.weights, residual)
@@ -176,13 +176,38 @@ def _continuous_qp(
             return float(np.dot(problem.weights, residual**2))
         return risk_statistics(residual, problem.weights, alpha=alpha).expected_shortfall
 
+    # Scale only the objective value: this leaves the QP argmin unchanged while
+    # avoiding SLSQP's fragile line search on USD-squared values near 1e9.
+    scale = max(abs(raw_fn(start)), 1.0)
+
+    def fn(h: np.ndarray) -> float:
+        return raw_fn(h) / scale
+
+    def jacobian(h: np.ndarray) -> np.ndarray | None:
+        residual = residual_loss(problem, h)
+        if objective == "variance":
+            centered = residual - np.dot(problem.weights, residual)
+            # Deterministic costs are scenario-constant and vanish on centering.
+            return -2 * problem.payoffs.T @ (problem.weights * centered) / scale
+        if objective == "mse" and not problem.allow_short:
+            # Long-only costs are linear in h, so G - c is the exact payoff slope.
+            slope = problem.payoffs - problem.unit_costs
+            return -2 * slope.T @ (problem.weights * residual) / scale
+        return None
+
+    options = {"ftol": 1e-10, "maxiter": 1000}
+    kwargs = {}
+    if objective == "variance" or not problem.allow_short:
+        kwargs["jac"] = lambda h: jacobian(h)
+
     return minimize(
         fn,
         start,
         method="SLSQP",
         bounds=Bounds(lower, upper),
         constraints=constraints,
-        options={"ftol": 1e-10, "maxiter": 1000},
+        options=options,
+        **kwargs,
     )
 
 
@@ -426,13 +451,18 @@ def optimize(
         for station in maximal_station_masks()
     }
     subsets = list(subsets_by_key.values())
-    best: tuple[float, np.ndarray, str] | None = None
+    best: tuple[float, np.ndarray, str, bool] | None = None
     for active in subsets:
         answer, positions = _solve_active(problem, objective, alpha, active, lots, es_target)
-        if not answer.success or positions is None:
+        if positions is None or not np.isfinite(positions).all():
             continue
         residuals = _constraint_residuals(problem, positions)
         if min(residuals.values()) < -1e-7:
+            continue
+        solver_success = bool(answer.success)
+        # SLSQP can return status 8 after reaching a feasible improving QP point.
+        # Keep that actual implementation honestly, rather than calling it infeasible.
+        if not solver_success and (objective not in {"variance", "mse"} or lots):
             continue
         residual = residual_loss(problem, positions)
         value = (
@@ -447,7 +477,7 @@ def optimize(
             )
         )
         if best is None or value < best[0]:
-            best = value, positions, str(answer.message)
+            best = value, positions, str(answer.message), solver_success
     if best is None:
         return _result(
             problem,
@@ -458,7 +488,9 @@ def optimize(
             "No feasible solution under declared constraints",
             alpha,
         )
-    status: Literal["optimal", "feasible_suboptimal"] = "optimal"
+    status: Literal["optimal", "feasible_suboptimal"] = (
+        "optimal" if best[3] else "feasible_suboptimal"
+    )
     continuous = None
     if lots:
         base = optimize(problem, objective, alpha=alpha, lots=False, es_target=es_target)

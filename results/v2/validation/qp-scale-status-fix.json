@@ -1,0 +1,80 @@
+{
+  "schema_version": "2.0",
+  "kind": "qp-scale-status-fix-validation",
+  "scope": "Recorded evidence from the already-executed QP status-scale repair. No portfolio or scenario computation was rerun to create this record.",
+  "implementation": {
+    "optimize_py_sha256": "1504526369b1f7bd01a9bc929064f8b2007a5ea453e8ac5ef3be6a3cf8cb3ca1",
+    "change": "Variance and MSE QP objectives are normalized by a positive fixed baseline and use closed-form gradients. A finite iterate that satisfies every constraint is retained as feasible_suboptimal when SLSQP reports non-convergence."
+  },
+  "b26_observed_history_source": {
+    "prior_artifact_id": "sha256:bdaf3e09aadc63079454e33f02134d083d552ec433c6507360000c452bad4f72",
+    "analysis_id": "sha256:06c539d55b7489eacaa457cd8d541dcc46c12455068ec5c923b875f223f34c3a",
+    "execution_id": "execution:a904261d-c2e0-43a0-970f-c0b83bb9477c",
+    "protocol_id": "sha256:aee7ba2084b8fbe6a1cada0d644a21d3d410b13ad3dab6e921566bf7105defb7",
+    "config": {
+      "path": "config/research/next-station-v2.yaml",
+      "sha256": "89ac785f3001370ea69ebcaf44fa17669bc3dd01802a9815e8f19117debdfa87"
+    },
+    "scenario_set_id": null,
+    "scenario_source": "Observed historical HDD-01 training rows; this B26 training-choice reproduction does not generate a scenario set.",
+    "model_spec_id": "not_applicable-observed-history-b26-v2",
+    "model_fit_id": null,
+    "hdd_index_source_sha256": {
+      "county_hdd_01": "9d25e46bc100597ef3d6fd7b593446885a925305d88b818ba6fd74d9f283c013",
+      "station_hdd_01": "feb0cb9051f4a3e61ffd5696b7f82a00f605bdf595f9f6afa670e300ca49056a"
+    }
+  },
+  "original_origin_2010_reproduction": {
+    "objective": "variance",
+    "training_rows": 29,
+    "candidate_count": 12,
+    "solver_success": false,
+    "solver_status": 8,
+    "solver_message": "Positive directional derivative for linesearch",
+    "raw_solver_objective": 689354608.3800745,
+    "zero_position_objective": 1543919884.7352636,
+    "position_pattern": "all 12 positions were 2.0313953435546",
+    "deterministic_cost_usd": 27336.97747502132,
+    "minimum_constraint_residuals": {
+      "lower_bounds": 2.0313953435546,
+      "upper_bounds": 97.9686046564454,
+      "cash_budget_usd": 22663.02252497868
+    },
+    "finding": "The returned iterate was finite, constraint-feasible, and improved on zero, but the prior status mapping called it infeasible solely because SLSQP returned status 8."
+  },
+  "corrected_origin_2010_reproduction": {
+    "objective": "variance",
+    "status": "optimal",
+    "solver_message": "Optimization terminated successfully",
+    "objective_usd_squared": 315976252.34998274,
+    "objective_display": 315976252.35,
+    "deterministic_cost_usd": 33046.59981137542,
+    "deterministic_cost_display_usd": 33046.6,
+    "positions_prefix": [4.69286498, 4.94409879e-16, 7.57893995e-16]
+  },
+  "bounded_real_book_checks": {
+    "scenario_manifest": "var/r2j-production-7county-512/manifest.json",
+    "scenario_set_id": "sha256:fecd13608d3ba2dd746ba9c80039c69122162e15a2560d2977bfc96fc4ca2226",
+    "scenario_count": 512,
+    "scenario_type": "physical_predictive",
+    "generator_spec_id": "r2j-common-horizon-production-bridged-v2",
+    "data_vintage_id": "v1-frozen-2026-09-05",
+    "checks": [
+      {"book_id": "multi-location-cooling-v1", "config": "config/books/multi-location-cooling.json", "config_sha256": "4c90d93bbc29c2509eb16a9614df3db070f83a647268646047952b43b5608f99", "objective": "variance", "status": "optimal"},
+      {"book_id": "regional-heating-v1", "config": "config/books/regional-heating.json", "config_sha256": "62c3a692886d154e1c300432cbd9d381655bfd144fa77ab558f518df390176cc", "objective": "variance", "status": "optimal"},
+      {"book_id": "underwriter-capped-claim-v1", "config": "config/books/underwriter-capped-claim.json", "config_sha256": "e9c265f784e773e3f62d232a74730edc3ece9e5d9c37b1267a2ea517398fa23e", "objective": "variance", "status": "optimal"},
+      {"book_id": "multi-location-cooling-v1", "config": "config/books/multi-location-cooling.json", "config_sha256": "4c90d93bbc29c2509eb16a9614df3db070f83a647268646047952b43b5608f99", "objective": "mse", "status": "optimal"},
+      {"book_id": "regional-heating-v1", "config": "config/books/regional-heating.json", "config_sha256": "62c3a692886d154e1c300432cbd9d381655bfd144fa77ab558f518df390176cc", "objective": "mse", "status": "optimal"},
+      {"book_id": "underwriter-capped-claim-v1", "config": "config/books/underwriter-capped-claim.json", "config_sha256": "e9c265f784e773e3f62d232a74730edc3ece9e5d9c37b1267a2ea517398fa23e", "objective": "mse", "status": "optimal"}
+    ],
+    "executed_command": "uv run python - <<'PY' ... from weather_basis.research.publishing import compile_book; for objective in ('variance', 'mse'): for path in sorted((root/'config/books').glob('*.json')): book=json.loads(path.read_text()); book['objective']=objective; result=compile_book(root, root/'var/r2j-production-7county-512', book); print(book['book_id'], objective, result['optimized']['status']) ... PY"
+  },
+  "focused_validation": {
+    "test_command": "uv run pytest -q tests/unit/test_v2_portfolio.py",
+    "result": "12 passed",
+    "lint_command": "uv run ruff check src/weather_basis/portfolio/optimize.py tests/unit/test_v2_portfolio.py",
+    "lint_result": "passed",
+    "regression_test": "test_feasible_failed_variance_iteration_is_not_called_infeasible",
+    "regression_explanation": "The test supplies a finite, constraint-feasible variance iterate with success=False (the status-8 condition class) and asserts feasible_suboptimal. The status is therefore derived from measured residuals, not guessed from SLSQP's success flag."
+  }
+}

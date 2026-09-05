@@ -220,3 +220,24 @@ def test_nonbinding_cardinality_does_not_repeat_identical_solves(monkeypatch) ->
     assert calls == 2  # One constrained solve and one reference solve.
     assert constrained.positions == pytest.approx(unconstrained.positions)
     assert constrained.objective_value == pytest.approx(unconstrained.objective_value)
+
+
+def test_feasible_failed_variance_iteration_is_not_called_infeasible(monkeypatch) -> None:
+    problem = PortfolioProblem(
+        losses=np.array([1.0, 3.0]),
+        payoffs=np.array([[0.0], [2.0]]),
+        scenario_ids=("a", "b"),
+        candidate_ids=("hedge",),
+        upper_bounds=np.array([1.0]),
+        cash_budget=1.0,
+    )
+    monkeypatch.setattr(
+        portfolio_optimize,
+        "_continuous_qp",
+        lambda *args: portfolio_optimize.OptimizeResult(
+            success=False, x=np.array([0.5]), message="positive directional derivative"
+        ),
+    )
+    result = optimize(problem, "variance")
+    assert result.status == "feasible_suboptimal"
+    assert result.positions == pytest.approx([0.5])
