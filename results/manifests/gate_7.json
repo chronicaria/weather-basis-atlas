@@ -1,0 +1,39 @@
+{
+  "config_hash": "fdb7f34b315aa21c",
+  "created_utc": "2026-09-05T16:06:54.565724+00:00",
+  "extra": {
+    "allow_dirty": false,
+    "self_excluded_from_sha256": "results/manifests/gate_7.json",
+    "sha256_in": {
+      "tests/gates/test_phase7.py": "613fc58b339a04c1ac864d868bd718a9b0cf8e1b6e9a06c641b0ad86f091d984"
+    }
+  },
+  "geography_vintage": "us-atlas@3",
+  "git_commit": "245328c548cf38d96d651891c50237f9d1764d11",
+  "holdout_unlocked": false,
+  "paths_in": [
+    "tests/gates/test_phase7.py"
+  ],
+  "paths_out": [
+    "results/gates/gate_7.json",
+    "results/manifests/gate_7.json"
+  ],
+  "prereg_sha256": "2b17ce6504cfe3c8178c2a7f5a09fd1b809c54cf000e904d32899b10e1e18bb1",
+  "run_id": "gate_7-fdb7f34b315aa21c",
+  "seed": 20260901,
+  "sha256_out": {
+    "results/gates/gate_7.json": "f78c410570a5cff01c924179a4749c51edc7571e84911f24326da137e86ca21f"
+  },
+  "stage": "gate_7",
+  "vintages": {
+    "gazetteer": "census_2020",
+    "geography": "us-atlas@3",
+    "ghcnd": "ghcnd_snap2026-09-02",
+    "ghcnd_meta": "ghcnd_meta_snap2026-09-02",
+    "homr": "homr_snap2026-09-02",
+    "nclimgrid_tavg": "nclimgrid-daily_v1-0-0_snap2026-07-30",
+    "nclimgrid_tmax": "nclimgrid-daily_v1-0-0_snap2026-09-02",
+    "nclimgrid_tmin": "nclimgrid-daily_v1-0-0_snap2026-09-02",
+    "population": "co-est2021-alldata"
+  }
+}
