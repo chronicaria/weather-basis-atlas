@@ -49,10 +49,11 @@ def test_phase7_reproduction_manifest_records_hash_equality() -> None:
 def test_phase7_live_release_serves_required_payloads() -> None:
     """Plan Section 10 Phase 7: deployed home, metadata, and default county all return HTTP 200."""
     release = json.loads((ROOT / "results/manifests/release.json").read_text(encoding="utf-8"))
-    base_url = release["live_url"].rstrip("/")
+    evidence = release.get("extra", release)
+    base_url = evidence["live_url"].rstrip("/")
     for suffix in ("index.html", "data/meta.json", "data/county/31109.json.gz"):
         with urlopen(f"{base_url}/{suffix}", timeout=30) as response:  # noqa: S310
             assert response.status == 200
-    smoke = release.get("live_smoke", {})
+    smoke = evidence.get("live_smoke", {})
     assert smoke.get("passed") is True
     assert smoke.get("external_requests") == 0

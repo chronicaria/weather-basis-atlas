@@ -172,6 +172,7 @@ def test_named_stage_helpers_preserve_inputs_and_do_not_forge_release_url(tmp_pa
             root,
             cfg,
             live_url="https://unit.test",
+            live_smoke={"passed": True, "external_requests": 0},
             outputs=[site, readme],
             inputs=[sensitivity, qc],
             started_at=datetime.now(UTC),
@@ -183,6 +184,10 @@ def test_named_stage_helpers_preserve_inputs_and_do_not_forge_release_url(tmp_pa
         blocks
     )
     assert release_manifest.extra["live_url"] == "https://unit.test"
+    assert release_manifest.extra["live_smoke"] == {
+        "passed": True,
+        "external_requests": 0,
+    }
     try:
         write_release_manifest(
             root,

@@ -344,6 +344,7 @@ def write_release_manifest(
     cfg: Any,
     *,
     live_url: str,
+    live_smoke: Mapping[str, object] | None = None,
     outputs: Iterable[Path] | None = None,
     inputs: Iterable[Path] | None = None,
     started_at: datetime | None = None,
@@ -360,6 +361,9 @@ def write_release_manifest(
     if parsed.scheme != "https" or not host or host in {"localhost", "example.com"}:
         raise ValueError("release manifest requires a real HTTPS live_url selected by a human")
     root = Path(root)
+    smoke = dict(live_smoke or {})
+    if smoke and (smoke.get("passed") is not True or smoke.get("external_requests") != 0):
+        raise ValueError("release manifest requires a passing local-only live smoke test")
     return write_stage_manifest(
         root,
         cfg,
@@ -372,6 +376,6 @@ def write_release_manifest(
             root / "results/tournament",
             root / "results/sensitivities",
         ],
-        extra={"live_url": live_url.rstrip("/")},
+        extra={"live_url": live_url.rstrip("/"), "live_smoke": smoke},
         started_at=started_at,
     )
