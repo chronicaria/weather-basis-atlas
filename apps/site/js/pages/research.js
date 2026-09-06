@@ -38,10 +38,13 @@ function renderEvidence(key, record) {
   section.append(node('p', `Result ${record.object_id} · analysis ${record.analysis_id} · source ${record.evidence_reference}`)); return section;
 }
 
-export function mountResearch({ bootstrap, loadObject }) {
+export function mountResearch({ bootstrap, loadObject, scenario, setScenario }) {
   const panel = replacePanel('.lab-panel', [node('h2', 'Evidence library')]); const records = bootstrap.objects.filter((object) => ['research', 'research_evidence'].includes(object.result_type));
   if (!records.length) { panel.append(node('p', 'No research projections are published for this release.')); return; }
   const nav = node('nav', undefined, { class: 'route-list', 'aria-label': 'Research records' }); const detail = node('div', undefined, { 'aria-live': 'polite' }); const buttons = new Map();
-  records.forEach((reference) => { const key = reference.object_key || reference.object_id; const button = node('button', title(key.replace(/^research:/, '')), { type: 'button' }); button.addEventListener('click', async () => { detail.replaceChildren(node('p', 'Loading frozen evidence…')); try { const record = await loadObject(key); detail.replaceChildren(renderEvidence(key.replace(/^research:/, ''), record)); } catch (error) { detail.replaceChildren(node('p', `Evidence unavailable: ${error.message}`)); } }); buttons.set(key, button); nav.append(button); });
-  panel.append(nav, detail); const requested = new URLSearchParams(window.location.search).get('record'); (buttons.get(requested) || nav.querySelector('button'))?.click();
+  let selected = scenario.researchRecord;
+  records.forEach((reference) => { const key = reference.object_key || reference.object_id; const button = node('button', title(key.replace(/^research:/, '')), { type: 'button' }); button.addEventListener('click', async () => { if (selected !== key) { selected = key; setScenario({ researchRecord: key }); } detail.replaceChildren(node('p', 'Loading frozen evidence…')); try { const record = await loadObject(key); detail.replaceChildren(renderEvidence(key.replace(/^research:/, ''), record)); } catch (error) { detail.replaceChildren(node('p', `Evidence unavailable: ${error.message}`)); } }); buttons.set(key, button); nav.append(button); });
+  panel.append(nav, detail); const requested = scenario.researchRecord;
+  if (requested && !buttons.has(requested)) { detail.append(node('p', `Evidence unavailable: this release does not contain ${requested}. Choose a listed research record.`)); return; }
+  (buttons.get(requested) || nav.querySelector('button'))?.click();
 }

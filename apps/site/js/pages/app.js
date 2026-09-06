@@ -142,6 +142,6 @@ async function start() {
   if (document.body.dataset.page === 'compare') mountCompare({ bootstrap, counties: bootstrap.county_registry || bootstrap.objects.find((item) => item.result_type === 'county_registry')?.payload?.counties || [], scenario, loadObject, setScenario });
   if (document.body.dataset.page === 'contract') await mountContract({ scenario, loadObject, setScenario });
   if (document.body.dataset.page === 'portfolio') mountPortfolio({ bootstrap, scenario, loadObject });
-  if (document.body.dataset.page === 'research') mountResearch({ bootstrap, loadObject });
+  if (document.body.dataset.page === 'research') mountResearch({ bootstrap, loadObject, scenario, setScenario });
 }
 start().catch((error) => { const status = $('#scenario-status'); if (status) status.textContent = `The workbench could not start. ${error.message}`; });

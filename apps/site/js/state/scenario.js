@@ -5,6 +5,7 @@ export const DEFAULT_SCENARIO = Object.freeze({
   schemaVersion: '2.0',
   releaseId: null,
   route: 'explore',
+  researchRecord: null,
   fips: '31109',
   comparisonFips: null,
   indexId: 'HDD-01',
@@ -26,7 +27,7 @@ export const DEFAULT_SCENARIO = Object.freeze({
 });
 
 const keys = {
-  version: 'v', schemaVersion: 'schema', releaseId: 'release', route: 'route', fips: 'fips', comparisonFips: 'compare', indexId: 'index',
+  version: 'v', schemaVersion: 'schema', releaseId: 'release', route: 'route', researchRecord: 'record', fips: 'fips', comparisonFips: 'compare', indexId: 'index',
   contractStart: 'start', contractEnd: 'end', valuationAsOf: 'asof',
   payoffFamily: 'payoff', direction: 'side', strike: 'strike', secondaryStrike: 'strike2', payoffStructure: 'structure', contractMembers: 'members', contractScenarioSetId: 'contractSet', assumedLoad: 'load', cap: 'cap',
   multiplier: 'multiplier', strategy: 'strategy', assumptions: 'assumptions',
@@ -42,6 +43,7 @@ export function normalizeScenario(input = {}) {
     releaseId: typeof value.releaseId === 'string' && value.releaseId.trim() ? value.releaseId.trim() : null,
     schemaVersion: value.schemaVersion === '2.0' ? '2.0' : DEFAULT_SCENARIO.schemaVersion,
     route: ['explore', 'compare', 'contract', 'portfolio', 'research'].includes(value.route) ? value.route : DEFAULT_SCENARIO.route,
+    researchRecord: textOr(value.researchRecord, null),
     fips: /^\d{5}$/.test(String(value.fips)) ? String(value.fips) : DEFAULT_SCENARIO.fips,
     comparisonFips: String(value.comparisonFips || '').split(',').filter((fips) => /^\d{5}$/.test(fips)).slice(0, 5).join(',') || null,
     indexId: /^[A-Z]+-\d{2}$/.test(String(value.indexId)) ? String(value.indexId) : DEFAULT_SCENARIO.indexId,
@@ -62,7 +64,7 @@ export function normalizeScenario(input = {}) {
 
 export function decodeScenario(search = window.location.search) {
   const params = new URLSearchParams(search);
-  if (!params.has('v')) return { scenario: { ...DEFAULT_SCENARIO }, error: null, legacy: Boolean(window.location.hash) };
+  if (!params.has('v')) return { scenario: normalizeScenario({ researchRecord: params.get('record') }), error: null, legacy: Boolean(window.location.hash) };
   if (params.get('v') !== SCENARIO_VERSION) return { scenario: null, error: 'This link uses an unsupported scenario version.', legacy: false };
   const raw = Object.fromEntries(Object.entries(keys).map(([field, key]) => [field, params.get(key)]));
   return { scenario: normalizeScenario(raw), error: null, legacy: false };

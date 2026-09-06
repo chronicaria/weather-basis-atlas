@@ -1,0 +1,116 @@
+{
+  "schema_version": "2.0",
+  "kind": "final_national_browser_acceptance",
+  "release_id": "release:6ef583abd964e2d0d9ad0b560bb0df212da2d298d262e633d501b17fa3ad3b20",
+  "bundle_digest": "bundle:992cd02821e0dd8728757d7e59ef85c6511bb3531ec489ec3122f5af3c212814",
+  "scope": "final_national_with_b26",
+  "served_url": "http://127.0.0.1:8784",
+  "release_asset_sha256": "c772825a7a704574c65dcde1a203332cd2927615973c9530f824d07034914f18",
+  "journeys": [
+    {
+      "name": "explore",
+      "passed": true,
+      "route": "/index.html",
+      "observations": [
+        "release-aware URL matched final release",
+        "Lancaster County / 31109 loaded",
+        "matched and nearest hedge-effectiveness values rendered"
+      ],
+      "screenshot": "docs/v2/ui-evidence/final-national-explore.png",
+      "network": [
+        "current.json 200",
+        "bootstrap.json 200",
+        "state catalog 200",
+        "county object 200"
+      ]
+    },
+    {
+      "name": "contract",
+      "passed": true,
+      "route": "/contract.html",
+      "observations": [
+        "committed 2027 ticket calculated",
+        "2000 scenario paths",
+        "station-linear residual distribution rendered",
+        "unavailable market fields remained explicit"
+      ],
+      "scenario_set_id": "sha256:38e2708d2a7e5372a39e5ce7aca29a2984ac41550d6f69a86c09e12c1a0e8503",
+      "screenshot": "docs/v2/ui-evidence/final-national-contract.png"
+    },
+    {
+      "name": "portfolio_custom_csv",
+      "passed": true,
+      "route": "/portfolio.html",
+      "observations": [
+        "custom CSV changed Lancaster heating amount to 150",
+        "three rows mapped without conversion or dropping",
+        "worker returned optimal",
+        "accepted decision and all JSON/memo/CSV actions enabled"
+      ],
+      "decision_id": "decision:c6658673f59262d3f9b82de78e0980abec7f3514aaea824f70d9d5b1fff4d47d",
+      "screenshot": "docs/v2/ui-evidence/final-national-custom-portfolio.png"
+    },
+    {
+      "name": "decision_restore",
+      "passed": true,
+      "observations": [
+        "same downloaded JSON restored without recalculation",
+        "decision identity matched"
+      ],
+      "screenshot": "docs/v2/ui-evidence/final-national-restored.png"
+    },
+    {
+      "name": "research_next_station",
+      "direct_record_query_passed": false,
+      "control_journey_passed": true,
+      "observations": [
+        "direct ?record=research:next_station was stripped by scenario normalization and loaded default data record",
+        "Next-station pilot control loaded populated B26 evidence and promote disposition",
+        "bootstrap provenance contains requested pilot artifact"
+      ],
+      "pilot_artifact": "sha256:a6e569904e030545f18e1e490d64febd2657d45ed0e99af8e9192c7c8d1b9ddf",
+      "screenshot": "docs/v2/ui-evidence/final-national-research-next-station.png"
+    },
+    {
+      "name": "responsive_keyboard",
+      "passed": true,
+      "viewport": [
+        320,
+        800
+      ],
+      "observations": [
+        "document scrollWidth equals viewport width",
+        "first Tab target was Skip to content"
+      ],
+      "screenshot": "docs/v2/ui-evidence/final-national-portfolio-320.png"
+    }
+  ],
+  "accepted_export": {
+    "path": "results/v2/validation/final-national-decision.json",
+    "decision_id": "decision:c6658673f59262d3f9b82de78e0980abec7f3514aaea824f70d9d5b1fff4d47d",
+    "scenario_set_id": "sha256:38e2708d2a7e5372a39e5ce7aca29a2984ac41550d6f69a86c09e12c1a0e8503",
+    "paths": 2000,
+    "sources": 48,
+    "models": [
+      "R2j",
+      "sha256:c20ba74caac1e6ac2130de339c94e1b3a25cd724a399f4d557ec03bbd92e4b45",
+      "r2j-raw-residual-before-ar-v1"
+    ],
+    "objects": [
+      "object:e7bd53334df530b9ac4cdc467065ab9761fcf52280db37ff6302f9b8fc9a551c",
+      "object:b34545d9f345154585e35788b6643c00b07255f1e4a60a42110c88f0d661a9eb",
+      "object:ffedd40d39fac3f2dfb87260efb93d79fb5637261f21c18516738b9e17bf7a04",
+      "object:55a40ebf4e9545d18627ef0447b2d1aef82729378a275cb55fa75a65bd19828e",
+      "object:4e00e152e0a6c60e0fcf6a506b00f47881fcde7f25dce239b8fea22f21799f81"
+    ],
+    "baseline_es": 95303.58836746214,
+    "accepted_es": 57990.65302315827,
+    "csv_paths": [
+      "docs/v2/ui-evidence/final-national-positions.csv",
+      "docs/v2/ui-evidence/final-national-result-rows.csv",
+      "docs/v2/ui-evidence/final-national-holdings.csv"
+    ],
+    "memo_path": "docs/v2/ui-evidence/final-national-decision-memo.md"
+  },
+  "blocking_finding": "Direct Research ?record=research:next_station is not retained; control navigation loads the correct populated B26 record. Reported to root before any source edit."
+}

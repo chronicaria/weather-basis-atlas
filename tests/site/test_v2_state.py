@@ -21,6 +21,12 @@ const encoded = encodeScenario({
 window.location.search = encoded;
 assert.equal(decodeScenario().scenario.fips, '17031');
 assert.equal(decodeScenario().scenario.strike, 123.5);
+const research = decodeScenario('?record=research:next_station').scenario;
+assert.equal(research.researchRecord, 'research:next_station');
+const pinnedResearch = encodeScenario({...research, releaseId:'release-1'});
+assert.equal(decodeScenario(pinnedResearch).scenario.researchRecord, 'research:next_station');
+assert.equal(
+  decodeScenario('?record=research:missing').scenario.researchRecord, 'research:missing');
 const counties = [{name:'Cook',state:'GA',fips:'13051'}, {name:'Cook',state:'IL',fips:'17031'}];
 assert.equal(findCountyMatches(counties, 'Cook').length, 2);
 let resolveOld, resolveNew, visible = [];
