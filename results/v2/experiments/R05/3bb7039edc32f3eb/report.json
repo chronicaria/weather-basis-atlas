@@ -1,0 +1,12 @@
+{
+  "classification_counts": {
+    "ambiguous": 400,
+    "positive_in_screen": 5693,
+    "robustly_difficult": 116
+  },
+  "disposition": "descriptive sensitivity only; final policy awaits corrected national policy/scenario artifacts",
+  "experiment": "R05",
+  "protocol_id": "sha256:731f3bbadfa3da075576935455bdf619ed8b1a96d2b16a37843907e26ab17b1e",
+  "scope": "bounded national sensitivity screen, not B24 national validation",
+  "settings": 4
+}

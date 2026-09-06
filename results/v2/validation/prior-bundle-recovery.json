@@ -1,0 +1,49 @@
+{
+  "bundle_digest": "bundle:4c6a8a68169dcfe7c5cd2d7975fcfdde2a9e9a8fb1dd42f38e658300fc6e6b1e",
+  "classification": "prior_candidate_bundle_not_prior_public_v2",
+  "deployment_or_upload": "not_performed",
+  "file_count": 3443,
+  "prior_bundle_asset": {
+    "bytes": 195927470,
+    "checksum": "build/release-assets/weather-basis-atlas-v2-prior.tar.gz.sha256",
+    "checksum_verified": true,
+    "manifest": "build/release-assets/weather-basis-atlas-v2-prior.tar.gz.manifest.json",
+    "path": "build/release-assets/weather-basis-atlas-v2-prior.tar.gz",
+    "sha256": "e555260fb330e3515c6de3002263a293578f5477add9cfdfeaf7732226abe3fa"
+  },
+  "recovery": {
+    "all_files_match": true,
+    "extracted_bundle": "build/recovery/prior-retrieved/v2-real-ui-preflight-7",
+    "extracted_inventory_sha256": "e187cfeaa21fdda37eef97e4c28ec2670048d42a5bb70efcb59359d09e1bb520",
+    "rollback_inventory_sha256": "e187cfeaa21fdda37eef97e4c28ec2670048d42a5bb70efcb59359d09e1bb520",
+    "rollback_target": "build/recovery/prior-rollback",
+    "source_inventory_sha256": "e187cfeaa21fdda37eef97e4c28ec2670048d42a5bb70efcb59359d09e1bb520",
+    "verified_bundle_digest": "bundle:4c6a8a68169dcfe7c5cd2d7975fcfdde2a9e9a8fb1dd42f38e658300fc6e6b1e",
+    "verified_release_id": "release:ca0f01029fdac1696c3416fbbb34ac5d7cfcf85731b7600fd61ebef14f01ffbf"
+  },
+  "release_id": "release:ca0f01029fdac1696c3416fbbb34ac5d7cfcf85731b7600fd61ebef14f01ffbf",
+  "release_lock_scope": "representative_real_ui",
+  "schema_version": "2.0",
+  "scope": "representative_real_ui",
+  "source_bundle": "build/releases/v2-real-ui-preflight-7",
+  "status": "passed",
+  "tamper_test": {
+    "modified_path": "index.html",
+    "quarantined_copy": "build/recovery/prior-tampered-quarantine",
+    "verifier_output": "{\"reason\":\"bundle file changed: index.html\",\"status\":\"invalid_request\"}",
+    "verify_rejected": true
+  },
+  "v1_archive": {
+    "all_files_match_original_archive_manifest": true,
+    "asset": "build/release-assets/v1-archive.tar.gz",
+    "bytes": 738832421,
+    "checksum_verified": true,
+    "extracted_inventory_sha256": "84a667043619f755590e11985bb405e6053cbc2dacc55c4093298f3e5b2962d1",
+    "extracted_root": "build/recovery/v1-archive-retrieved/var/archive/v1",
+    "file_count": 3239,
+    "inventory_manifest": "build/release-assets/v1-archive.tar.gz.manifest.json",
+    "sha256": "c3b8d916d6cd5c2cfb65a96deeb89ecd5dfbb982bec2710b06614066e63a4e30",
+    "source": "var/archive/v1",
+    "source_inventory_sha256": "84a667043619f755590e11985bb405e6053cbc2dacc55c4093298f3e5b2962d1"
+  }
+}

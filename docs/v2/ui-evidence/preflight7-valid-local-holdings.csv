@@ -1,0 +1,4 @@
+row_id,kind,entity_id,amount,budget,candidate_id,payoff_kind,strike,multiplier,unit_cost,units,currency
+csv-heating-omaha,heating_shortfall,31055:HDD-01,115,1284.7289953231812,,,,,,USD/degree_day,USD
+csv-heating-lincoln,heating_shortfall,31109:HDD-01,140,1247.1719961166382,,,,,,USD/degree_day,USD
+csv-heating-grand-island,heating_shortfall,31079:HDD-01,75,1205.4029989242554,,,,,,USD/degree_day,USD

@@ -1,0 +1,132 @@
+{
+  "disposition": "inconclusive_small_registered_origin_count; retain R2j for daily/strip support and common-year trend as tested monthly baseline",
+  "experiment_id": "R04-common-marginal-dependence-v2",
+  "peak_rss_bytes": 687751168,
+  "protocol_id": "sha256:c8dc43dab7f57de1c95a5ac92051c0f433c9a0c594ff08c065d07e33fdb440ef",
+  "rows": [
+    {
+      "columns": 350,
+      "files": {
+        "common_year_monthly.npz": "fb6a0b52e2308bfea42199a8e5b0ae56f77841409f6dd83070a4ff667ed78eea",
+        "fitted_params.npz": "dc7d66674a045f00d476be117175658765e316b118d938e9a283d730d5c4581b",
+        "r2j_monthly.npz": "bcf8dff9bf46c91d7855db2e2264bbbc11f43556276a6aaf7d0fefb75e29e79d",
+        "rank_monthly.npz": "7f5d8c275adec434492e2b0c7e8f87ddbb0ecf47a76b465cd697fed2611c8812"
+      },
+      "fit_cutoff": "2019-06-30",
+      "origin": 2019,
+      "pairs": [
+        "HDD-10",
+        "HDD-11",
+        "HDD-12",
+        "HDD-01",
+        "HDD-02",
+        "HDD-03",
+        "HDD-04",
+        "CDD-04",
+        "CDD-05",
+        "CDD-06",
+        "CDD-07",
+        "CDD-08",
+        "CDD-09",
+        "CDD-10"
+      ],
+      "peak_rss_bytes": 630472704,
+      "runtime_seconds": 3.8392750839993823,
+      "scoreability": "complete",
+      "scores": {
+        "common_year_trend": {
+          "energy_score": 20.37452669592173,
+          "mean_crps": 60.701571565227766,
+          "sum_crps": 21245.550047829718
+        },
+        "r2j": {
+          "energy_score": 14.672106778703565,
+          "mean_crps": 42.072367052796636,
+          "sum_crps": 14725.328468478823
+        },
+        "rank_coupled_monthly": {
+          "energy_score": 14.673868503422826,
+          "mean_crps": 45.94827401344213,
+          "sum_crps": 16081.895904704746
+        }
+      },
+      "status": "complete",
+      "training_vectors": 13
+    },
+    {
+      "columns": 350,
+      "files": {
+        "common_year_monthly.npz": "6f9744b7ac1918185d6fe5f457a7ee61ac2a209fa2ac50ced9312452136256ad",
+        "fitted_params.npz": "ee7165dbb254739cf391eb278fd23885499c37b652f3f0438a7d1b8552e4050d",
+        "r2j_monthly.npz": "ce473cd55e9715a8bdade41ddda51a85a5480df0f03b4cd0001fdee0b4face26",
+        "rank_monthly.npz": "b2dd079c246023393e655a3eed9521f902b2cdc76f5e7a1372bc6d29b96d1316"
+      },
+      "fit_cutoff": "2020-06-30",
+      "origin": 2020,
+      "pairs": [
+        "HDD-10",
+        "HDD-11",
+        "HDD-12",
+        "HDD-01",
+        "HDD-02",
+        "HDD-03",
+        "HDD-04",
+        "CDD-04",
+        "CDD-05",
+        "CDD-06",
+        "CDD-07",
+        "CDD-08",
+        "CDD-09",
+        "CDD-10"
+      ],
+      "peak_rss_bytes": 687751168,
+      "runtime_seconds": 3.857927999997628,
+      "scoreability": "complete",
+      "scores": {
+        "common_year_trend": {
+          "energy_score": 16.757633996269625,
+          "mean_crps": 56.24157864206544,
+          "sum_crps": 19684.552524722905
+        },
+        "r2j": {
+          "energy_score": 14.445721963014474,
+          "mean_crps": 47.67321057018431,
+          "sum_crps": 16685.62369956451
+        },
+        "rank_coupled_monthly": {
+          "energy_score": 15.009614857756127,
+          "mean_crps": 47.87189079325563,
+          "sum_crps": 16755.16177763947
+        }
+      },
+      "status": "complete",
+      "training_vectors": 14
+    },
+    {
+      "fit_cutoff": "2021-06-30",
+      "origin": 2021,
+      "reason": "missing_heldout_common_daily_support",
+      "status": "unavailable"
+    }
+  ],
+  "runtime_seconds": 7.732352917002572,
+  "status": "executed",
+  "summary": {
+    "mean_scores": {
+      "common_year_trend": {
+        "energy_score": 18.566080346095678,
+        "mean_crps": 58.4715751036466
+      },
+      "r2j": {
+        "energy_score": 14.55891437085902,
+        "mean_crps": 44.87278881149047
+      },
+      "rank_coupled_monthly": {
+        "energy_score": 14.841741680589475,
+        "mean_crps": 46.91008240334888
+      }
+    },
+    "n_registered_origins": 3,
+    "n_scoreable_origins": 2
+  }
+}

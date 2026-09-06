@@ -1,20 +1,77 @@
-name: Pages
+name: Deploy sealed V2 release
+
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
+    inputs:
+      bundle_url:
+        description: Immutable GitHub Release asset URL for the sealed .tar.gz bundle
+        required: true
+        type: string
+      bundle_sha256:
+        description: SHA-256 from the corresponding checked-in/release-asset manifest
+        required: true
+        type: string
+      release_id:
+        description: Expected release:<sha256> identity embedded in the sealed bundle
+        required: true
+        type: string
+
 permissions:
   contents: read
   pages: write
   id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
 jobs:
   deploy:
-    environment: github-pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
       - run: uv sync --frozen
-      - run: uv run wba site check
-      - uses: actions/upload-pages-artifact@v3
-        with: {path: site}
-      - uses: actions/deploy-pages@v4
+      - name: Download pinned sealed bundle
+        env:
+          BUNDLE_URL: ${{ inputs.bundle_url }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          case "$BUNDLE_URL" in
+            https://github.com/*/releases/download/*) ;;
+            *) echo "bundle_url must be a GitHub Release download URL" >&2; exit 1 ;;
+          esac
+          curl --fail --location --retry 3 --retry-delay 2 --header "Authorization: Bearer $GITHUB_TOKEN" "$BUNDLE_URL" --output "$RUNNER_TEMP/release.tar.gz"
+      - name: Verify immutable asset checksum
+        env:
+          EXPECTED_SHA256: ${{ inputs.bundle_sha256 }}
+        run: |
+          actual="$(sha256sum "$RUNNER_TEMP/release.tar.gz" | awk '{print $1}')"
+          test "$actual" = "$EXPECTED_SHA256"
+      - name: Extract one sealed bundle
+        run: |
+          mkdir "$RUNNER_TEMP/release-asset"
+          tar --extract --gzip --file "$RUNNER_TEMP/release.tar.gz" --directory "$RUNNER_TEMP/release-asset" --no-same-owner
+          mapfile -t roots < <(find "$RUNNER_TEMP/release-asset" -mindepth 1 -maxdepth 1 -type d -print)
+          test "${#roots[@]}" -eq 1
+          test -f "${roots[0]}/bundle-manifest.json"
+          test -f "${roots[0]}/release-lock.json"
+          test -f "${roots[0]}/v1/index.html"
+          echo "BUNDLE=${roots[0]}" >> "$GITHUB_ENV"
+      - name: Verify sealed release and declared identity
+        env:
+          EXPECTED_RELEASE_ID: ${{ inputs.release_id }}
+        run: |
+          uv run wba v2 release verify --bundle "$BUNDLE"
+          actual="$(uv run wba v2 release inspect --bundle "$BUNDLE" | python -c 'import json, sys; print(json.load(sys.stdin)["release_id"])')"
+          test "$actual" = "$EXPECTED_RELEASE_ID"
+      - name: Upload exactly the verified bundle
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ env.BUNDLE }}
+      - id: deployment
+        name: Deploy verified bundle
+        uses: actions/deploy-pages@v4

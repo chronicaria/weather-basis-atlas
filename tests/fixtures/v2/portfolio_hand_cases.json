@@ -1,0 +1,83 @@
+{
+  "schema_version": "v2-fixture-1",
+  "description": "Artificial numerical cases for the V2 portfolio contract. These are not weather findings.",
+  "cases": [
+    {
+      "id": "ledger-perfect-hedge",
+      "scenario_ids": ["s1", "s2", "s3"],
+      "weights": [0.25, 0.5, 0.25],
+      "exposure_loss": [10.0, 20.0, 40.0],
+      "long_unit_payoffs": [[0.0], [10.0], [30.0]],
+      "positions": [1.0],
+      "terminal_cost": 2.0,
+      "expected": {
+        "residual_loss": [12.0, 12.0, 12.0],
+        "unhedged_mean": 22.5,
+        "unhedged_variance": 118.75,
+        "residual_mean": 12.0,
+        "residual_variance": 0.0,
+        "residual_es_90": 12.0
+      }
+    },
+    {
+      "id": "ledger-short-sign",
+      "scenario_ids": ["s1", "s2", "s3"],
+      "weights": [0.25, 0.5, 0.25],
+      "exposure_loss": [10.0, 20.0, 40.0],
+      "long_unit_payoffs": [[0.0], [10.0], [30.0]],
+      "positions": [-1.0],
+      "terminal_cost": 2.0,
+      "expected": {"residual_loss": [12.0, 32.0, 72.0]}
+    },
+    {
+      "id": "weighted-fractional-tail",
+      "scenario_ids": ["s1", "s2", "s3"],
+      "weights": [0.9, 0.05, 0.05],
+      "losses": [0.0, 10.0, 100.0],
+      "expected": {"es_90": 55.0, "es_95": 100.0}
+    },
+    {
+      "id": "payoff-identities",
+      "scenario_ids": ["s1", "s2", "s3"],
+      "index": [5.0, 10.0, 15.0],
+      "strike": 10.0,
+      "multiplier": 1.0,
+      "expected": {
+        "call": [0.0, 0.0, 5.0],
+        "put": [5.0, 0.0, 0.0],
+        "call_minus_put": [-5.0, 0.0, 5.0],
+        "capped_call_cap_3": [0.0, 0.0, 3.0],
+        "call_spread_10_15": [0.0, 0.0, 5.0]
+      }
+    },
+    {
+      "id": "integer-lot-recompute",
+      "scenario_ids": ["s1", "s2"],
+      "weights": [0.5, 0.5],
+      "exposure_loss": [0.0, 10.0],
+      "long_unit_payoffs": [[0.0], [10.0]],
+      "cost_per_unit": [1.0],
+      "upper_bounds": [2.0],
+      "lot_sizes": [2.0],
+      "objective": "mse",
+      "expected": {
+        "continuous_position": [1.097560975609756],
+        "continuous_residual_loss": [1.097560975609756, 0.12195121951219523],
+        "continuous_mse": 0.6097560975609758,
+        "implemented_position": [2.0],
+        "implemented_residual_loss": [2.0, -8.0],
+        "implemented_mse": 34.0
+      }
+    },
+    {
+      "id": "infeasible-required-hedge-budget",
+      "scenario_ids": ["s1", "s2"],
+      "weights": [0.5, 0.5],
+      "exposure_loss": [0.0, 10.0],
+      "long_unit_payoffs": [[0.0], [10.0]],
+      "cost_per_unit": [1.0],
+      "constraints": {"position_lower": [1.0], "cash_budget": 0.0},
+      "expected": {"status": "infeasible", "reason_code": "cash_budget"}
+    }
+  ]
+}

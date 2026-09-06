@@ -1,4 +1,4 @@
-.PHONY: env test test-data data contracts indices atlas models quotes nebraska site reproduce
+.PHONY: env test test-data data contracts indices atlas models quotes nebraska site reproduce v2-fixture-plan v2-fixture-run
 DATA_DONOR ?= $(HOME)/Desktop/Code/WeatherDerivativePricing
 SNAPSHOT ?= data/snapshots/weather-basis-atlas.tar
 REPRO_OUT ?= /tmp/weather-basis-atlas-reproduce
@@ -39,9 +39,14 @@ quotes:
 nebraska:
 	uv run wba nebraska run
 site:
-	uv run wba site payloads
 	uv run wba site build
 	uv run wba site check
+
+v2-fixture-plan:
+	uv run wba v2 plan --stage portfolios.optimize --spec config/research/v2.yaml --vintage config/vintages/v1-frozen.yaml --profile fixture --request tests/fixtures/v2/portfolio_request.json --out var/runs/v2-fixture-plan.json
+
+v2-fixture-run: v2-fixture-plan
+	uv run wba v2 run --plan var/runs/v2-fixture-plan.json --resume
 reproduce:
 	uv run wba reproduce --snapshot $(SNAPSHOT) --out $(REPRO_OUT)
 

@@ -1,0 +1,51 @@
+schema_version: '2.0'
+evidence:
+  cme_chapter_403:
+    source: CFTC public rule-filing copy, Chapter 403
+    uri: https://www.cftc.gov/sites/default/files/filings/ptc/23/05/ptc0504231410.pdf
+    retrieved_on: '2026-09-01'
+    sha256: 9c51d584015fbcd417e66f6e5e77cc4e4aa49d1c72e79a6f25b75a5237d45360
+    scope: City, station, daily-temperature, multiplier, and settlement-rule transcription.
+    status: retained_transcription_not_human_verified
+  cme_product_slate:
+    source: CME weather product slate PM23WE001/0823
+    uri: https://www.cmegroup.com/trading/weather/temperature-based-indexes.html
+    retrieved_on: '2026-09-01'
+    sha256: 07d77777d24737dedcd68ed4a5cf83050291030020d3802d315c4f3ff4a7105d
+    scope: Product-code transcription only.
+    status: retained_transcription_not_human_verified
+  calendar_table:
+    source: Chapter 403 monthly temperature contract calendar
+    uri: https://www.cftc.gov/sites/default/files/filings/ptc/23/05/ptc0504231410.pdf
+    retrieved_on: '2026-09-01'
+    sha256: 61aec994ed8c828a8e88dd4135748ade23541758f6e5f89697ab2d1f1fec5273
+    scope: Fourteen retained HDD/CDD month pairs.
+    status: retained_transcription_not_human_verified
+  exchange_calendar:
+    source: No frozen authoritative exchange-business-day calendar
+    uri: https://www.cmegroup.com/daily_bulletin/current/Section24_Weather_Futures_And_Options.pdf
+    retrieved_on: '2026-09-05'
+    sha256: null
+    scope: Exact settlement dates are unsupported in the frozen vintage.
+    status: unavailable
+contract:
+  currency: USD
+  tick_usd: null
+  lot_size: null
+  observation_rule: Arithmetic mean of daily Tmax and Tmin in the documented local station day.
+  expiry_rule: Contract window ends on the final local calendar day of the named month.
+  settlement_rule: Second Exchange business day after the contract window; exact holiday calendar absent.
+  correction_rule: Official settlement-index correction policy is not retained.
+  evidence_tier: retained_documentary_transcription
+listing:
+  unknown_historical_listing_reason: >-
+    The frozen registry has product specifications but no dated instrument master or
+    historical listing archive. A current city universe does not prove that a given
+    city/product/window/year was listed.
+market:
+  access_class: paid_or_registered_source_required
+  supported_field_types: [bid, ask, trade, preliminary_settlement, final_settlement, volume, open_interest]
+  unavailable_reason: >-
+    No licensed historical market observations or official settlement records are in
+    the frozen V1 inputs. Market execution and settlement-grade pricing are disabled;
+    this null is not a zero price.

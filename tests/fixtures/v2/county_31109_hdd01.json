@@ -1,0 +1,4 @@
+{
+  "schema_version":"2.0","release_id":"v2-fixture-r1","object_id":"county:31109:HDD-01","result_type":"county","analysis_id":"fixture-identity-only","source_artifact_ids":["fixture-county"],"data_vintage_id":"fixture-vintage","model_spec_ids":["not-applicable"],"scenario_set_id":null,"valuation_asof":"2026-07-01","index_definition_id":"fixture-hdd-01","units":"identity","currency":null,
+  "payload":{"county":{"fips":"31109","name":"Lancaster","state":"NE"},"historical_evidence":{"status":"unavailable","reason_code":"fixture_no_historical_metric"},"current_availability":{"status":"unavailable","reason_code":"fixture_no_current_model"},"selection_asof":null,"matched_policy":null},"status":"partial","reason_code":"fixture_identity_only","evidence_reference":"tests/fixtures/v2/county_31109_hdd01.json"
+}

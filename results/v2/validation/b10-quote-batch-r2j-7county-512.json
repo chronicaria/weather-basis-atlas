@@ -1,0 +1,39 @@
+{
+  "artifact": "var/r2j-production-7county-512/manifest.json",
+  "benchmark": {
+    "batched_seconds": {
+      "median": 0.01770691700221505,
+      "min": 0.017510833997221198
+    },
+    "bootstrap_B": 200,
+    "county_pair_inputs": 98,
+    "paths": 512,
+    "reference_seconds": {
+      "median": 0.010796917005791329,
+      "min": 0.010624541995639447
+    },
+    "repetitions": 7,
+    "speedup_median": 0.6097570234525121,
+    "tickets_per_input": 6
+  },
+  "method": {
+    "bootstrap": "one annual burn-history multiplicity matrix per county/pair, reused across compatible tickets",
+    "hedge": "fresh payoff-specific covariance ratio for each call or put and each strike",
+    "selection": "current_pair as-of score tape, valuation 2026-07-01, then exact selected station entity in the shared scenario matrix"
+  },
+  "numerical_reference_max_abs_error": 0.0,
+  "observation_cutoff": "2026-05-31",
+  "bridge_days": 30,
+  "scenario_set_id": "sha256:fecd13608d3ba2dd746ba9c80039c69122162e15a2560d2977bfc96fc4ca2226",
+  "seed_validation": {
+    "reason": "no independent second-seed R2j artifact was present with this frozen benchmark",
+    "status": "unavailable"
+  },
+  "station_hedge_validation": {
+    "selected_scenarios": 98,
+    "station_values_nonfinite": 0,
+    "unavailable_selections": [],
+    "status": "passed"
+  },
+  "status": "partial_pending_independent_seed"
+}

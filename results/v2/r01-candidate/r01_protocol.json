@@ -1,0 +1,15 @@
+{
+  "id": "R01",
+  "question": "Does corrected prior-score selection beat nearest on matched seasons?",
+  "baseline": "nearest_eligible",
+  "challenger": "prior_best",
+  "metric": "D06 replication-MSE HE",
+  "common_support": "exact paired seasons",
+  "equivalence_bands": [
+    0.0,
+    0.02,
+    0.05
+  ],
+  "inference_unit": "chronological outer origin/season",
+  "status": "registered_before_reconstruction"
+}

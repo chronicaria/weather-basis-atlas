@@ -1,0 +1,19 @@
+{
+  "release_id": "release:6ef583abd964e2d0d9ad0b560bb0df212da2d298d262e633d501b17fa3ad3b20",
+  "bundle_digest": "bundle:992cd02821e0dd8728757d7e59ef85c6511bb3531ec489ec3122f5af3c212814",
+  "routes": {
+    "/": "index.html",
+    "/compare": "compare.html",
+    "/contract": "contract.html",
+    "/portfolio": "portfolio.html",
+    "/research/": "research/index.html"
+  },
+  "file_count": 93495,
+  "served_bytes": 749137207,
+  "bundle": "/Users/andrewpark/Desktop/Code/weather-basis-atlas/build/recovery/final-release-asset/v2-final",
+  "asset_sha256": "c772825a7a704574c65dcde1a203332cd2927615973c9530f824d07034914f18",
+  "archive": "build/release-assets/weather-basis-atlas-v2.tar.gz",
+  "extraction_wall_seconds": 27.836124832996575,
+  "status": "passed",
+  "scope": "fresh_final_asset_extraction_and_full_seal_verification"
+}

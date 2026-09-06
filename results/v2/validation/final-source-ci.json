@@ -1,0 +1,18 @@
+{
+  "schema_version": "2.0",
+  "source_commit": "2ef563f",
+  "workflow_runs": [
+    {
+      "id": 33999898637,
+      "url": "https://github.com/chronicaria/weather-basis-atlas/actions/runs/33999898637",
+      "status": "success",
+      "checks": "Ruff; schema/registry/release 9 passed; full pytest 195 passed, 1 skipped, 5 deselected; fresh checkout fixture and site check per workflow"
+    },
+    {
+      "id": 33999896413,
+      "url": "https://github.com/chronicaria/weather-basis-atlas/actions/runs/33999896413",
+      "status": "success"
+    }
+  ],
+  "limitations": "Five data-marked tests are excluded from ordinary CI. The local-data-only test is skipped on fresh checkout. Full national artifact acceptance is separate."
+}

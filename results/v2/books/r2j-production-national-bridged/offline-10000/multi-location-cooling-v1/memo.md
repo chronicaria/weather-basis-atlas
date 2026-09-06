@@ -1,0 +1,37 @@
+# Portfolio decision memo
+
+## Question
+
+Can a July CDD portfolio retain geographic natural offsets before it purchases weather protection?
+
+## Decision identity
+
+`decision:9f23212dd14086b6f0f20aff0bd108ddb23076bdd91fbf7de3acbb004a4cd4d8` · scenario `sha256:ac7236e86321bb268817ecc41bf11d1eb438167651b38160ad1ddb12103f5ed3`
+
+## Holdings and implementation
+
+
+Positions: `[4.6205112453188075, 9.506492443934514, 2.1134812890405374, 1.5098517971641148]`
+
+Status: `optimal`; objective: `es`.
+
+## Cost and risk
+
+
+Deterministic cost: `23453.073247617223`; ES: `27668.285101293277`; variance: `79235965.62195994`.
+
+## Binding constraints
+
+max_active, max_stations.
+
+## Adverse scenarios
+
+Scenario-level tail attribution is available from the retained scenario-set identity; this memo does not relabel physical paths as market prices..
+
+## Uncertainty
+
+Representative physical predictive scenarios and illustrative physical expected-payout pricing; no observed or executable market quote.
+
+## Reproduction
+
+Sources: r2j-production:97f48305b46b74f0afe994b3f2d3c033fa6930e69874ab011d61129ecf89fba4. Run `uv run python -c "from pathlib import Path; from weather_basis.research.publishing import compile_sample_books; compile_sample_books(Path('.'), Path('var/r2j-production-national-10000-bridged'), Path('results/v2/books/r2j-production-national-bridged/offline-10000'))"`.

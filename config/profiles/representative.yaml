@@ -1,0 +1,9 @@
+schema_version: '2.0'
+name: representative
+workers: 1
+memory_gib: 12.0
+cache_dir: var/cache/v2
+scratch_dir: var/shards/v2
+chunk_counties: 64
+blas_threads: 1
+telemetry: true

@@ -1,0 +1,85 @@
+schema_version: '1.0'
+experiment_id: B26-next-station-nebraska-v2-individual-admission
+status: registered_corrected_admission_pending_execution
+supersedes:
+  protocol: B26-next-station-nebraska-v1
+  artifact_id: sha256:1eaad37e27c5de78e6c71c405565b4f5b5f26ea424034976c1dd070d98c255df
+  reason: >-
+    The prior protocol required every raw January observation for all 18 series in
+    every preceding season. That was stricter than the registered 20-season
+    support rule and blocked otherwise admissible individual stations.
+frozen_on: '2026-09-05'
+parent_evidence: R05 bounded sensitivity screen; B26 is a separate, conditional pilot
+question: Which one additional observed Nebraska station reference, if any, reduces the declared regional HDD book's held-out residual risk?
+scope_disclosure: >-
+  This is a retrospective research-proxy study using frozen public station observations.
+  It makes no exchange-listing, market-demand, liquidity, or executable-availability claim.
+exposure_book:
+  book_id: regional-heating-v1
+  pair: HDD-01
+  counties:
+    - {fips: '31055', amount_usd_per_dd: 115.0}
+    - {fips: '31109', amount_usd_per_dd: 140.0}
+    - {fips: '31079', amount_usd_per_dd: 75.0}
+  target_budget_rule: prior_30_season_median_each_origin
+baseline:
+  station_universe: cme13-listed-reference-v1
+  station_ids: [USW00003927, USW00012960, USW00013739, USW00013874, USW00014732, USW00014739, USW00014922, USW00023152, USW00023169, USW00023232, USW00024229, USW00093814, USW00094846]
+candidate_admission:
+  source: frozen local 18-station panel and station_registry.csv
+  station_ids: [USW00014935, USW00014939, USW00014942, USW00024023, USW00024028]
+  required_role: nebraska
+  required_pair: HDD-01
+  minimum_common_prior_seasons: 20
+  metadata_rule: station ID, coordinates, registry role, source coverage and monthly QC must be present at the origin cutoff
+  qc_rule: a station is individually eligible when at least 20 of its preceding 30 January observations are complete and unfilled; bad prior seasons are excluded from aligned training rows
+  historical_availability: retrospective metadata and QC snapshot; it cannot establish historical exchange availability
+comparisons:
+  - {id: baseline, additions: []}
+  - {id: add_USW00014935, additions: [USW00014935]}
+  - {id: add_USW00014939, additions: [USW00014939]}
+  - {id: add_USW00014942, additions: [USW00014942]}
+  - {id: add_USW00024023, additions: [USW00024023]}
+  - {id: add_USW00024028, additions: [USW00024028]}
+  - {id: fixed_combo_omaha_scottsbluff, additions: [USW00014942, USW00024028]}
+  - {id: training_selected_one_addition, additions: training_selected_one_addition}
+rolling_evaluation:
+  origins: [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]
+  prior_seasons: 30
+  heldout_rule: one realized origin season, scored once after the choice is frozen
+  missing_heldout_rule: missing later outcome makes the frozen choice unscoreable; never substitute another station
+objectives: [variance, es]
+tail_level: 0.90
+contract:
+  kind: long_station_hdd_put
+  payout_usd_per_dd: 20.0
+  strike_rule: prior_30_season_median_each_station_origin
+  premium_rule: prior_training_physical_mean_payoff_plus_fee
+  contract_fee_usd: 20.0
+  zero_fee_sensitivity: true
+constraints:
+  cash_budget_usd: 50000.0
+  long_only: true
+  upper_contracts_per_station: 100
+  lot_size_contracts: 1
+  variance_lot_rule: continuous_solution_floored_to_whole_contracts_then_reevaluated
+uncertainty:
+  method: origin_clustered_bootstrap
+  resamples: 2000
+  seed: 20260905
+  note: origins are dependent observed history, not independent paths; interval is descriptive
+adjudication:
+  minimum_paired_origins: 10
+  promote_rule: >-
+    The base-cost training-selected addition must have at least the minimum paired
+    origins and a strictly positive lower 95 percent origin-bootstrap gain bound
+    for both variance and ES90. Promotion is only a research-feature disposition.
+  retain_research_rule: >-
+    Both base-cost training-selected point gains are positive but the registered
+    promotion rule is not met.
+  inconclusive_rule: At least one registered comparison is scoreable but neither prior rule is met.
+  stop_missing_evidence_rule: No registered comparison reaches the minimum paired-origin support.
+reporting:
+  required: [station_table, coordinates, admission_disposition, origin_rows, objective_summary, cost_sensitivity, map_ready_rows]
+  dispositions: [promote, retain_research, inconclusive, stop_missing_evidence]
+  consumed_development_years: [2023, 2024, 2025]

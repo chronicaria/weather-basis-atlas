@@ -1,0 +1,5 @@
+row_id,kind,entity_id,amount,units,currency
+cooling-omaha,exposure,31055:CDD-07,160,USD/degree_day,USD
+cooling-lincoln,exposure,31109:CDD-07,130,USD/degree_day,USD
+cooling-north-platte,exposure,31111:CDD-07,95,USD/degree_day,USD
+cooling-scottsbluff,exposure,31157:CDD-07,70,USD/degree_day,USD

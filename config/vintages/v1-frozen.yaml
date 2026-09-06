@@ -1,0 +1,137 @@
+schema_version: '2.0'
+vintage_id: v1-frozen-2026-09-05
+frozen_on: '2026-09-05'
+data_vintage_sha256: a9e833ab702b6c9933de0249ace0e4671f9cbd23b2c3399e8550fcedf2e886cf
+market_data_status: absent_paid_or_registered_history
+official_settlement_status: absent_authorized_settlement_history
+artifacts:
+  - artifact_id: nclimgrid-tavg-manifest-v1
+    schema_version: '2.0'
+    provider: NOAA NCEI
+    dataset: nClimGrid-Daily county averages
+    source_uri: https://www.ncei.noaa.gov/data/nclimgrid-daily/access/averages/
+    retrieved_at: '2026-07-30T03:33:21+00:00'
+    published_at: null
+    available_at: null
+    sha256: 1fc446b3a0648bad118e7537da98469fe2080eb02e5ecc67e1fc75a9e7ad70a7
+    byte_count: null
+    access_class: public_frozen_input
+    source_terms: NOAA public data; preserve source provenance and revision limits.
+    parser_version: v1-panel
+  - artifact_id: nclimgrid-tmax-manifest-v1
+    schema_version: '2.0'
+    provider: NOAA NCEI
+    dataset: nClimGrid-Daily county maximum temperature
+    source_uri: https://www.ncei.noaa.gov/data/nclimgrid-daily/access/averages/
+    retrieved_at: '2026-09-02T16:07:39+00:00'
+    published_at: null
+    available_at: null
+    sha256: b86d78fd27c7a859fb72bc9ce59833824c9e4f893c39aaf739d9b3d96cb0651d
+    byte_count: null
+    access_class: public_frozen_input
+    source_terms: NOAA public data; retained only for coherent accepted overlap.
+    parser_version: v1-panel
+  - artifact_id: nclimgrid-tmin-manifest-v1
+    schema_version: '2.0'
+    provider: NOAA NCEI
+    dataset: nClimGrid-Daily county minimum temperature
+    source_uri: https://www.ncei.noaa.gov/data/nclimgrid-daily/access/averages/
+    retrieved_at: '2026-09-02T16:07:42+00:00'
+    published_at: null
+    available_at: null
+    sha256: 16214d17b2fff324882a235fde108cfe2e1e1d1f0b286859a8db56cc29c0da81
+    byte_count: null
+    access_class: public_frozen_input
+    source_terms: NOAA public data; retained only for coherent accepted overlap.
+    parser_version: v1-panel
+  - artifact_id: ghcnd-stations-manifest-v1
+    schema_version: '2.0'
+    provider: NOAA NCEI
+    dataset: GHCN-Daily station observations
+    source_uri: https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily
+    retrieved_at: '2026-09-02T00:00:00+00:00'
+    published_at: null
+    available_at: null
+    sha256: 1b99c7417dfb832ef0d5243ce6e90930ab09c2b4ba92adaaadcdbe3c04518307
+    byte_count: null
+    access_class: public_frozen_input
+    source_terms: NOAA public data; source Q flags are preserved and masked before filling.
+    parser_version: v1-ghcnd-qc
+  - artifact_id: homr-manifest-v1
+    schema_version: '2.0'
+    provider: NOAA NCEI
+    dataset: Historical Observing Metadata Repository station metadata
+    source_uri: https://www.ncei.noaa.gov/homr/
+    retrieved_at: '2026-09-02T00:00:00+00:00'
+    published_at: null
+    available_at: null
+    sha256: ff5c91258e48aa5c1bf06e2f728af374636171274c7de5ffbbfea8b1cf2c2572
+    byte_count: null
+    access_class: public_frozen_input
+    source_terms: NOAA public metadata snapshot; parser completeness is not a stability claim.
+    parser_version: v1-homr
+support:
+  - support_id: county-tavg-v1
+    schema_version: '2.0'
+    artifact_id: nclimgrid-tavg-manifest-v1
+    variable: TAVG
+    location_type: county
+    coverage_start: '1951-01'
+    coverage_end: '2026-06'
+    coherent_through: '2026-06'
+    retrieval_vintage_id: nclimgrid-daily_v1-0-0_snap2026-07-30
+    qc_rule: County source coverage is frozen as received; use coverage diagnostics, not settlement claims.
+    imputation_rule: No additional V2 imputation is introduced by this lock.
+    station_metadata_breaks: not_applicable_to_county_grid
+    historical_availability: retrospective revised public snapshot; historical issue-time availability is unknown.
+    aggregation_order: Daily county mean temperature then degree-day transform then period sum.
+    supported_for: [county_temperature_research, HDD_CDD_physical_index]
+    unsupported_reason: County mean temperature is not official station settlement or a business loss model.
+  - support_id: county-tmax-v1
+    schema_version: '2.0'
+    artifact_id: nclimgrid-tmax-manifest-v1
+    variable: TMAX
+    location_type: county
+    coverage_start: '2023-01'
+    coverage_end: '2026-06'
+    coherent_through: '2025-12'
+    retrieval_vintage_id: nclimgrid-daily_v1-0-0_snap2026-09-02
+    qc_rule: Source coverage is frozen as received; evaluate missingness before use.
+    imputation_rule: No additional V2 imputation is introduced by this lock.
+    station_metadata_breaks: not_applicable_to_county_grid
+    historical_availability: retrospective revised public snapshot; historical issue-time availability is unknown.
+    aggregation_order: Daily county Tmax retains source order; no multivariable product past coherent_through.
+    supported_for: [bounded_auxiliary_research]
+    unsupported_reason: TAVG/TMAX/TMIN coherence after 2025-12 is unsupported; observed mismatch reached about 6.92 F in 2026.
+  - support_id: county-tmin-v1
+    schema_version: '2.0'
+    artifact_id: nclimgrid-tmin-manifest-v1
+    variable: TMIN
+    location_type: county
+    coverage_start: '2023-01'
+    coverage_end: '2026-06'
+    coherent_through: '2025-12'
+    retrieval_vintage_id: nclimgrid-daily_v1-0-0_snap2026-09-02
+    qc_rule: Source coverage is frozen as received; evaluate missingness before use.
+    imputation_rule: No additional V2 imputation is introduced by this lock.
+    station_metadata_breaks: not_applicable_to_county_grid
+    historical_availability: retrospective revised public snapshot; historical issue-time availability is unknown.
+    aggregation_order: Daily county Tmin retains source order; no multivariable product past coherent_through.
+    supported_for: [bounded_auxiliary_research]
+    unsupported_reason: TAVG/TMAX/TMIN coherence after 2025-12 is unsupported; observed mismatch reached about 6.92 F in 2026.
+  - support_id: station-tmean-v1
+    schema_version: '2.0'
+    artifact_id: ghcnd-stations-manifest-v1
+    variable: TMEAN
+    location_type: station
+    coverage_start: '1951-01'
+    coverage_end: '2026-06'
+    coherent_through: '2026-06'
+    retrieval_vintage_id: ghcnd_snap2026-09-02
+    qc_rule: Nonblank Tmax/Tmin Q flags are masked before documented short-gap interpolation.
+    imputation_rule: Short interior invalid runs may be linearly filled; retain missing, gap_filled, and Q-flag states.
+    station_metadata_breaks: HOMR snapshot records warnings; absence of parsed events does not prove station stability.
+    historical_availability: retrospective public snapshot; historical availability and official settlement corrections are unknown.
+    aggregation_order: Daily station Tmax/Tmin arithmetic mean then degree-day transform then period sum.
+    supported_for: [station_proxy_index_research, HDD_CDD_physical_index]
+    unsupported_reason: GHCN proxy observations are not official settlement records.

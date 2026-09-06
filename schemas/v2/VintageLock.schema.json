@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "VintageLock",
+  "properties": {
+    "schema_version": {
+      "const": "2.0"
+    },
+    "vintage_id": {
+      "type": "string"
+    },
+    "frozen_on": {
+      "type": "string"
+    },
+    "data_vintage_sha256": {
+      "type": "string"
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "title": "SourceArtifact",
+        "properties": {
+          "schema_version": {
+            "const": "2.0"
+          },
+          "artifact_id": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "dataset": {
+            "type": "string"
+          },
+          "source_uri": {
+            "type": "string"
+          },
+          "retrieved_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "published_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "available_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sha256": {
+            "type": "string"
+          },
+          "byte_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "access_class": {
+            "type": "string"
+          },
+          "source_terms": {
+            "type": "string"
+          },
+          "parser_version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "schema_version",
+          "artifact_id",
+          "provider",
+          "dataset",
+          "source_uri",
+          "retrieved_at",
+          "published_at",
+          "available_at",
+          "sha256",
+          "byte_count",
+          "access_class",
+          "source_terms",
+          "parser_version"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "support": {
+      "type": "array",
+      "items": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "title": "SourceSupport",
+        "properties": {
+          "schema_version": {
+            "const": "2.0"
+          },
+          "support_id": {
+            "type": "string"
+          },
+          "artifact_id": {
+            "type": "string"
+          },
+          "variable": {
+            "type": "string"
+          },
+          "location_type": {
+            "type": "string"
+          },
+          "coverage_start": {
+            "type": "string"
+          },
+          "coverage_end": {
+            "type": "string"
+          },
+          "coherent_through": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "retrieval_vintage_id": {
+            "type": "string"
+          },
+          "qc_rule": {
+            "type": "string"
+          },
+          "imputation_rule": {
+            "type": "string"
+          },
+          "station_metadata_breaks": {
+            "type": "string"
+          },
+          "historical_availability": {
+            "type": "string"
+          },
+          "aggregation_order": {
+            "type": "string"
+          },
+          "supported_for": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "unsupported_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "schema_version",
+          "support_id",
+          "artifact_id",
+          "variable",
+          "location_type",
+          "coverage_start",
+          "coverage_end",
+          "coherent_through",
+          "retrieval_vintage_id",
+          "qc_rule",
+          "imputation_rule",
+          "station_metadata_breaks",
+          "historical_availability",
+          "aggregation_order",
+          "supported_for",
+          "unsupported_reason"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "market_data_status": {
+      "type": "string"
+    },
+    "official_settlement_status": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "vintage_id",
+    "frozen_on",
+    "data_vintage_sha256",
+    "artifacts",
+    "support",
+    "market_data_status",
+    "official_settlement_status"
+  ],
+  "additionalProperties": false
+}

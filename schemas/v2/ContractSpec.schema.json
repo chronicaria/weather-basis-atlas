@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "ContractSpec",
+  "properties": {
+    "schema_version": {
+      "const": "2.0"
+    },
+    "contract_spec_id": {
+      "type": "string"
+    },
+    "index_definition_id": {
+      "type": "string"
+    },
+    "station_id": {
+      "type": "string"
+    },
+    "station_name": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "index": {
+      "type": "string"
+    },
+    "product_code": {
+      "type": "string"
+    },
+    "multiplier_usd": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string"
+    },
+    "tick_usd": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "lot_size": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "observation_rule": {
+      "type": "string"
+    },
+    "expiry_rule": {
+      "type": "string"
+    },
+    "settlement_rule": {
+      "type": "string"
+    },
+    "correction_rule": {
+      "type": "string"
+    },
+    "effective_from": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "effective_to": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "evidence_tier": {
+      "type": "string"
+    },
+    "evidence_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "contract_spec_id",
+    "index_definition_id",
+    "station_id",
+    "station_name",
+    "city",
+    "index",
+    "product_code",
+    "multiplier_usd",
+    "currency",
+    "tick_usd",
+    "lot_size",
+    "observation_rule",
+    "expiry_rule",
+    "settlement_rule",
+    "correction_rule",
+    "effective_from",
+    "effective_to",
+    "evidence_tier",
+    "evidence_ids"
+  ],
+  "additionalProperties": false
+}

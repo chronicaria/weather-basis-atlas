@@ -1,0 +1,38 @@
+<!doctype html><html><body><pre># Portfolio decision memo
+
+## Question
+
+How much January HDD shortfall risk remains across a declared Nebraska operating region?
+
+## Decision identity
+
+`decision:94a8acd6fd0a6bda1ae7c765e068f8ce93ff2aa104b13eb22a8c04a2feac7232` · scenario `sha256:da29be1b324f78afb0a81aaa699abbb49ee59ba1be23800ba806d49e23c82bd7`
+
+## Holdings and implementation
+
+
+Positions: `[178.4473414153062, 144.3891036810544, 0.0]`
+
+Status: `optimal`; objective: `es`.
+
+## Cost and risk
+
+
+Deterministic cost: `37191.138567883034`; ES: `61873.89587077856`; variance: `217869760.32734337`.
+
+## Binding constraints
+
+lower_bounds.
+
+## Adverse scenarios
+
+Scenario-level tail attribution is available from the retained scenario-set identity; this memo does not relabel physical paths as market prices..
+
+## Uncertainty
+
+Representative physical predictive scenarios and illustrative physical expected-payout pricing; no observed or executable market quote.
+
+## Reproduction
+
+Sources: r2j-production:c3651c85eb14665094456e3637e17987a294279b3f50454b32304d5aec05dfa2. Run `uv run python -c "from pathlib import Path; from weather_basis.research.publishing import compile_sample_books; compile_sample_books(Path('.'), Path('var/r2j-production-7county-512'), Path('results/v2/books/r2j-production-7county-512'))"`.
+</pre></body></html>

@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "evidence_kind": "B26_next_station_acceptance",
+  "accepted_artifact_id": "sha256:a6e569904e030545f18e1e490d64febd2657d45ed0e99af8e9192c7c8d1b9ddf",
+  "accepted_artifact_path": "results/v2/next-station/sha256-a6e569904e030545f18e1e490d64febd2657d45ed0e99af8e9192c7c8d1b9ddf",
+  "protocol_id": "sha256:aee7ba2084b8fbe6a1cada0d644a21d3d410b13ad3dab6e921566bf7105defb7",
+  "disposition": "promote",
+  "paired_origins": 16,
+  "source_operational_coverage": "All five registered Nebraska research proxies have retained GHCN source-manifest records; this is not an exchange-availability claim.",
+  "superseded_artifacts": [
+    {
+      "artifact_id": "sha256:1eaad37e27c5de78e6c71c405565b4f5b5f26ea424034976c1dd070d98c255df",
+      "reason": "The v1 all-18 raw-QC admission rule was stricter than the 20-good-prior-season protocol and made every origin ineligible."
+    },
+    {
+      "artifact_id": "sha256:bdaf3e09aadc63079454e33f02134d083d552ec433c6507360000c452bad4f72",
+      "reason": "This pre-QP-convergence repair run retained only a few variance decisions because a feasible SLSQP point was discarded; it is preserved as solver-failure evidence, not station evidence."
+    }
+  ],
+  "selection_agreement": {
+    "common_scored_origins": 16,
+    "same_addition_origins": 13,
+    "different_addition_origins": 3
+  },
+  "interpretation": "Promotion is the protocol's research-feature disposition. It does not establish an exchange listing, liquidity, executable quote, or market demand."
+}

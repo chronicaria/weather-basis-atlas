@@ -1,0 +1,115 @@
+{
+  "assets": [
+    {
+      "bytes": 7484848,
+      "github_sha256": "451d96cc70c1148b6bb5df31cb200ceb1efc141cbe17d670deef18281198e2c8",
+      "local_asset_sha256": "451d96cc70c1148b6bb5df31cb200ceb1efc141cbe17d670deef18281198e2c8",
+      "name": "final-release-leaf.tar.gz",
+      "url": "https://github.com/chronicaria/weather-basis-atlas/releases/download/untagged-6f2a1eb2d0bbb9172f28/final-release-leaf.tar.gz"
+    },
+    {
+      "bytes": 1047,
+      "github_sha256": "fe656b85cc303889f7a35b0712ff018259ad147600a3f3ae364f06f5188955f4",
+      "name": "final-release-leaf.tar.gz.manifest.json",
+      "url": "https://github.com/chronicaria/weather-basis-atlas/releases/download/untagged-6f2a1eb2d0bbb9172f28/final-release-leaf.tar.gz.manifest.json"
+    },
+    {
+      "bytes": 92,
+      "github_sha256": "d715c5008cd5a5dc5aeeea4742580db0d92ad21df32f6a3bea5b1b72440f9cd8",
+      "name": "final-release-leaf.tar.gz.sha256",
+      "url": "https://github.com/chronicaria/weather-basis-atlas/releases/download/untagged-6f2a1eb2d0bbb9172f28/final-release-leaf.tar.gz.sha256"
+    },
+    {
+      "bytes": 931123887,
+      "github_sha256": "e46d04aca472e4a2fc2373d8bf6b282d321744b1d78c091c127c9a0020834779",
+      "local_asset_sha256": "e46d04aca472e4a2fc2373d8bf6b282d321744b1d78c091c127c9a0020834779",
+      "name": "national-public-source-final.tar.gz",
+      "url": "https://github.com/chronicaria/weather-basis-atlas/releases/download/untagged-6f2a1eb2d0bbb9172f28/national-public-source-final.tar.gz"
+    },
+    {
+      "bytes": 25795606,
+      "github_sha256": "cbfbd773388b4f5c80cff836c5534dfd2ba30f23599bec00f3fd6603c5349b8d",
+      "name": "national-public-source-final.tar.gz.manifest.json",
+      "url": "https://github.com/chronicaria/weather-basis-atlas/releases/download/untagged-6f2a1eb2d0bbb9172f28/national-public-source-final.tar.gz.manifest.json"
+    },
+    {
+      "bytes": 102,
+      "github_sha256": "395e6b49224e75b9078619d2c19b06c3c15217dea57a271d3a640573d843e21f",
+      "name": "national-public-source-final.tar.gz.sha256",
+      "url": "https://github.com/chronicaria/weather-basis-atlas/releases/download/untagged-6f2a1eb2d0bbb9172f28/national-public-source-final.tar.gz.sha256"
+    },
+    {
+      "bytes": 35772681,
+      "github_sha256": "f41b349beb8e6cfd09296cd076097b8cc26b8ba0d506c0588b7f288db852c097",
+      "local_asset_sha256": "f41b349beb8e6cfd09296cd076097b8cc26b8ba0d506c0588b7f288db852c097",
+      "name": "research-final-delta.tar.gz",
+      "url": "https://github.com/chronicaria/weather-basis-atlas/releases/download/untagged-6f2a1eb2d0bbb9172f28/research-final-delta.tar.gz"
+    },
+    {
+      "bytes": 10877,
+      "github_sha256": "dedccdec04c86b3daf92e6d7db4de16a9cbc3ad66908801c32c604b33553ad6a",
+      "name": "research-final-delta.tar.gz.manifest.json",
+      "url": "https://github.com/chronicaria/weather-basis-atlas/releases/download/untagged-6f2a1eb2d0bbb9172f28/research-final-delta.tar.gz.manifest.json"
+    },
+    {
+      "bytes": 94,
+      "github_sha256": "0545f264b1d3cf430f7aad4ae7b1275bd21e1805805833537856b10266bdbf2f",
+      "name": "research-final-delta.tar.gz.sha256",
+      "url": "https://github.com/chronicaria/weather-basis-atlas/releases/download/untagged-6f2a1eb2d0bbb9172f28/research-final-delta.tar.gz.sha256"
+    }
+  ],
+  "draft_release": {
+    "is_draft": true,
+    "is_prerelease": false,
+    "published": false,
+    "tag": "v2.0.0-20260905",
+    "url": "https://github.com/chronicaria/weather-basis-atlas/releases/tag/untagged-6f2a1eb2d0bbb9172f28"
+  },
+  "excluded": [
+    "scenarios.build (already retained)",
+    "site.build",
+    "release.verify",
+    "evolving final site and documentation proofs"
+  ],
+  "final_run": {
+    "changed_stages": {
+      "cases.build": "var/shards/v2/cases.build/sha256-d1f36598015a77ee268c71fd7c5b77a498269afb2bbfafbc08dc8cc6090deb44",
+      "payoffs.build": "var/shards/v2/payoffs.build/sha256-1c033179a840726d24361f6554bdeaebf002bd864c2b653cbf0beef1a497ed1b",
+      "portfolios.evaluate": "var/shards/v2/portfolios.evaluate/sha256-8dc0569c24a988269d4503f029233cc29bbd27cc4ff97045737f0ace367e12df",
+      "portfolios.optimize": "var/shards/v2/portfolios.optimize/sha256-e555b7823bc5c052ae4357cf164664ea658ac4091b6d5a3e1c675c7ac617e5be",
+      "quotes.build": "var/shards/v2/quotes.build/sha256-1b5448f5e5f62c0d15c08053b067278d12e9f5814c38bbc59d24355c815f7c91",
+      "research.next_station": "var/shards/v2/research.next_station/sha256-2d4493b05c063634b9a8263fbf4ad44bfda4bf20794150282d10a27033365a93"
+    },
+    "evidence_scope": "final downstream research run; v5 is predecessor evidence only",
+    "plan_id": "sha256:a3f157028ae28513ce7003b329753d1b503fc09fbbd3cd5a4f580b9466abe079",
+    "run": "var/runs/v2-final-research-run.json"
+  },
+  "recovery": {
+    "leaf_reconstruction": {
+      "candidate_lock": {
+        "content_id_prefix": "6ef583ab",
+        "path": "config/releases/v2-candidate.lock.json"
+      },
+      "canonical_assets_first": [
+        "national-public-source-final.tar.gz",
+        "research-final-delta.tar.gz"
+      ],
+      "compact_leaf_asset": "final-release-leaf.tar.gz",
+      "core_cases_asset": "national-public-source-final.tar.gz",
+      "expected_public_source_sha256": "4da95206d2f325a8772b844055dc9a901976cd9250214aa2c1c486e82e8073f9",
+      "extraction_order": [
+        "Verify and extract the two canonical assets into a recovery repository root so their archived relative paths are restored.",
+        "From that root, materialize a fresh var/releases/v2-final-source with the exact relative command below.",
+        "Verify the materialized public-source.json against the recorded SHA and compare its supplement record against final-release-leaf.tar.gz. The compact leaf is a byte-equivalence check only after materialization; it cannot create the complete source because it omits reused core records."
+      ],
+      "materialize_command": "uv run python scripts/add_station_pilot_to_release.py --core-source var/shards/v2/cases.build/sha256-d1f36598015a77ee268c71fd7c5b77a498269afb2bbfafbc08dc8cc6090deb44/public-source.json --pilot-directory var/shards/v2/research.next_station/sha256-2d4493b05c063634b9a8263fbf4ad44bfda4bf20794150282d10a27033365a93 --out var/releases/v2-final-source",
+      "out_must_not_exist": "var/releases/v2-final-source",
+      "reused_core_objects": 90152
+    },
+    "representative_extraction": "build/recovery/final-research-assets-representative",
+    "representative_files": 7,
+    "source_hashes_match": true
+  },
+  "schema_version": "2.0",
+  "status": "uploaded_to_draft"
+}

@@ -111,6 +111,9 @@ def build_parser() -> argparse.ArgumentParser:
     reproduce.add_argument("--out", type=Path, required=True)
     gate = commands.add_parser("gate")
     gate.add_argument("number", type=int, choices=range(8))
+    from weather_basis.application.v2_cli import register_parser
+
+    register_parser(commands)
     return parser
 
 
@@ -1150,6 +1153,10 @@ def _run_site(args: argparse.Namespace, root: Path) -> int:
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     root = Path.cwd()
+    if args.command == "v2":
+        from weather_basis.application.v2_cli import main as v2_main
+
+        return v2_main(args, root)
     started_at = datetime.now(UTC)
     if args.command == "data":
         result = _run_data(args, root)

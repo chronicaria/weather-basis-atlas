@@ -1,0 +1,13 @@
+{
+  "package": "highs",
+  "version": "1.15.2",
+  "license": "MIT",
+  "registry_integrity": "sha512-IugrQ7Z8nSMHgVneTFwzV8fIfaR85l/kGhN+jvEDbm5k5MlGXtq1Zp2hy1fkmHA71nCmIg9F7ayWfEPxLpfUyA==",
+  "tarball_sha256": "1b81cd5dbe0593371785925f9aed888d120c16ad0db9d21cc3b7642f78902a1f",
+  "assets": {
+    "highs-1.15.2.js": "6d5be3ed3cbd1ce1924cc66cc9302b50753dabdb8c6e0e815845dce7f1890033",
+    "highs-1.15.2.wasm": "7e6432b2b26f4fab9f6d9bac55da43307c7a4b1b071cb204cb4d23e1901bc4d0",
+    "LICENSE": "a456f4fd829deca0c17ad6c319f12b7bdfe645f2c49d72df0487b540edc13f91"
+  },
+  "source": "https://github.com/lovasoa/highs-js/tree/v1.15.2"
+}

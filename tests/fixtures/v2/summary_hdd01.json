@@ -1,0 +1,4 @@
+{
+  "schema_version":"2.0","release_id":"v2-fixture-r1","object_id":"summary:HDD-01","result_type":"summary","analysis_id":"fixture-identity-only","source_artifact_ids":["fixture-summary"],"data_vintage_id":"fixture-vintage","model_spec_ids":["not-applicable"],"scenario_set_id":null,"valuation_asof":"2026-07-01","index_definition_id":"fixture-hdd-01","units":"identity","currency":null,
+  "payload":{"rows":[]},"status":"partial","reason_code":"fixture_no_national_metrics","evidence_reference":"tests/fixtures/v2/summary_hdd01.json"
+}

@@ -1,0 +1,261 @@
+{
+  "schema_version": "2.0",
+  "plan_id": "sha256:a3f157028ae28513ce7003b329753d1b503fc09fbbd3cd5a4f580b9466abe079",
+  "scope": "full",
+  "status": "passed",
+  "stages": [
+    {
+      "stage_id": "inputs.audit",
+      "status": "reused",
+      "directory": "var/shards/v2/inputs.audit/sha256-2fed4713dc5585eadc3ab2947eadf8a40c04f4c22d52a8c268d563f19d8249b7",
+      "shard_id": "sha256:2fed4713dc5585eadc3ab2947eadf8a40c04f4c22d52a8c268d563f19d8249b7",
+      "artifact_id": "sha256:d828fa24f1edf63923126500e81f0177c0edd8e95b9b54ca7fd7694f10476f04",
+      "producer_fingerprint": "sha256:7aea2376077c23eb838813ef96940efc2aa2ede69dc9d6c2c41381edf0d55851",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 0.002322999999999964,
+        "peak_rss_bytes": 102170624,
+        "phases_seconds": {
+          "kernel": 0.002289957999892067
+        },
+        "pid": 18952,
+        "wall_seconds": 0.002323666005395353
+      }
+    },
+    {
+      "stage_id": "panels.prepare",
+      "status": "reused",
+      "directory": "var/shards/v2/panels.prepare/sha256-39d6c5420799a7c29f0a6b7d457e62650f5d33c87de5f4e516e7256bcfb868e9",
+      "shard_id": "sha256:39d6c5420799a7c29f0a6b7d457e62650f5d33c87de5f4e516e7256bcfb868e9",
+      "artifact_id": "sha256:719adc13f516ba5a6deba037fcc67a7ece7a672fc1522a8bcfb013ec80c38d49",
+      "producer_fingerprint": "sha256:12739cec270e9185d65158ff2066e16117c1858010fce5c7900090ef18f8755a",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 0.030652000000000013,
+        "peak_rss_bytes": 104218624,
+        "phases_seconds": {
+          "kernel": 0.03220233300089603
+        },
+        "pid": 18952,
+        "wall_seconds": 0.03223799999977928
+      }
+    },
+    {
+      "stage_id": "models.fit",
+      "status": "reused",
+      "directory": "var/shards/v2/models.fit/sha256-23b923c14d5e11319d47c36584475b4146c8a17611a90e98b4571c6ecde064e6",
+      "shard_id": "sha256:23b923c14d5e11319d47c36584475b4146c8a17611a90e98b4571c6ecde064e6",
+      "artifact_id": "sha256:5490452113e960f0618ef2ab8c4ac06a7848aed7aab364f6b0e5cf299f4e7da6",
+      "producer_fingerprint": "sha256:2f4b9db29d97b147de628946898499591de6853400e6bea848176460f8f3b497",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 11.376716,
+        "peak_rss_bytes": 5458526208,
+        "phases_seconds": {
+          "kernel": 12.141919000001508
+        },
+        "pid": 20501,
+        "wall_seconds": 12.142022665997501
+      }
+    },
+    {
+      "stage_id": "tournament.execute",
+      "status": "reused",
+      "directory": "var/shards/v2/tournament.execute/sha256-a0af77f88ae759ccfb633b69d24ab9d3c3c8215c91390661aeb99e521c112b2d",
+      "shard_id": "sha256:a0af77f88ae759ccfb633b69d24ab9d3c3c8215c91390661aeb99e521c112b2d",
+      "artifact_id": "sha256:073f2989836aeb2a723f936d2c1768d79c693f924ab278454517b5849a3e4694",
+      "producer_fingerprint": "sha256:303a26d242be96d84adb12b83b0a59f7c1f242c7787f6287fe12b18e03625a55",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 0.009297999999999362,
+        "peak_rss_bytes": 5458526208,
+        "phases_seconds": {
+          "kernel": 0.021295459002431016
+        },
+        "pid": 20501,
+        "wall_seconds": 0.021338583996111993
+      }
+    },
+    {
+      "stage_id": "models.select",
+      "status": "reused",
+      "directory": "var/shards/v2/models.select/sha256-f478274fde0185fdf7be3a07fc81a318f1a6b861531132372a52c270180c1c86",
+      "shard_id": "sha256:f478274fde0185fdf7be3a07fc81a318f1a6b861531132372a52c270180c1c86",
+      "artifact_id": "sha256:b48a63b9dac89afe4718e15275f3762edf7e5d1186c1dae6df7721211a8ae0f2",
+      "producer_fingerprint": "sha256:dbc62a90284b928b79ca0daf391b9a9f3e306761b305a1e0539dfbbf3e12b0f7",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 0.006713000000001301,
+        "peak_rss_bytes": 5458526208,
+        "phases_seconds": {
+          "kernel": 0.006687583998427726
+        },
+        "pid": 20501,
+        "wall_seconds": 0.0067262499942444265
+      }
+    },
+    {
+      "stage_id": "scenarios.build",
+      "status": "reused",
+      "directory": "var/shards/v2/scenarios.build/sha256-750b533a8f349990e6b01b1bb9853e32a163c111291a468417ea8d17f63cf609",
+      "shard_id": "sha256:750b533a8f349990e6b01b1bb9853e32a163c111291a468417ea8d17f63cf609",
+      "artifact_id": "sha256:45a9f8c29ab9a726c46788a52e8fdb6d9a55eabd891efa6076a45f8817d8b996",
+      "producer_fingerprint": "sha256:cece9de3eff7e034422de53598bbc6741492f07b013c6aa6eecb47467f73c2a2",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 290.355822,
+        "peak_rss_bytes": 3000172544,
+        "phases_seconds": {
+          "kernel": 293.1921663750036
+        },
+        "pid": 21292,
+        "wall_seconds": 293.19221174999984
+      }
+    },
+    {
+      "stage_id": "payoffs.build",
+      "status": "recomputed",
+      "directory": "var/shards/v2/payoffs.build/sha256-1c033179a840726d24361f6554bdeaebf002bd864c2b653cbf0beef1a497ed1b",
+      "shard_id": "sha256:1c033179a840726d24361f6554bdeaebf002bd864c2b653cbf0beef1a497ed1b",
+      "artifact_id": "sha256:413334569f7dc6cde5d908fd48c6ee04fee8ba902ef73c473e6a57f19dd43b42",
+      "producer_fingerprint": "sha256:3fc00fb6ef5ffb9acce7c28245fef0bfa4f5fbc74d46d380ab96ab3844ae3a1f",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 22.106848,
+        "peak_rss_bytes": 313573376,
+        "phases_seconds": {
+          "kernel": 22.221014665999974
+        },
+        "pid": 30456,
+        "wall_seconds": 22.221070957995835
+      }
+    },
+    {
+      "stage_id": "atlas.evaluate",
+      "status": "reused",
+      "directory": "var/shards/v2/atlas.evaluate/sha256-2ec802f17709f889b2abb5db9305ff788eb20dc5296babdeb6f872b3396a8f88",
+      "shard_id": "sha256:2ec802f17709f889b2abb5db9305ff788eb20dc5296babdeb6f872b3396a8f88",
+      "artifact_id": "sha256:1991fc9542d7b79cfd6b78e24a2b6ceb7c2ddfbf93ef278b4ba4797a6498c8b1",
+      "producer_fingerprint": "sha256:33496284d9016c847c0140a68e144113cb195fba4d86b6c135a745197339decd",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 329.68159199999997,
+        "peak_rss_bytes": 1415856128,
+        "phases_seconds": {
+          "kernel": 328.4927156669946
+        },
+        "pid": 21488,
+        "wall_seconds": 328.49276229199313
+      }
+    },
+    {
+      "stage_id": "atlas.select_asof",
+      "status": "reused",
+      "directory": "var/shards/v2/atlas.select_asof/sha256-26dc722d06a95ecf8c72dab0b61ef7cd8d75fe0a4ca5c19339ebd3b2e5927777",
+      "shard_id": "sha256:26dc722d06a95ecf8c72dab0b61ef7cd8d75fe0a4ca5c19339ebd3b2e5927777",
+      "artifact_id": "sha256:609279ea71fa209a3e98c62e67bdd6f867b5bbafb2bf879d2a4b98d0a84d40ea",
+      "producer_fingerprint": "sha256:3cf05bfd5e3d082e17d9cdf848db023d6e72ae5a8897050431a10973976448fc",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 11.477645,
+        "peak_rss_bytes": 999751680,
+        "phases_seconds": {
+          "kernel": 10.208698500005994
+        },
+        "pid": 22579,
+        "wall_seconds": 10.208746500000416
+      }
+    },
+    {
+      "stage_id": "quotes.build",
+      "status": "recomputed",
+      "directory": "var/shards/v2/quotes.build/sha256-1b5448f5e5f62c0d15c08053b067278d12e9f5814c38bbc59d24355c815f7c91",
+      "shard_id": "sha256:1b5448f5e5f62c0d15c08053b067278d12e9f5814c38bbc59d24355c815f7c91",
+      "artifact_id": "sha256:2b645416554294cd13676d1f7c6fec60e296d911f6ec9144d29f80ddaa9d9b9f",
+      "producer_fingerprint": "sha256:3ee1dd7b65f624a19c1cfced4ffc978636f397bbf66cc6b67c2dbb6efd126903",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 15.188005999999998,
+        "peak_rss_bytes": 932544512,
+        "phases_seconds": {
+          "kernel": 17.355446915993525
+        },
+        "pid": 30456,
+        "wall_seconds": 17.355544707999798
+      }
+    },
+    {
+      "stage_id": "portfolios.evaluate",
+      "status": "recomputed",
+      "directory": "var/shards/v2/portfolios.evaluate/sha256-8dc0569c24a988269d4503f029233cc29bbd27cc4ff97045737f0ace367e12df",
+      "shard_id": "sha256:8dc0569c24a988269d4503f029233cc29bbd27cc4ff97045737f0ace367e12df",
+      "artifact_id": "sha256:8e45da940ed5cd6064ee371815abed6dcedfa96f0f592b322ca536572c0d57d6",
+      "producer_fingerprint": "sha256:e4e70eb760d3053e3385e5c9bc52e063e0bc4f50d9973f3baca0fe2fdecb960e",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 0.43335299999999677,
+        "peak_rss_bytes": 932544512,
+        "phases_seconds": {
+          "kernel": 0.44509354200272355
+        },
+        "pid": 30456,
+        "wall_seconds": 0.4451311250013532
+      }
+    },
+    {
+      "stage_id": "portfolios.optimize",
+      "status": "recomputed",
+      "directory": "var/shards/v2/portfolios.optimize/sha256-e555b7823bc5c052ae4357cf164664ea658ac4091b6d5a3e1c675c7ac617e5be",
+      "shard_id": "sha256:e555b7823bc5c052ae4357cf164664ea658ac4091b6d5a3e1c675c7ac617e5be",
+      "artifact_id": "sha256:f17906cddeec015810e0ac65c8f0e445959499a986e7a099ed2ed555f2fbaa06",
+      "producer_fingerprint": "sha256:e4e70eb760d3053e3385e5c9bc52e063e0bc4f50d9973f3baca0fe2fdecb960e",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 0.43247799999999614,
+        "peak_rss_bytes": 932544512,
+        "phases_seconds": {
+          "kernel": 0.4377206249992014
+        },
+        "pid": 30456,
+        "wall_seconds": 0.43776045800041175
+      }
+    },
+    {
+      "stage_id": "cases.build",
+      "status": "recomputed",
+      "directory": "var/shards/v2/cases.build/sha256-d1f36598015a77ee268c71fd7c5b77a498269afb2bbfafbc08dc8cc6090deb44",
+      "shard_id": "sha256:d1f36598015a77ee268c71fd7c5b77a498269afb2bbfafbc08dc8cc6090deb44",
+      "artifact_id": "sha256:52369fcfa6a16caf06129a765d4e001249f9d4a551db903c58c26a572b98d7c4",
+      "producer_fingerprint": "sha256:64a922aad88cc1fa94f538e6e1c7e0e803137397950b4af772c14824b3eae803",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 279.312632,
+        "peak_rss_bytes": 1978859520,
+        "phases_seconds": {
+          "kernel": 287.89212870799383
+        },
+        "pid": 30456,
+        "wall_seconds": 287.8921739589932
+      }
+    },
+    {
+      "stage_id": "research.next_station",
+      "status": "recomputed",
+      "directory": "var/shards/v2/research.next_station/sha256-2d4493b05c063634b9a8263fbf4ad44bfda4bf20794150282d10a27033365a93",
+      "shard_id": "sha256:2d4493b05c063634b9a8263fbf4ad44bfda4bf20794150282d10a27033365a93",
+      "artifact_id": "sha256:a6e569904e030545f18e1e490d64febd2657d45ed0e99af8e9192c7c8d1b9ddf",
+      "producer_fingerprint": "sha256:b2a745cce4bee9a39170eea9b7ed8668d675601c2c3d1d15b5a4d4cb85e9cc8a",
+      "telemetry": {
+        "counters": {},
+        "cpu_seconds": 27.69312500000001,
+        "peak_rss_bytes": 1978859520,
+        "phases_seconds": {
+          "kernel": 17.710823374996835
+        },
+        "pid": 30456,
+        "wall_seconds": 17.710899749996315
+      }
+    }
+  ],
+  "telemetry_note": "Reused stages report original producer telemetry; they did not rerun. Final fresh site/release is a separate release leaf."
+}

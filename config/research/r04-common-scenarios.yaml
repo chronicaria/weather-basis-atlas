@@ -1,0 +1,25 @@
+schema_version: '2.0'
+experiment_id: R04-common-marginal-dependence-v3
+status: frozen-corrected-r2j-protocol
+supersedes: R04-common-marginal-dependence-v2
+prior_artifact_status: "results/v2/experiments/R04 is retained as a v2 protocol/panel mismatch: config named 31031/31153 while the executed panel used 31055/31157. Do not use it for selection."
+question: On registered origins, how do daily R2j, coherent common-year trend bootstrap, and a monthly-only rank-coupled R0 candidate score against the one realized future monthly vector?
+decision: Retain R2j for daily/strip products unless a monthly candidate has clearly better descriptive origin-aggregated CRPS and energy score without losing stated product support.
+evidence_tier: representative frozen public panel; no national conclusion
+origins: [2019, 2020, 2021]
+paths: 512
+seed: 20260905
+holdout: next complete July-June season after each origin
+representative_counties: ['31055', '31079', '31109', '31111', '31157', '06037', '36061']
+station_scope: listed frozen station panel
+baseline: r2j-raw-residual-before-ar-v1
+challengers: [common-year-trend-bootstrap-v1, rank-coupled-monthly-r0-v1]
+fit_rule: Fit/reuse only data available through each origin; no outcome-period fitting, candidate screening, or rank-template selection.
+primary_marginal_metrics: [per-column CRPS, origin-aggregated mean CRPS]
+primary_joint_metrics: [training-scale-normalized energy score]
+economic_metrics: []
+cost_assumptions: none; this generator experiment does not fabricate market costs
+runtime_metrics: [wall_seconds, peak_rss_bytes]
+product_support_rule: rank-coupled candidate is monthly-index-only and is ineligible for daily/path-dependent or strip-identity decisions
+promotion_rule: B20 records a promote/retain-simple/inconclusive disposition from the three origin rows; uncertainty is descriptive because origins are few and not independent draws.
+stop_rule: Stop a candidate on unsupported common support, identity failure, or a material held-out marginal/joint degradation

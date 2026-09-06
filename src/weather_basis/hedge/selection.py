@@ -63,6 +63,7 @@ def point_in_time_best(
     trailing: int = 10,
     min_oos: int = 5,
     seasons: np.ndarray | None = None,
+    decision_eligible: np.ndarray | None = None,
 ) -> np.ndarray:
     """Select a station using only information available before each origin.
 
@@ -70,10 +71,10 @@ def point_in_time_best(
     HE on its most recent ``trailing`` available earlier residuals.  Before any
     candidate is eligible, the common fallback is the contemporaneous training
     R². ``first_test_j`` is retained in this public contract as an auditable
-    record-length input; unavailable pre-record observations must be NaN in
-    ``resid`` and therefore cannot be selected.  When calendar-year labels
-    are supplied, the schedule is also enforced explicitly rather than merely
-    inferred from missing values.
+    record-length input. Candidate eligibility is a decision-time input: it
+    is never inferred from a residual at the held-out origin. Callers with
+    source/listing availability should supply ``decision_eligible``; the
+    compatibility default uses only the registered first-test schedule.
     """
     residuals = np.asarray(resid, dtype=float)
     exposure = np.asarray(a_c, dtype=float)
@@ -95,6 +96,17 @@ def point_in_time_best(
         if season_values.shape != (t_count,):
             raise ValueError("seasons must have one calendar-year label per origin")
         available = season_values[:, None] >= starts[None, :]
+    if decision_eligible is not None:
+        declared = np.asarray(decision_eligible, dtype=bool)
+        if declared.shape == (t_count, station_count):
+            available &= declared
+        elif declared.shape == residuals.shape:
+            available = available[:, None, :] & declared
+        else:
+            raise ValueError(
+                "decision_eligible must have shape (origins, stations) or "
+                "(origins, counties, stations)"
+            )
 
     result = np.full((t_count, county_count), -1, dtype=np.intp)
     for t in range(t_count):
@@ -104,7 +116,7 @@ def point_in_time_best(
             eligible = np.zeros(station_count, dtype=bool)
             for j in range(station_count):
                 finite = np.flatnonzero(
-                    available[:t, j]
+                    (available[:t, j] if available.ndim == 2 else available[:t, c, j])
                     & np.isfinite(previous[:, c, j])
                     & np.isfinite(exposure[:t, c])
                 )
@@ -116,14 +128,14 @@ def point_in_time_best(
             if eligible.any():
                 valid = (
                     eligible
-                    & available[t]
+                    & (available[t] if available.ndim == 2 else available[t, c])
                     & np.isfinite(scores)
-                    & np.isfinite(residuals[t, c])
                 )
                 if valid.any():
                     result[t, c] = int(np.argmax(np.where(valid, scores, -np.inf)))
                 continue
-            valid = available[t] & np.isfinite(r2[t, c]) & np.isfinite(residuals[t, c])
+            current_eligible = available[t] if available.ndim == 2 else available[t, c]
+            valid = current_eligible & np.isfinite(r2[t, c])
             if valid.any():
                 result[t, c] = int(np.argmax(np.where(valid, r2[t, c], -np.inf)))
     return result

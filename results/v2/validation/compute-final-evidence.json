@@ -1,0 +1,104 @@
+{
+  "schema_version": "2.0",
+  "status": "passed_correctness_measured_targets",
+  "scope": "bounded compute, cache, resume, and scenario-streaming evidence",
+  "executed_evidence": {
+    "atomic_resume_and_corruption": {
+      "check": "tests/unit/test_v2_execution.py",
+      "result": "10 passed after the nested chunk-directory regression",
+      "coverage": [
+        "atomic publish",
+        "resume reuse",
+        "corruption quarantine and recomputation",
+        "declared directory recursively inventories child files",
+        "one/two-worker scheduler boundary"
+      ]
+    },
+    "exact_cutoff_fit_cache": {
+      "report": "var/runs/b09-fit-cache/report.json",
+      "cutoff": "2022-02-28",
+      "build_seconds": 11.462116792004963,
+      "cache_load_seconds": 0.12067424999986542,
+      "cache_load_reused": true,
+      "peak_rss_bytes": 4481646592,
+      "z_sha256": "c4e5d4dd2a0fa783e8793d32742cad51f2e84297c994547afd37aaebd004f4e0"
+    },
+    "two_worker_exact_cutoff_profile": {
+      "report": "var/runs/b09-two-worker/report.json",
+      "workers": 2,
+      "blas_threads": 1,
+      "wall_seconds": 17.874165458997595,
+      "peak_rss_bytes": 5127749632,
+      "same_cutoff_z_sha256": "c4e5d4dd2a0fa783e8793d32742cad51f2e84297c994547afd37aaebd004f4e0",
+      "disposition": "measured for two workers only; four-worker scaling was not measured"
+    },
+    "representative_kernel_shard": {
+      "report": "var/runs/bench-one/report.json",
+      "artifact_id": "sha256:b38b1bea8f6531d8f2983786d25e37f64e238ae100884271e74e5ddeb1453648",
+      "wall_seconds": 25.03964079200523,
+      "peak_rss_bytes": 4295540736
+    },
+    "full_national_r2j_stream": {
+      "replay": "var/runs/v2-scientific-replay-run-v3.json",
+      "artifact_id": "sha256:45a9f8c29ab9a726c46788a52e8fdb6d9a55eabd891efa6076a45f8817d8b996",
+      "paths": 10000,
+      "counties": 3107,
+      "station_count": 18,
+      "files": 3112,
+      "wall_seconds": 293.19221174999984,
+      "peak_rss_bytes": 3000172544,
+      "scenario_qc": "results/v2/validation/national-scenario-final-qc.json"
+    },
+    "national_r01_qc": {
+      "report": "results/v2/validation/national-r01-final-qc.json",
+      "status": "passed",
+      "decision_rows": 43498,
+      "unavailable_rows": 350
+    },
+    "independent_seed_b10": {
+      "report": "results/v2/validation/b10-independent-seed-r2j-7county-512.json",
+      "status": "passed",
+      "county_pair_columns": 98,
+      "tickets": 588,
+      "primary_seed": "r2j-production-bridged-v2-20260905",
+      "secondary_seed": "r2j-production-bridged-v2-20260906"
+    },
+    "final_release_leaf": {
+      "release_id": "release:6ef583abd964e2d0d9ad0b560bb0df212da2d298d262e633d501b17fa3ad3b20",
+      "bundle_digest": "bundle:992cd02821e0dd8728757d7e59ef85c6511bb3531ec489ec3122f5af3c212814",
+      "served_bytes": 749137207,
+      "build_wall_seconds": 325.1520897500013,
+      "process_peak_rss_bytes": 484933632,
+      "record": "results/v2/validation/final-release.json"
+    }
+  },
+  "full_dag_history": {
+    "v3": {
+      "status": "invalid_request",
+      "reason": "bundle exceeds the 1 GB GitHub Pages size limit",
+      "record": "var/runs/v2-candidate-run-v3.json"
+    },
+    "v4": {
+      "status": "intentionally_interrupted",
+      "record": "var/runs/v2-candidate-run-v4.stderr",
+      "reason": "Intentionally stopped after size estimate remained above hosting cap; superseded by lossless compact float32 wire projection."
+    },
+    "v5": {
+      "status": "completed",
+      "record": "results/v2/validation/full-candidate-v5-run.json",
+      "plan_id": "sha256:f9dc32b6bbd3e6360cf0019e5190ac7242dad72f20f020942ee3424d996940f0",
+      "reused_stages": 12,
+      "recomputed_stages": 3,
+      "served_bytes": 749107719
+    },
+    "final_downstream": {
+      "status": "passed",
+      "record": "results/v2/validation/final-downstream-run.json",
+      "plan_id": "sha256:a3f157028ae28513ce7003b329753d1b503fc09fbbd3cd5a4f580b9466abe079",
+      "reused_stages": 8,
+      "recomputed_stages": 6,
+      "reason": "Corrected scaled quadratic solver and completed B26."
+    }
+  },
+  "performance_disposition": "The recorded profiles establish bounded one- and two-worker behavior and one full national scenario stream. They do not establish a general full-DAG throughput target or establish four-worker scaling."
+}

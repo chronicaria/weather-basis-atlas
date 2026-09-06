@@ -1,0 +1,31 @@
+schema_version: '1.0'
+protocol: weather-basis-atlas-v2-b20-registered-1
+frozen_on: '2026-09-05'
+source: frozen local county and station HDD/CDD index panels
+common:
+  pairs: [HDD-01, CDD-07]
+  outer_origins: [2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]
+  min_training_years: 20
+  tail_level: 0.90
+  equivalence_bands: [0.0, 0.02, 0.05]
+  assumed_cost: 0.01
+  uncertainty: paired origin bootstrap, 1000 resamples
+R02:
+  question: Does a sparse two-to-three station basket improve held-out basis risk?
+  baseline: nearest eligible single station
+  challenger: training-selected maximum three-station OLS basket
+  candidate_search: all finite listed plus Nebraska diagnostic stations, selected inside each prior window
+  primary_metric: held-out squared residual risk and ES90
+  decision: retain simple if the paired result is non-positive or unstable
+R03:
+  question: Does a jointly selected five-county Nebraska book improve on separately selected protection?
+  baseline: separately fitted maximum-two station linear hedges
+  challenger: one book-level maximum-four station linear hedge
+  primary_metric: held-out portfolio ES90
+  decision: retain separate construction if joint improvement is not supported
+R05:
+  question: Which county/pair combinations remain difficult over bounded window and station-universe choices?
+  baseline: best training-only single station
+  challenger: sensitivity screen over two training/evaluation windows and CME-13 versus extended-18 candidate universes
+  primary_metric: common held-out V2 hedge effectiveness
+  decision: publish difficult and ambiguous support; do not declare a final national policy
