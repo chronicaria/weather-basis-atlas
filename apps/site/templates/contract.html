@@ -1,1 +1,43 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Contract Lab · Weather Basis Atlas</title><link rel="stylesheet" href="styles/tokens.css"><link rel="stylesheet" href="styles/layout.css"><link rel="stylesheet" href="styles/components.css"></head><body data-page="contract" data-route="contract.html"><a class="skip" href="#main">Skip to content</a><header class="masthead"><a class="wordmark" href="index.html">Weather<br><em>Basis Atlas</em></a><nav class="primary-nav" aria-label="Primary"><a href="index.html">Explore</a><a href="compare.html">Compare</a><a href="contract.html" aria-current="page">Contract Lab</a><a href="portfolio.html">Portfolio Lab</a><a href="research/index.html">Research</a></nav><span class="release-mark">V2 workbench</span></header><main id="main"><p class="eyebrow">Readable financial ticket</p><h1>Define the weather payoff.</h1><p class="lede">Physical expected payout, assumed risk-transfer indication, and observed market information are separate components with separate availability.</p><div class="scenario-bar"><p id="scenario-summary"></p><button id="copy-scenario" class="quiet-button">Copy scenario</button><button id="reset-scenario" class="quiet-button">Reset</button><span id="scenario-status" class="status" role="status"></span></div><section class="lab-panel"><form class="scenario-form"><fieldset><label>Payoff family <select><option>Put</option><option>Call</option><option>Capped put</option><option>Spread</option></select></label><label>Direction <select><option>Long</option><option>Short</option></select></label></fieldset><fieldset><label for="strike">Strike, index points <input id="strike" type="number" inputmode="decimal" placeholder="Published reference strike pending"></label><label>Multiplier <input type="number" inputmode="decimal" placeholder="Required from contract definition"></label></fieldset></form><p class="notice">A ticket commits a contract year and calendar. A month name alone does not choose a historical row.</p><table class="metric-table"><thead><tr><th>Physical expected payout</th><th>Risk-transfer indication</th><th>Market observation</th></tr></thead><tbody><tr><td>Unavailable pending strict DTO</td><td>Unavailable pending assumption record</td><td>Unavailable pending evidence source</td></tr></tbody></table></section></main><footer class="workbench-footer">Model indications are not executable quotes.</footer><script type="module" src="js/pages/app.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contract Lab · Weather Basis Atlas</title>
+<meta name="description" content="Weather Basis Atlas: how well the thirteen listed U.S. weather stations would have hedged each county's heating and cooling degree days. Research and education only.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/layout.css">
+<link rel="stylesheet" href="styles/components.css">
+<link rel="stylesheet" href="styles/contract.css">
+</head>
+<body data-page="contract" data-route="contract.html">
+<a class="skip" href="#main">Skip to content</a>
+<header class="masthead"><div class="masthead-inner">
+<a class="wordmark" href="index.html">Weather <em>Basis Atlas</em></a>
+<nav class="primary-nav" aria-label="Primary"><a href="index.html">Explore</a><a href="compare.html">Compare</a><a href="contract.html" aria-current="page">Contract Lab</a><a href="portfolio.html">Portfolio Lab</a><a href="research/index.html">Research</a></nav>
+<span class="release-mark"><a href="research/index.html?record=research:releases">Version 2.1</a></span>
+</div></header>
+<main id="main">
+<div class="page-head">
+<div>
+<p class="eyebrow">Contract Lab</p>
+<h1>Design a weather contract and see what it would pay.</h1>
+<p class="lede">Choose a payoff shape, a strike and a payout per degree day for the selected county and month. The atlas prices the contract on 2,000 simulated seasons, shows how often it would pay and by how much, and how much of that risk the selected listed station could hedge.</p>
+</div>
+<aside><strong>Three separate numbers</strong><p>The expected payout, any assumed risk-transfer loading and an observed market price are always reported apart. This release assumes no loading and reproduces no market prices, so nothing here is a quote.</p></aside>
+</div>
+<div class="context-strip" aria-label="Current selection">
+<dl class="context-items" id="context-items"></dl>
+<div class="context-actions"><button id="copy-scenario" class="btn btn-quiet btn-small">Copy link</button><button id="reset-scenario" class="btn btn-quiet btn-small">Reset</button></div>
+<p id="scenario-status" class="status" role="status"></p>
+</div>
+<section class="lab-panel" aria-label="Contract ticket and result"><p class="status">Loading the reference contract…</p></section>
+</main>
+<footer class="site-footer"><div class="site-footer-inner">
+<div><h4>Research and education only</h4><p>Everything here is a model estimate built from public NOAA temperature records. Nothing is an executable quote, an offer, insurance, investment advice, or a promise of hedge performance. The project is not affiliated with CME Group or Speedwell/Xweather; station names identify public weather stations and no exchange price data are reproduced.</p></div>
+<div><h4>About this release</h4><p>Version 2.1 · county study frozen at the 2026-06 data vintage, valued as of 1 July 2026.</p><details><summary>Release identifier</summary><p><code>__WBA_RELEASE_ID__</code></p></details><p><a href="https://github.com/chronicaria/weather-basis-atlas">Source code and data</a> · <a href="v1/index.html">V1 archive</a></p></div>
+</div></footer>
+<script type="module" src="js/pages/app.js"></script>
+</body>
+</html>

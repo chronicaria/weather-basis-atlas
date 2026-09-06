@@ -1,1 +1,43 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Portfolio Lab · Weather Basis Atlas</title><link rel="stylesheet" href="styles/tokens.css"><link rel="stylesheet" href="styles/layout.css"><link rel="stylesheet" href="styles/components.css"></head><body data-page="portfolio" data-route="portfolio.html"><a class="skip" href="#main">Skip to content</a><header class="masthead"><a class="wordmark" href="index.html">Weather<br><em>Basis Atlas</em></a><nav class="primary-nav" aria-label="Primary"><a href="index.html">Explore</a><a href="compare.html">Compare</a><a href="contract.html">Contract Lab</a><a href="portfolio.html" aria-current="page">Portfolio Lab</a><a href="research/index.html">Research</a></nav><span class="release-mark">V2 workbench</span></header><main id="main"><p class="eyebrow">Holdings, constraints, adverse scenarios</p><h1>Build a protection book with its costs intact.</h1><p class="lede">Portfolio Lab will aggregate aligned scenarios and retain signed positions, premium, fees and assumptions. It does not turn a precomputed example into a custom optimization result.</p><div class="scenario-bar"><p id="scenario-summary"></p><button id="copy-scenario" class="quiet-button">Copy scenario</button><button id="reset-scenario" class="quiet-button">Reset</button><span id="scenario-status" class="status" role="status"></span></div><section class="lab-panel"><h2>Start with an empty or supplied analytical book</h2><div class="route-list"><a href="#empty"><strong>Empty book</strong>Define holdings locally before evaluation.</a><a href="#heating"><strong>Regional heating</strong>Supplied example awaits a published portfolio result.</a><a href="#cooling"><strong>Multi-location cooling</strong>Supplied example awaits aligned scenario support.</a></div><p class="notice">Custom CSV import, optimization and Scenario Room require the common scenario and ledger contracts. This UI retains no private book in a public URL.</p></section></main><footer class="workbench-footer">Portfolio results report feasibility rather than silently recommending no hedge.</footer><script type="module" src="js/pages/app.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio Lab · Weather Basis Atlas</title>
+<meta name="description" content="Weather Basis Atlas: how well the thirteen listed U.S. weather stations would have hedged each county's heating and cooling degree days. Research and education only.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/layout.css">
+<link rel="stylesheet" href="styles/components.css">
+<link rel="stylesheet" href="styles/portfolio.css">
+</head>
+<body data-page="portfolio" data-route="portfolio.html">
+<a class="skip" href="#main">Skip to content</a>
+<header class="masthead"><div class="masthead-inner">
+<a class="wordmark" href="index.html">Weather <em>Basis Atlas</em></a>
+<nav class="primary-nav" aria-label="Primary"><a href="index.html">Explore</a><a href="compare.html">Compare</a><a href="contract.html">Contract Lab</a><a href="portfolio.html" aria-current="page">Portfolio Lab</a><a href="research/index.html">Research</a></nav>
+<span class="release-mark"><a href="research/index.html?record=research:releases">Version 2.1</a></span>
+</div></header>
+<main id="main">
+<div class="page-head">
+<div>
+<p class="eyebrow">Portfolio Lab</p>
+<h1>Build a protection book and see what it costs.</h1>
+<p class="lede">Start from an example book or your own holdings, choose which station contracts may be used, and let the optimiser find the cheapest protection against 2,000 simulated seasons. Risk is measured as ES90, the average loss in the worst 10% of those seasons. Everything runs and stays in your browser.</p>
+</div>
+<aside><strong>What to expect</strong><p>If no feasible hedge exists under your rules, the lab says so rather than quietly recommending nothing. Costs are illustrative model premiums, not market quotes.</p></aside>
+</div>
+<div class="context-strip" aria-label="Current selection">
+<dl class="context-items" id="context-items"></dl>
+<div class="context-actions"><button id="copy-scenario" class="btn btn-quiet btn-small">Copy link</button><button id="reset-scenario" class="btn btn-quiet btn-small">Reset</button></div>
+<p id="scenario-status" class="status" role="status"></p>
+</div>
+<section class="lab-panel stack-lg" aria-label="Portfolio book builder"><p class="status">Loading the portfolio lab…</p></section>
+</main>
+<footer class="site-footer"><div class="site-footer-inner">
+<div><h4>Research and education only</h4><p>Everything here is a model estimate built from public NOAA temperature records. Nothing is an executable quote, an offer, insurance, investment advice, or a promise of hedge performance. The project is not affiliated with CME Group or Speedwell/Xweather; station names identify public weather stations and no exchange price data are reproduced.</p></div>
+<div><h4>About this release</h4><p>Version 2.1 · county study frozen at the 2026-06 data vintage, valued as of 1 July 2026.</p><details><summary>Release identifier</summary><p><code>__WBA_RELEASE_ID__</code></p></details><p><a href="https://github.com/chronicaria/weather-basis-atlas">Source code and data</a> · <a href="v1/index.html">V1 archive</a></p></div>
+</div></footer>
+<script type="module" src="js/pages/app.js"></script>
+</body>
+</html>

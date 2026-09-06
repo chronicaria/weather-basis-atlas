@@ -1,0 +1,33 @@
+/* Portfolio Lab: page-specific layout for the step-by-step book builder. */
+.steps > .step > .step-body { margin-top: .75rem; }
+.cards button.card { font: inherit; cursor: pointer; width: 100%; }
+.cards button.card:focus-visible { outline-offset: 0; }
+.import-block { display: grid; gap: .5rem; justify-items: start; max-width: 34rem; }
+.import-block input[type="file"] { padding: .4rem .5rem; font-size: .88rem; }
+.holdings-table input.control, .holdings-table select.control { padding: .35rem .45rem; font-size: .86rem; }
+.holdings-table [data-size="row"] { width: 100%; min-width: 8.5rem; }
+.holdings-table [data-size="short"] { width: 5.5rem; }
+.holdings-table [data-size="kind"] { width: 11rem; }
+.holdings-table [data-size="medium"] { width: 8.5rem; }
+.holdings-table [data-size="long"] { width: 9.5rem; }
+.holdings-table [data-size="num"] { width: 5.5rem; text-align: right; }
+.holdings-table td { padding: .3rem .35rem; }
+.holdings-table th:first-child, .holdings-table td:first-child { min-width: 11rem; }
+.holdings-table thead th.num { text-align: right; }
+/* Column names wrap rather than setting the column width, so the whole table fits at 1280 without scrolling. */
+.holdings-table thead th, .holdings-table thead th.num { white-space: normal; }
+.holdings-note { margin-top: .35rem; }
+.check-list { gap: .45rem; }
+.check-list .check { align-items: flex-start; }
+.check-list .check strong { font-weight: 600; }
+.candidate-choices .hint { margin: -.25rem 0 .5rem; }
+.field-row { align-items: start; }
+.export-block { padding-top: .75rem; border-top: 1px solid var(--line); }
+.portfolio-result:empty { display: none; }
+/* Positions tables: keep the station on one line and give the contract sentence room; the wrap scrolls on narrow screens. */
+.positions-table td:first-child { white-space: nowrap; }
+.positions-table td:nth-child(2) { min-width: 17rem; }
+.step-body h4 { margin: .25rem 0 0; }
+@media (max-width: 640px) { .step { padding-left: 2.3rem; } .steps { gap: 1.75rem; } }
+/* The objective label is long: give it a full row so the selected option is never clipped. */
+.field-row.hedging-rules > .field:first-child { grid-column: 1 / -1; }

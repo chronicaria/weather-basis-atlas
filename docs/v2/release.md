@@ -124,12 +124,55 @@ with their inventories and checksums; they are recovery inputs, not Pages
 deployment content. These assets are now retained on the immutable release above.
 
 The Pages workflow is manually dispatched with the GitHub Release asset URL,
-archive SHA-256, and expected `release_id`. It downloads only that asset,
+archive SHA-256, and expected `release_id`. Dispatch it from the release tag
+(`gh workflow run pages.yml --ref <tag> …`) so the checkout, dependency lock
+and verifier are the ones sealed with that release, including on rollback. It downloads only that asset,
 checks the archive digest, extracts exactly one bundle, requires its V1 archive
 entrypoint, runs `wba v2 release verify`, compares the embedded ID, and uploads
 only that verified directory to Pages. It never uploads the tracked `site/`
 directory or fetches mutable weather inputs. Do not dispatch it until the full
 candidate lock and its accepted public artifacts exist.
+
+## Presentation-only releases (V2.1 and later)
+
+A change confined to `apps/site/` (templates, styles, scripts) is a new
+presentation of the same accepted scientific artifacts. Do not rerun any
+scientific stage. Iterate against a sealed bundle without resealing:
+
+```bash
+python3 scripts/serve_site.py --bundle build/releases/v2-published --port 8790
+```
+
+The dev server serves `apps/site` templates, styles and scripts (resolving the
+release placeholder) and takes data, map vendor files and the V1 archive from
+the bundle. When the front end is ready, derive a lock that keeps every
+scientific pin and recomputes only `presentation.source_hashes`, then build,
+verify, package and publish exactly as above:
+
+```bash
+uv run python scripts/presentation_lock.py \
+  --base config/releases/v2-candidate.lock.json \
+  --out config/releases/v2.1-presentation.lock.json
+uv run wba v2 release build --lock config/releases/v2.1-presentation.lock.json \
+  --out build/releases/v2.1
+uv run wba v2 release verify --bundle build/releases/v2.1
+uv run python scripts/package_release.py --bundle build/releases/v2.1 \
+  --out build/release-assets/weather-basis-atlas-v2.1.tar.gz
+```
+
+`presentation_lock.py` copies every scientific pin unchanged (accepted artifacts,
+public source, V1 archive, scientific configuration identity, scenario sets, model
+specs, data vintages), recomputes the presentation digests, refreshes the Python
+source inventory when a module changed, and asserts the scientific identity is
+untouched before writing. The site builder additionally refuses to publish a file
+under `apps/site` that the lock does not pin, so the release ID identifies every
+presentation byte it ships.
+
+The new lock yields a new `release:` identity because the lock content changed;
+the public objects inside the bundle are re-stamped with that identity by the
+builder, while their scientific `analysis_id`, `scenario_set_id` and source
+artifact ids are unchanged. Record the tag, asset SHA-256 and release id in
+PROGRESS.md after the Pages workflow succeeds.
 
 ## Recovery
 

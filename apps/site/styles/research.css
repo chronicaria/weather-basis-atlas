@@ -1,0 +1,36 @@
+/* Research library: record typography, the contents list on narrow screens, and small table helpers.
+   Loaded after components.css; keeps the doc-shell from there. */
+.doc-shell > * { min-width: 0; }
+.doc-toc { display: block; }
+.doc-toc .toc-toggle { display: none; }
+.doc-toc .toc-list { display: grid; gap: .1rem; }
+
+.research-record .doc-lead { font-family: var(--serif); font-size: 1.15rem; line-height: 1.45; color: var(--ink); max-width: 44rem; margin: .25rem 0 1rem; }
+.research-record .note { font-size: .86rem; color: var(--ink-2); }
+.research-record .callout { margin: .75rem 0 1rem; }
+.research-record .tiles { margin: .75rem 0 1rem; }
+.research-record .table-wrap { margin: .5rem 0; }
+.research-record .kv { margin: .25rem 0 .5rem; }
+.research-record h5 { margin: 1rem 0 .3rem; font-size: .92rem; font-family: var(--sans); }
+.research-record .record-actions { margin: 1.25rem 0; }
+.research-record .fields { margin-top: 1.5rem; }
+.research-record .research-data { display: grid; gap: .5rem; }
+.research-record .stack { gap: .75rem; }
+.research-record .linklike { background: none; border: 0; padding: 0; margin: 0; font: inherit; color: var(--teal); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; cursor: pointer; }
+.research-record .linklike:hover { color: var(--ink); }
+.research-record .cell-links { display: inline-flex; flex-direction: column; gap: .2rem; white-space: nowrap; }
+/* Row labels ("The five-county book on its own") broke into four lines once the table scrolled on a phone. */
+.research-record .metric-table tbody td:first-child { min-width: 7.5rem; }
+.research-record tr.is-flagged td { background: var(--accent-soft); }
+.research-record .metric-table td .band { display: block; font-size: .8rem; color: var(--ink-2); white-space: nowrap; }
+
+@media (max-width: 900px) {
+  .doc-toc { display: block; position: static; }
+  .doc-toc .toc-toggle { display: flex; width: 100%; align-items: center; gap: .6rem; border: 1px solid var(--rule); background: var(--paper); color: var(--ink); padding: .65rem .85rem; font-weight: 600; text-align: left; border-radius: var(--radius); }
+  .doc-toc .toc-toggle .toc-label { flex: none; }
+  .doc-toc .toc-toggle .toc-current { flex: 1; min-width: 0; color: var(--ink-2); font-weight: 400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .doc-toc .toc-toggle .toc-state { flex: none; font-size: .8rem; color: var(--teal); text-transform: uppercase; letter-spacing: .06em; }
+  .doc-toc .toc-list { display: none; }
+  .doc-shell.toc-open .doc-toc .toc-list { display: grid; gap: .1rem; margin-top: .5rem; padding: .35rem; border: 1px solid var(--line); background: var(--paper); border-radius: var(--radius); }
+  .doc-toc .toc-list button { min-height: 2.5rem; }
+}

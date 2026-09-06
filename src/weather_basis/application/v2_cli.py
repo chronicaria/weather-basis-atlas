@@ -53,7 +53,14 @@ def register_parser(commands):
     build.add_argument("--lock", type=Path, required=True)
     build.add_argument("--out", type=Path, required=True)
     for name in ("verify", "inspect"):
-        release.add_parser(name).add_argument("--bundle", type=Path, required=True)
+        parser = release.add_parser(name)
+        parser.add_argument("--bundle", type=Path, required=True)
+        if name == "verify":
+            parser.add_argument(
+                "--print-manifest",
+                action="store_true",
+                help="Print the full file inventory (tens of MB) instead of a summary",
+            )
     rollback = release.add_parser("rollback")
     rollback.add_argument("--bundle", type=Path, required=True)
     rollback.add_argument(
@@ -215,7 +222,16 @@ def main(args, root: Path) -> int:
             elif args.release_command == "inspect":
                 result = inspect_release(args.bundle)
             else:
+                # The manifest is one line of tens of megabytes: summarise unless asked.
                 result = verify_release(args.bundle)
+                if not args.print_manifest:
+                    files = result.get("files", [])
+                    result = {
+                        **{key: value for key, value in result.items() if key != "files"},
+                        "verified": "passed",
+                        "file_count": len(files),
+                        "total_bytes": sum(record.get("bytes", 0) for record in files),
+                    }
         elif args.v2_command == "serve":
             from functools import partial
             from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer

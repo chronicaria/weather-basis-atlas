@@ -29,6 +29,43 @@ def _source(root: Path, path: str) -> Path:
     return result if result.is_absolute() else root / result
 
 
+def _legacy_stub(filename: str, title: str) -> str:
+    """A styled signpost for a V1 URL: the archived page is preserved, not current."""
+
+    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{title} · V1 archive · Weather Basis Atlas</title>
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/layout.css">
+<link rel="stylesheet" href="styles/components.css"></head>
+<body><header class="masthead"><div class="masthead-inner">
+<a class="wordmark" href="index.html">Weather <em>Basis Atlas</em></a>
+<nav class="primary-nav" aria-label="Primary">
+<a href="index.html">Explore</a>
+<a href="compare.html">Compare</a>
+<a href="contract.html">Contract Lab</a>
+<a href="portfolio.html">Portfolio Lab</a>
+<a href="research/index.html">Research</a></nav></div></header>
+<main id="main"><div class="page-head"><div>
+<p class="eyebrow">First edition archive</p>
+<h1>{title} has moved.</h1>
+<p class="lede">This address belongs to the first edition of the atlas,
+published in September 2026 and kept exactly as it was. Its station choices
+and effectiveness figures were later re-measured on matched seasons, and some
+of them changed, so read it as a record rather than as the current result.</p>
+</div></div>
+<div class="btn-row">
+<a class="btn btn-primary" href="research/index.html">Read the current research</a>
+<a class="btn" href="v1/{filename}">Open the archived page</a>
+<a class="btn btn-quiet" href="index.html">Go to the map</a></div></main>
+<footer class="site-footer"><div class="site-footer-inner"><div>
+<h4>Research and education only</h4>
+<p>Model estimates built from public NOAA temperature records. Nothing here is
+an executable quote, an offer, insurance, investment advice, or a promise of
+hedge performance.</p></div></div></footer></body></html>
+"""
+
+
 def build_site(*, root: Path, out: Path, release_id: str, lock: dict[str, Any]) -> dict[str, Any]:
     root, out = Path(root), Path(out)
     out.mkdir(parents=True, exist_ok=True)
@@ -95,6 +132,18 @@ def build_site(*, root: Path, out: Path, release_id: str, lock: dict[str, Any]) 
         html = template.read_text()
         html = html.replace("__WBA_RELEASE_ID__", release_id)
         target.write_text(html)
+    # Every shipped presentation byte must be pinned, or the release ID would not
+    # identify the bytes it publishes.
+    pinned = set(lock.get("presentation", {}).get("source_hashes", {}))
+    if pinned:
+        unpinned = sorted(
+            path.relative_to(root).as_posix()
+            for path in source.rglob("*")
+            if path.is_file()
+            and "__pycache__" not in path.parts
+            and path.relative_to(root).as_posix() not in pinned
+        )
+        require(not unpinned, f"Unpinned presentation source: {', '.join(unpinned)}")
     for folder in ("js", "styles", "vendor"):
         if (source / folder).is_dir():
             shutil.copytree(source / folder, out / folder)
@@ -116,16 +165,13 @@ def build_site(*, root: Path, out: Path, release_id: str, lock: dict[str, Any]) 
         require((legacy_root / "index.html").is_file(), "Missing preserved V1 bundle")
         shutil.copytree(legacy_root, out / "v1")
     # Legacy document routes remain explicit archival destinations, never new figures under old IDs.
-    for filename in ("methodology.html", "model-card.html", "nebraska.html", "about.html"):
-        target = out / filename
-        target.write_text(
-            "<!doctype html><html lang='en'><meta charset='utf-8'>"
-            "<meta name='viewport' content='width=device-width,initial-scale=1'>"
-            "<title>V1 archive · Weather Basis Atlas</title><h1>V1 research archive</h1>"
-            f"<p>This link identifies the original V1 research release. "
-            f"<a href='v1/{filename}'>Open the preserved V1 page</a> or "
-            "<a href='research/index.html'>read the V2 evidence</a>.</p></html>"
-        )
+    for filename, title in (
+        ("methodology.html", "Methodology"),
+        ("model-card.html", "Model card"),
+        ("nebraska.html", "Nebraska case study"),
+        ("about.html", "Provenance"),
+    ):
+        (out / filename).write_text(_legacy_stub(filename, title))
     (out / ".nojekyll").write_text("")
     return {
         "schema_version": "2.0",

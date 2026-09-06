@@ -27,6 +27,11 @@ public transport, exact live identity and all three live portfolio journeys pass
 [compute](../../results/v2/validation/compute-final-evidence.json),
 [prior recovery](../../results/v2/validation/prior-bundle-recovery.json).
 
+G6's browser evidence is agent-narrated JSON plus screenshots, not an automated
+test; three of the retained research-journey captures are the same image. V2.1
+adds replayable Playwright journeys per route under the QA scratch scripts named
+in the release runbook.
+
 The final source CI passed Ruff, 195 tests with one local-data-only skip and five
 data-marked deselections, plus clean-checkout V1 fixture reproduction/site check.
 Those tests do not substitute for the separately executed national validation.

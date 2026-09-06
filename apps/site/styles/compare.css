@@ -1,0 +1,38 @@
+/* Compare page: county picker chips, the side-by-side table and the correlation matrix. */
+.compare-controls { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 1rem 1.5rem; align-items: start; }
+.compare-controls > * { min-width: 0; }
+.picker-label { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--teal); font-weight: 700; margin: 0 0 .5rem; }
+.chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .4rem; }
+.chips:empty { display: none; }
+.chip { display: inline-flex; align-items: center; gap: .2rem; border: 1px solid var(--rule); background: var(--paper); border-radius: var(--radius); padding: .2rem .25rem .2rem .7rem; font-size: .88rem; font-weight: 600; max-width: 100%; }
+.chip > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chip-remove { flex: none; border: 0; background: transparent; color: var(--ink-3); width: 1.6rem; height: 1.6rem; border-radius: var(--radius); display: grid; place-items: center; font-size: 1.05rem; line-height: 1; padding: 0; }
+.chip-remove:hover { background: var(--accent-soft); color: var(--accent); }
+/* The Compare button stays focusable when it cannot run; the status beside it says why, so its text stays legible. */
+.btn[aria-disabled="true"] { opacity: 1; cursor: not-allowed; background: transparent; color: var(--ink-2); border-color: var(--line); }
+/* Side-by-side table: county names, headers and the 95% band may wrap so eight columns fit a desktop page. */
+.compare-table td:first-child { min-width: 10rem; }
+.compare-table thead th, .compare-table thead th.num, .compare-stats thead th, .compare-stats thead th.num { white-space: normal; }
+.compare-table td.num.band { white-space: normal; }
+.compare-table .muted { color: var(--ink-2); }
+.season-range { display: block; font-weight: 400; }
+/* Scroll hints are unhidden by compare.js only while a table really is wider than its wrap. */
+.scroll-hint[hidden] { display: none; }
+.notes { margin: .6rem 0 0; padding-left: 1.1rem; font-size: .88rem; color: var(--ink-2); }
+.notes li { margin: .2rem 0; }
+.compare-stats td:first-child { white-space: nowrap; }
+.corr-table th[scope="row"] { width: auto; white-space: nowrap; }
+.corr-table td.num { min-width: 5.5rem; color: var(--ink); }
+.corr-table td.corr-self { font-weight: 600; }
+.compare-actions .btn { white-space: normal; text-align: left; max-width: 100%; }
+@media (max-width: 640px) {
+  .compare-controls { grid-template-columns: 1fr; }
+  .chip-remove { width: 2rem; height: 2rem; }
+  /* The county column stays put while the rest of the table scrolls. */
+  .compare-table td:first-child, .compare-table th:first-child { position: sticky; left: 0; background: var(--paper); z-index: 1; }
+  .corr-table th[scope="row"] { white-space: normal; min-width: 7rem; }
+  .corr-table td.num { min-width: 3.5rem; }
+  /* Three columns of degree days fit a phone once the unit moves into the sentence above. */
+  .compare-stats .col-unit { display: none; }
+  .compare-stats th, .compare-stats td { padding-left: .4rem; padding-right: .4rem; }
+}

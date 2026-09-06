@@ -1,0 +1,39 @@
+/* Contract Lab: ticket form and result. Small additions on top of components.css. */
+.ticket-form .kv th { width: 44%; }
+.ticket-form .kv td { font-weight: 600; }
+.ticket-form .link-row { margin: .6rem 0 0; }
+.ticket-form fieldset > .field + .field, .ticket-form fieldset > .field + .field-row, .ticket-form fieldset > .field-row + .field-row { margin-top: .75rem; }
+.ticket-form > .btn-row { margin-top: 1.4rem; }
+.ticket-form select { text-overflow: ellipsis; }
+/* Two fields side by side: the hint row absorbs any slack so both boxes sit at the same height and size (the fourth row holds an optional .field-error). */
+.ticket-form .field-row .field { grid-template-rows: auto 1fr auto auto; }
+/* Where the browser can share the rows across the pair, the boxes stay aligned even when only one of them shows an error. */
+@supports (grid-template-rows: subgrid) {
+  .ticket-form .field-row { grid-auto-rows: auto; }
+  .ticket-form .field-row .field { grid-row: span 4; grid-template-rows: subgrid; row-gap: .3rem; }
+}
+.two-col > .panel + .panel { padding-top: 1.1rem; }
+/* The result column keeps a usable floor so the ticket column yields first; under
+   text zoom the pair stacks rather than pushing the buttons past the viewport. */
+.lab-panel .two-col { grid-template-columns: minmax(0, 26rem) minmax(20rem, 1fr); }
+@media (max-width: 900px) { .lab-panel .two-col { grid-template-columns: 1fr; } }
+@supports (container-type: inline-size) {
+  .lab-panel { container-type: inline-size; }
+  @container (max-width: 48rem) { .lab-panel .two-col { grid-template-columns: 1fr; } }
+}
+/* Six result tiles: three per row so the grid has no empty cells; two per row on narrow screens. */
+.result-body .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 640px) { .result-body .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* A field that stopped the ticket being priced: the message sits under the box. */
+.ticket-form [aria-invalid="true"] { border-color: var(--accent); }
+.ticket-form .field-error { font-weight: 600; font-size: .8rem; color: var(--accent); }
+/* A ticket that could not be priced keeps the last result on screen: the figures dim, the links and export stay live and are labelled as the last ticket. */
+.result-body > * { transition: opacity .2s; }
+.result-body.is-stale > :not(.btn-row):not(details):not(.result-links) { opacity: .65; }
+.result-body .result-links { margin-top: .5rem; }
+.chart-key { color: var(--ink-3); display: flex; flex-wrap: wrap; gap: .3rem 1.1rem; font-size: .8rem; margin: .5rem 0 0; }
+.chart-key span { display: inline-flex; align-items: center; gap: .45rem; }
+.chart-key i { display: inline-block; width: .9rem; height: .6rem; border-radius: 2px; background: var(--teal); opacity: .5; }
+.chart-key i.line { height: 2px; border-radius: 0; background: var(--ink); opacity: 1; }
+.chart-key i.dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--ink); opacity: .5; }
+.chart-key i.dash { width: 1.4rem; height: 0; border-top: 2px dashed var(--ink-2); background: none; opacity: 1; }

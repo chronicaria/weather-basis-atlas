@@ -203,3 +203,52 @@ transport and recovery are separate recorded evidence. Final gates and exact
 maintenance commands are in [the completion proof](results/v2/validation/completion.json),
 [handover](docs/v2/handover.md), [ledger](docs/v2/IMPLEMENTATION.md) and
 [release runbook](docs/v2/release.md). V1 source/history/archive remain preserved.
+
+## 2026-09-06 — V2.1 public presentation release
+
+Rebuilt the front end for a public reader without touching a scientific artifact.
+The county study, the 10,000-path scenario set and its exact 2,000-path public
+prefix, the browser solver, the decision-record format and the exports are the
+accepted V2 ones; `scripts/presentation_lock.py` copies every scientific pin and
+recomputes only the presentation digests, asserting the scientific identity is
+unchanged before it writes.
+
+What changed for a reader: a design system with named map layers, legends,
+hover labels and metric tiles that say what each number means; plain-language
+status text in place of machine codes; formatted numbers with units and a real
+minus sign; simulated-season charts with labelled axes; a stepped Portfolio Lab;
+a documentation shell for Research; and every internal identifier moved into a
+collapsed provenance block. `scripts/serve_site.py` overlays `apps/site/` on a
+sealed bundle so the front end can be developed against real public data without
+resealing.
+
+Corrections carried into the public text after an adversarially verified audit
+of the V2 build:
+
+- R01 is now reported whole. The prior-best rule beat the nearest listed station
+  in 6,355 evaluable records, tied in 3,859 and lost in 32,934, so the nearest
+  station was better in 76% of them. The Research page tallies wins, ties and
+  losses per index from the public summaries, records that the registered
+  practical-equivalence bands were never tallied, and states that the atlas's
+  current selection still applies the prior-best rule. Explore labels the
+  selected station accordingly.
+- No risk-transfer loading ships in this release, and the published `hedged`
+  price component equals the physical expected payout by construction, so the
+  README no longer claims explicit assumed risk charges and the Contract Lab
+  never presents a separate hedged number.
+- B10's "2,940 independent-seed checks" is restated as 1,176 pass/fail checks
+  plus 1,764 diagnostic comparisons.
+- The acceptance register now says G6's browser evidence is agent-narrated JSON
+  plus screenshots, three of which are the same image.
+- The holdings CSV template ships entity ids that actually evaluate.
+
+Release hygiene: the site builder refuses to publish a file under `apps/site`
+that the lock does not pin, so the release ID identifies every presentation byte
+it ships; the legacy V1 routes are now styled pages that say the first-edition
+figures were superseded; and the Pages workflow should be dispatched from the
+release tag so the verifier is the one sealed with that release.
+
+Checks: Ruff clean; 198 tests pass with 5 data-marked deselections. Every route
+was driven headlessly at 1280, 390 and 320 CSS pixels and at 200% text zoom with
+no page overflow and no console errors, and no page shows an internal identifier
+outside a collapsed block.

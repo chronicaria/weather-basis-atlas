@@ -29,8 +29,10 @@ constraints and lot treatment. Browser-imported holdings stay local.
 ## Findings and limits
 
 - The matched national table has 43,148 evaluable and 350 unavailable county/pair
-  rows. Prior-best selection beats nearest in 6,355 evaluable rows; this does
-  not establish a universal improvement. Historical scoreability and current
+  rows. Prior-best selection beats nearest in 6,355 evaluable rows, ties in
+  3,859 and loses in 32,934 (76%), with a median difference near −4 percentage
+  points of hedge effectiveness; the nearest station is the better default in
+  most records, and the registered equivalence bands were not tallied here. Historical scoreability and current
   as-of eligibility are separate. All 43,498 quote records were checked against
   the actual selected station; 417 station hedges are explicitly unavailable.
 - Three illustrative books have lower optimized ES90 than their unhedged
@@ -107,3 +109,13 @@ These are explicit extension dispositions, not missing core features:
 Use the proof register and execution ledger to resume maintenance. The historical
 specification and audits are preserved; current results do not rewrite their
 original claims.
+
+## V2.1 presentation release
+
+V2.1 (September 2026) redesigned `apps/site/` for a public reader without
+touching any scientific artifact: plain-language copy, formatted numbers with
+units, named map layers with legends, metric tiles with one-line meanings,
+simulated-season charts, a stepped Portfolio Lab, a documentation shell for
+Research, and provenance identifiers moved into collapsed blocks. The
+presentation-only release path (`scripts/presentation_lock.py`,
+`scripts/serve_site.py`) is documented in [the release runbook](release.md).

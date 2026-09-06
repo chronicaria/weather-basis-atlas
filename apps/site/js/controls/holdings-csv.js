@@ -1,7 +1,8 @@
 export const HOLDINGS_COLUMNS = Object.freeze(['row_id', 'kind', 'entity_id', 'amount', 'budget', 'candidate_id', 'payoff_kind', 'strike', 'multiplier', 'unit_cost', 'units', 'currency']);
 
 export function holdingsTemplate() {
-  return `${HOLDINGS_COLUMNS.join(',')}\nexposure-1,heating_shortfall,county:31109,100000,650,,,,,,USD,USD\nhedge-1,hedge,station:example,1,,station:example,put,650,1,0,index_point,USD\n`;
+  // Entity ids must match the aligned scenario matrices: FIPS:PAIR for counties, STATION:PAIR for stations.
+  return `${HOLDINGS_COLUMNS.join(',')}\nexposure-1,heating_shortfall,31109:HDD-01,120,1188,,,,,,USD,USD\nhedge-1,hedge,USW00014935:HDD-01,1,,hedge-1,put,1200,20,20,index_point,USD\n`;
 }
 
 export function parseHoldingsCsv(text) {

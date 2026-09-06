@@ -13,7 +13,7 @@ in PR #1. [Completion proof](../../results/v2/validation/completion.json) ·
 | B05–B06 | All 43,498 matched county/pair rows and current selections; 43,148 evaluable/350 unavailable. All quotes reference actual selected stations or explicit unavailability. Final national G1/G2 checks. |
 | B07 | Explicit county commitment, ambiguity/stale-response handling, release-aware URLs; final Research direct-link/unknown-record repair verified. |
 | B08–B09 | Atomic content-addressed execution, resume, corruption quarantine and recursive file inventories; exact-cutoff cache and measured one/two-worker evidence. |
-| B10 | Batched pricing and 2,940 independent-seed checks; measured small-batch performance limits retained. |
+| B10 | Batched pricing and 1,176 pass/fail independent-seed checks (588 tickets, expected payout and hedged expected payout, 4-sigma tolerance) plus 1,764 diagnostic comparisons of hedge ratio, model-load standard error and residual ES95; measured small-batch performance limits retained. |
 | B11 | National 3,107-county/18-station aligned simulation, 10,000 paths; 437.5 million stored values checked and public 2,000 paths verified as the exact prefix. |
 | B12–B14 | Signed USD ledger, actual four-objective Python/browser optimization, costs/constraints/lots, canonical book reconstruction, attribution and incremental claim; final four-objective parity and independent decision replay. |
 | B15 | Strict national projections, per-state catalogues, shared provenance and lossless float32 wire transport; final source hash and record/prefix checks. |

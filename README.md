@@ -1,19 +1,37 @@
 # Weather Basis Atlas
 
-Weather Basis Atlas is a reproducible temperature-exposure and portfolio research
-workbench. [V2 is live](https://chronicaria.github.io/weather-basis-atlas/), with
+Every U.S. county has a temperature index, but only thirteen cities have listed
+weather contracts. Weather Basis Atlas shows how well the best listed station
+would have hedged each county's heating and cooling degree days, month by month,
+across 45 years of matched history, and lets you price a contract or build a
+hedged portfolio on 2,000 simulated seasons.
+[The site is live](https://chronicaria.github.io/weather-basis-atlas/), with
 Explore, Compare, Contract Lab, Portfolio Lab, Scenario Room and Research.
 
+Version 2.1 (September 2026) is a presentation-only release of the V2 study: the
+same sealed data and calculations, redesigned for a public reader. Internal
+identifiers now live in collapsed provenance blocks, numbers are formatted with
+units, map layers have names and legends, and every page opens with a plain
+statement of what it shows. See [the release runbook](docs/v2/release.md) for
+how presentation releases are built without rerunning science.
+
 The national study retains all 3,107 counties × 14 index/month pairs: 43,148
-records are evaluable and 350 unavailable. Prior-best selection beats nearest
-in 6,355 evaluable records; that is a matched historical finding, not a universal
-performance claim. Current as-of station selection is a separate object.
+records are evaluable and 350 unavailable. On matched seasons, choosing the
+station by past performance (the prior-best rule) beat the nearest listed
+station in 6,355 evaluable records, tied in 3,859 and did worse in 32,934
+(76%); the median difference is about −4 percentage points of hedge
+effectiveness. The registered practical-equivalence bands were not tallied in
+this release. Current as-of station selection still applies the prior-best
+rule and is labelled as such on the site; it is a separate object from the
+historical comparison.
 
 One joint 10,000-path offline scenario set supplies an exact 2,000-path public
 prefix. Three illustrative books and bounded local CSV books support actual
-browser optimization and decision JSON, memo and CSV export/restore. Physical
-payouts, assumed risk charges and unavailable market observations remain
-separate. The valuation convention is July 1, 2026, with May 31 observation
+browser optimization and decision JSON, memo and CSV export/restore. Public
+quotes carry a physical expected payout only: no risk-transfer loading ships in
+this release (any loading is entered by the user), the published "hedged"
+component equals the physical payout by construction, and no market
+observation is available. The valuation convention is July 1, 2026, with May 31 observation
 cutoff and an explicitly frozen retrospective vintage. Outcomes from 2023–2025
 are consumed development evidence.
 
