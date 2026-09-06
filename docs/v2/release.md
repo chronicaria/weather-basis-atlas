@@ -5,6 +5,21 @@ builder never runs a weather model, downloads source data, or substitutes an
 unlocked artifact. A template-only change creates a new presentation release
 from the same accepted scientific artifacts.
 
+## Published asset
+
+The immutable release is [v2.0.0-20260905](https://github.com/chronicaria/weather-basis-atlas/releases/tag/v2.0.0-20260905),
+from merged source `59e8c3702ea56770249301187d004811b8132186`.
+Use `weather-basis-atlas-v2-published.tar.gz`:
+
+- Release: `release:306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74`
+- Bundle: `bundle:500a17e4202c6bc05fad8e2f7daa993cdedc204dc594397a3006c42210d85ae6`
+- Archive SHA-256: `3b9588fecc7db5f3a3cfdfa0dabdb05238aba4fbe153ddd31610096de0532f45`
+
+The archive is 704,474,367 bytes and expands to the verified 749,244,937-byte
+site with 93,495 files. [Fresh complete extraction](../../results/v2/validation/published-bundle-recovery.json)
+passed. The earlier `weather-basis-atlas-v2.tar.gz` and `weather-basis-atlas-v2-prior.tar.gz`
+are preserved prepublication candidates, not the deployable final asset.
+
 ## Release lock
 
 `build_release(root, lock_path, out)` accepts JSON or YAML. Its top-level keys
@@ -106,7 +121,7 @@ digest, archive byte size, and archive SHA-256. Separately retain the frozen
 research-input assets produced by
 [`scripts/package_research_assets.py`](../../scripts/package_research_assets.py)
 with their inventories and checksums; they are recovery inputs, not Pages
-deployment content. No asset has been uploaded or published yet.
+deployment content. These assets are now retained on the immutable release above.
 
 The Pages workflow is manually dispatched with the GitHub Release asset URL,
 archive SHA-256, and expected `release_id`. It downloads only that asset,
@@ -125,7 +140,7 @@ retrieval and hash-verification stage of recovery. Uploading that verified
 directory and checking the deployed release identity are separate authorized
 transport steps.
 
-V2 candidate validation is underway. V1 remains the current public release
-until a V2 bundle, archive routes, authorized upload, and recovery through the
-real deployment transport have all been verified. Do not delete the tracked
-`site/` tree as part of release-mechanism work.
+The final V2 asset is published and Pages run 34001239283 succeeded.
+[Exact live byte checks](../../results/v2/validation/public-release-smoke.json)
+and [actual public browser journeys](../../results/v2/validation/public-browser-smoke.json)
+passed. The V1 archive and tracked `site/` tree are retained explicitly.

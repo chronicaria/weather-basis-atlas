@@ -70,6 +70,28 @@
       "build_wall_seconds": 325.1520897500013,
       "process_peak_rss_bytes": 484933632,
       "record": "results/v2/validation/final-release.json"
+    },
+    "published_release_leaf": {
+      "release_id": "release:306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74",
+      "bundle_digest": "bundle:500a17e4202c6bc05fad8e2f7daa993cdedc204dc594397a3006c42210d85ae6",
+      "routes": {
+        "/": "index.html",
+        "/compare": "compare.html",
+        "/contract": "contract.html",
+        "/portfolio": "portfolio.html",
+        "/research/": "research/index.html"
+      },
+      "file_count": 93495,
+      "served_bytes": 749244937,
+      "bundle": "/Users/andrewpark/Desktop/Code/weather-basis-atlas/build/releases/v2-published",
+      "build_wall_seconds": 343.72238504100096,
+      "process_peak_rss_bytes": 421707776,
+      "lock_sha256": "d5e20dd4a785cc04276f84a9264f7bfae6e203716f7bb7f13011b1b1a14df827",
+      "public_source_sha256": "4da95206d2f325a8772b844055dc9a901976cd9250214aa2c1c486e82e8073f9",
+      "scope": "final_national_with_b26_and_research_link_repair",
+      "scientific_artifacts_unchanged": true,
+      "supersedes": "results/v2/validation/final-release.json",
+      "change": "Preserve research record identity through URL normalization and navigation; unknown research keys show unavailable."
     }
   },
   "full_dag_history": {

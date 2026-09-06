@@ -1,0 +1,169 @@
+{
+  "schema_version": "2.0",
+  "status": "passed",
+  "scope": "complete_national_V2_B00_through_B27",
+  "checked_at": "2026-09-06T00:32:52.815110+00:00",
+  "release_id": "release:306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74",
+  "bundle_digest": "bundle:500a17e4202c6bc05fad8e2f7daa993cdedc204dc594397a3006c42210d85ae6",
+  "public_source_sha256": "4da95206d2f325a8772b844055dc9a901976cd9250214aa2c1c486e82e8073f9",
+  "source_commit": "59e8c3702ea56770249301187d004811b8132186",
+  "public_url": "https://chronicaria.github.io/weather-basis-atlas/",
+  "release_url": "https://github.com/chronicaria/weather-basis-atlas/releases/tag/v2.0.0-20260905",
+  "gates": [
+    {
+      "gate": "G0",
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "results/v2/validation/candidate-final-numerical.json",
+          "sha256": "373abf5241068667c9bb0a3845465ecb4ebb4327b8a6f14f4f735c22a0c0e249"
+        },
+        {
+          "path": "results/v2/validation/published-ui.json",
+          "sha256": "8eb63ad1df8f667b947b8f71c5dacf7b2b6f55e56b9f3445dc2ce0388bb7aab9"
+        },
+        {
+          "path": "results/v2/validation/published-decision-replay.json",
+          "sha256": "60dc582004201708fa2e8078f476965b1960df0122051e2a217ffe951b513e70"
+        }
+      ]
+    },
+    {
+      "gate": "G1",
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "results/v2/validation/candidate-final-numerical.json",
+          "sha256": "373abf5241068667c9bb0a3845465ecb4ebb4327b8a6f14f4f735c22a0c0e249"
+        }
+      ]
+    },
+    {
+      "gate": "G2",
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "results/v2/validation/candidate-final-numerical.json",
+          "sha256": "373abf5241068667c9bb0a3845465ecb4ebb4327b8a6f14f4f735c22a0c0e249"
+        }
+      ]
+    },
+    {
+      "gate": "G3",
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "results/v2/validation/candidate-final-numerical.json",
+          "sha256": "373abf5241068667c9bb0a3845465ecb4ebb4327b8a6f14f4f735c22a0c0e249"
+        }
+      ]
+    },
+    {
+      "gate": "G4",
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "results/v2/validation/candidate-final-numerical.json",
+          "sha256": "373abf5241068667c9bb0a3845465ecb4ebb4327b8a6f14f4f735c22a0c0e249"
+        },
+        {
+          "path": "results/v2/validation/final-four-objective-parity.json",
+          "sha256": "f3b79e3f44d856a3f192aae20827e5f2ea3de15ca52930ad6703bbf0f88fc7b5"
+        },
+        {
+          "path": "results/v2/validation/published-decision-replay.json",
+          "sha256": "60dc582004201708fa2e8078f476965b1960df0122051e2a217ffe951b513e70"
+        }
+      ]
+    },
+    {
+      "gate": "G5",
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "results/v2/validation/candidate-final-numerical.json",
+          "sha256": "373abf5241068667c9bb0a3845465ecb4ebb4327b8a6f14f4f735c22a0c0e249"
+        },
+        {
+          "path": "results/v2/next-station/sha256-a6e569904e030545f18e1e490d64febd2657d45ed0e99af8e9192c7c8d1b9ddf/artifact-manifest.json",
+          "sha256": "80e24352c659f47fce160347ea919724b807d7be9502b04ed6d6110e984f90c7"
+        },
+        {
+          "path": "results/v2/next-station/acceptance-a6e569904e030545.json",
+          "sha256": "1b050e1eadb5b09e1f331c6c12da7c6507a68323a8415ca305138c11bfe79849"
+        }
+      ]
+    },
+    {
+      "gate": "G6",
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "results/v2/validation/final-national-ui.json",
+          "sha256": "71e60e7a949652df0dbccdbc65a68c74b70f199512c1099056eb52f2126698a0"
+        },
+        {
+          "path": "results/v2/validation/published-ui.json",
+          "sha256": "8eb63ad1df8f667b947b8f71c5dacf7b2b6f55e56b9f3445dc2ce0388bb7aab9"
+        },
+        {
+          "path": "results/v2/validation/public-browser-smoke.json",
+          "sha256": "51cc4bfcf31341ae36a719c46efd29cd2138bfc6e4f2d87774b4e51d9e13915d"
+        }
+      ]
+    },
+    {
+      "gate": "G7",
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "results/v2/validation/compute-final-evidence.json",
+          "sha256": "8b934ee1d31f5b6ccc410d8e1263521a3e67ed605724125d522859541c5934e6"
+        },
+        {
+          "path": "results/v2/validation/final-downstream-run.json",
+          "sha256": "35e4a6d515a3e5a6a7bd57cbea18522f1ee54de82713fc8bb65a7683d01de215"
+        }
+      ]
+    },
+    {
+      "gate": "G8",
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "results/v2/validation/published-release.json",
+          "sha256": "c91eddc4bd6fdf891e81a9eef18eabba9b2a4809a377da54e01cdf9e16a5a853"
+        },
+        {
+          "path": "results/v2/validation/published-bundle-recovery.json",
+          "sha256": "a650f3085be233af9852b7368700f412024ed57895237a471065e454444961c5"
+        },
+        {
+          "path": "results/v2/validation/prior-bundle-recovery.json",
+          "sha256": "9fe2ff2f2e4c00b0288c715e0af9a7eec9e11d39266c16f7799b3fab04c58873"
+        },
+        {
+          "path": "results/v2/validation/pages-deployment.json",
+          "sha256": "3e32afd31888b2fc98122929872b4798e5221a79ab20646e8586a3e92cee3f3f"
+        },
+        {
+          "path": "results/v2/validation/public-release-smoke.json",
+          "sha256": "f8c3e3d5af995732724f2171673807f2f71fd05d5439c25d76891eef166689af"
+        },
+        {
+          "path": "results/v2/validation/public-browser-smoke.json",
+          "sha256": "51cc4bfcf31341ae36a719c46efd29cd2138bfc6e4f2d87774b4e51d9e13915d"
+        }
+      ]
+    }
+  ],
+  "scope_notes": [
+    "G0\u2013G5 reuse the exact accepted scientific source; presentation-only changes were resealed and checked in browser.",
+    "G6 predecessor direct-record failure is retained and superseded by the explicit final repair.",
+    "G7 correctness passed; general fourfold pipeline speedup and four-worker scaling remain unestablished measured targets.",
+    "G8 full bundle verified before upload and in deployment, then exact public manifest/critical bytes and actual live journeys checked.",
+    "Conditional extension tracks are unadmitted with stated evidence requirements; B26 required pilot is completed."
+  ],
+  "next_station_artifact_id": "sha256:a6e569904e030545f18e1e490d64febd2657d45ed0e99af8e9192c7c8d1b9ddf",
+  "report_id": "completion:2a8c820b60a816c8a469c52ae6902bdc98aa1ee09fe8e298d30af36d1d709d91"
+}

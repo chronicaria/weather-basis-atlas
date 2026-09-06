@@ -173,3 +173,33 @@
 - Human-only status: H-1 CME browser downloads not supplied (optional for this
   build); H-2 Databento pull not requested (optional); H-3 complete under the
   `chronicaria` identity; H-4 walkthrough video not supplied (optional).
+
+
+## 2026-09-05 — V2 released and handed over
+
+Completed B00–B27 and G0–G8; [V2 is live](https://chronicaria.github.io/weather-basis-atlas/).
+Release `v2.0.0-20260905` pins merged source `59e8c3702ea56770249301187d004811b8132186`
+and release `306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74`.
+Pages run 34001239283 deployed the checksum-verified archive; all public routes,
+V1 archive, manifest/critical bytes and three real book optimizations passed.
+
+The matched national table has 43,148 evaluable/350 unavailable records and
+6,355 prior-best wins over nearest, with explicit paired support. The 10,000-path
+joint release and exact 2,000-path browser prefix support actual contract,
+portfolio and scenario-room calculations. Four-objective solver parity passed;
+the final custom decision replayed in Python with zero residual difference.
+The bounded station pilot met its registered research-promotion rule on 16
+origins (selected-addition ES gain $10,602; clustered 95% interval $4,507–$16,933).
+
+This entry supersedes earlier interpretations of 2023–2025 as untouched
+confirmation evidence and of dependent diagnostic signs as independent tests.
+Those original reports are retained as history. Current research states its
+retrospective vintage, consumed development outcomes and inconclusive R04
+comparison. No executable market or universal improvement claim is made.
+
+Source CI passed Ruff, 195 tests/one skip/five data deselections, plus clean V1
+fixture reproduction/site check. National science, public browser, release
+transport and recovery are separate recorded evidence. Final gates and exact
+maintenance commands are in [the completion proof](results/v2/validation/completion.json),
+[handover](docs/v2/handover.md), [ledger](docs/v2/IMPLEMENTATION.md) and
+[release runbook](docs/v2/release.md). V1 source/history/archive remain preserved.

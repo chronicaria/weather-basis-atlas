@@ -86,10 +86,17 @@ The final candidate's downstream run is
 [`var/runs/v2-final-research-run.json`](../../var/runs/v2-final-research-run.json).
 The B26 next-station report is
 [`results/v2/next-station/sha256-a6e569904e030545f18e1e490d64febd2657d45ed0e99af8e9192c7c8d1b9ddf/next_station_report.json`](../../results/v2/next-station/sha256-a6e569904e030545f18e1e490d64febd2657d45ed0e99af8e9192c7c8d1b9ddf/next_station_report.json).
-These locators are local evidence inputs, not a declaration that a final site
-bundle or public tag has been published.
+These exact recovery inputs are published with
+[release v2.0.0-20260905](https://github.com/chronicaria/weather-basis-atlas/releases/tag/v2.0.0-20260905).
+The core assets, final downstream delta, complete final public source and compact
+release leaf have separate inventories and checksums. Follow
+[the reconstruction order](../../results/v2/validation/final-research-assets.json)
+to recover the fresh release source before applying the compact leaf.
 
-The release asset packer is preparing the final deltas for the intended
-`v2.0.0-20260905` tag. Eight core assets have already been uploaded by the
-release owner. Keep the resulting asset checksums and inventory with the final
-release lock; do not infer publication from an upload in progress.
+The deployable asset is `weather-basis-atlas-v2-published.tar.gz`; its complete
+extraction and sealed inventory were verified in
+[the recovery report](../../results/v2/validation/published-bundle-recovery.json).
+`v2-completion-evidence.tar.gz` retains the final handover, gate reports, browser
+proofs and locks, including historical failures and their explicit supersession.
+Pages deployment and exact public identity both passed. The older candidate
+assets remain identified as prepublication artifacts.

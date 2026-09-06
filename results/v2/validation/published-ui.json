@@ -1,0 +1,80 @@
+{
+  "schema_version": "2.0",
+  "kind": "published_release_targeted_browser_acceptance",
+  "release_id": "release:306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74",
+  "bundle_digest": "bundle:500a17e4202c6bc05fad8e2f7daa993cdedc204dc594397a3006c42210d85ae6",
+  "scope": "final_national_with_b26_and_research_link_repair",
+  "served_url": "http://127.0.0.1:8785",
+  "scientific_artifacts_unchanged": true,
+  "journeys": [
+    {
+      "name": "research_direct_b26",
+      "passed": true,
+      "url_record": "research:next_station",
+      "observations": [
+        "URL retained record query",
+        "B26 populated case displayed",
+        "disposition promote",
+        "pilot artifact retained"
+      ],
+      "pilot_artifact": "sha256:a6e569904e030545f18e1e490d64febd2657d45ed0e99af8e9192c7c8d1b9ddf",
+      "screenshot": "docs/v2/ui-evidence/published-research-direct.png"
+    },
+    {
+      "name": "research_click_refresh",
+      "passed": true,
+      "observations": [
+        "Glossary click changed record=research:glossary",
+        "refresh preserved Glossary"
+      ],
+      "record": "research:glossary"
+    },
+    {
+      "name": "research_unknown",
+      "passed": true,
+      "observations": [
+        "unknown key stayed in URL",
+        "explicit unavailable message rendered without substitution"
+      ],
+      "screenshot": "docs/v2/ui-evidence/published-research-unknown.png"
+    },
+    {
+      "name": "common_navigation_release_identity",
+      "passed": true,
+      "observations": [
+        "Research to Portfolio navigation retained published release identity",
+        "Portfolio custom CSV worker returned optimal"
+      ],
+      "screenshot": "docs/v2/ui-evidence/published-portfolio-custom.png"
+    },
+    {
+      "name": "published_decision_export_restore",
+      "passed": true,
+      "decision_id": "decision:57081658174d55e0e5fdce5c546c856eb878dda7b2bafec9ae13b5c47aa8e79a",
+      "observations": [
+        "custom CSV with Lancaster amount 150 optimized",
+        "2,000-path compiled problem exported",
+        "memo downloaded",
+        "downloaded JSON restored without recalculation"
+      ],
+      "artifacts": [
+        "results/v2/validation/published-decision.json",
+        "docs/v2/ui-evidence/published-decision-memo.md",
+        "docs/v2/ui-evidence/published-decision-restored.png"
+      ]
+    }
+  ],
+  "decision": {
+    "id": "decision:57081658174d55e0e5fdce5c546c856eb878dda7b2bafec9ae13b5c47aa8e79a",
+    "release_id": "release:306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74",
+    "scenario_set_id": "sha256:38e2708d2a7e5372a39e5ce7aca29a2984ac41550d6f69a86c09e12c1a0e8503",
+    "paths": 2000,
+    "source_count": 48,
+    "model_spec_ids": [
+      "R2j",
+      "sha256:c20ba74caac1e6ac2130de339c94e1b3a25cd724a399f4d557ec03bbd92e4b45",
+      "r2j-raw-residual-before-ar-v1"
+    ],
+    "adverse_rows": 3
+  }
+}

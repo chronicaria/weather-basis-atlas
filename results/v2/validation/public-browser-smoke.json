@@ -1,0 +1,68 @@
+{
+  "schema_version": "2.0",
+  "kind": "public_pages_browser_smoke",
+  "base_url": "https://chronicaria.github.io/weather-basis-atlas/",
+  "release_id": "release:306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74",
+  "journeys": [
+    {
+      "name": "explore",
+      "passed": true,
+      "observations": [
+        "Lancaster County loaded",
+        "release-aware URL matches published release",
+        "county data requests returned 200"
+      ],
+      "screenshot": "docs/v2/ui-evidence/public-explore.png"
+    },
+    {
+      "name": "contract",
+      "passed": true,
+      "observations": [
+        "committed monthly ticket calculated",
+        "2000 paths",
+        "physical and station-linear residual distributions rendered"
+      ],
+      "scenario_set_id": "sha256:38e2708d2a7e5372a39e5ce7aca29a2984ac41550d6f69a86c09e12c1a0e8503",
+      "screenshot": "docs/v2/ui-evidence/public-contract.png"
+    },
+    {
+      "name": "portfolio_books",
+      "passed": true,
+      "books": [
+        {
+          "book": "regional-heating-v1",
+          "status": "optimal",
+          "expected_shortfall": 56155.88702717324,
+          "deterministic_cost": 29054.34022598095,
+          "decision_id": "decision:f6b66e801a939d01557c0e7218ad421e7efa0db3c2d27e7c44d82eeada9a3832"
+        },
+        {
+          "book": "multi-location-cooling-v1",
+          "status": "optimal",
+          "expected_shortfall": 28240.11283057162,
+          "deterministic_cost": 24036.98340294994,
+          "decision_id": "decision:8b7ab4c30c51345a9f9126a9094a912361e3b8eae7d8620ca825ba63d10924c3"
+        },
+        {
+          "book": "underwriter-capped-claim-v1",
+          "status": "optimal",
+          "expected_shortfall": 18735.28752134348,
+          "deterministic_cost": 16143.841229369158,
+          "decision_id": "decision:ee88aa85e6af1ccd4ecff00f5b58946af87e2dff9b674a1407ea8b2b56184ee4"
+        }
+      ],
+      "screenshot": "docs/v2/ui-evidence/public-portfolio-underwriter.png"
+    },
+    {
+      "name": "research_direct_b26",
+      "passed": true,
+      "observations": [
+        "direct record query preserved",
+        "B26 next-station pilot populated",
+        "promote disposition"
+      ],
+      "pilot_artifact": "sha256:a6e569904e030545f18e1e490d64febd2657d45ed0e99af8e9192c7c8d1b9ddf",
+      "screenshot": "docs/v2/ui-evidence/public-research-next-station.png"
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "schema_version": "2.0",
+  "status": "passed",
+  "scope": "public_https_exact_bytes_for_all_routes_V1_lock_manifest_bootstrap_and_changed_worker_modules",
+  "checked_at": "2026-09-06T00:28:48.800278+00:00",
+  "url": "https://chronicaria.github.io/weather-basis-atlas/",
+  "release_id": "release:306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74",
+  "bundle_digest": "bundle:500a17e4202c6bc05fad8e2f7daa993cdedc204dc594397a3006c42210d85ae6",
+  "source_commit": "59e8c3702ea56770249301187d004811b8132186",
+  "deployment_run": 34001239283,
+  "release_url": "https://github.com/chronicaria/weather-basis-atlas/releases/tag/v2.0.0-20260905",
+  "checks": [
+    {
+      "path": "index.html",
+      "url": "https://chronicaria.github.io/weather-basis-atlas/index.html?release_check=306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74",
+      "status": 200,
+      "bytes": 2888,
+      "sha256": "63072cfea3c8d4106485548afe67f47326b04883441843f2e00c5c8f549440cc",
+      "matches_sealed_bundle": true
+    },
+    {
+      "path": "compare.html",
+      "url": "https://chronicaria.github.io/weather-basis-atlas/compare.html?release_check=306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74",
+      "status": 200,
+      "bytes": 1771,
+      "sha256": "6ea29fb67761451580edfb7bbfc083ecb4010fbe035602b8b1c56e18a951eb67",
+      "matches_sealed_bundle": true
+    },
+    {
+      "path": "contract.html",
+      "url": "https://chronicaria.github.io/weather-basis-atlas/contract.html?release_check=306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74",
+      "status": 200,
+      "bytes": 2558,
+      "sha256": "35f6106021c7d57c1edd745eef21eb559e278c11072bda83039684a024a2cbfa",
+      "matches_sealed_bundle": true
+    },
+    {
+      "path": "portfolio.html",
+      "url": "https://chronicaria.github.io/weather-basis-atlas/portfolio.html?release_check=306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74",
+      "status": 200,
+      "bytes": 2243,
+      "sha256": "d9c30753e8b57198735fd23fbee5a1397495e5f5bf412f6e13faf232521c8162",
+      "matches_sealed_bundle": true
+    },
+    {
+      "path": "research/index.html",
+      "url": "https://chronicaria.github.io/weather-basis-atlas/research/index.html?release_check=306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74",
+      "status": 200,
+      "bytes": 1591,
+      "sha256": "d1800def20a34f71f55a00125571900d62202f075766d98faad8c03710da118a",
+      "matches_sealed_bundle": true
+    },
+    {
+      "path": "v1/index.html",
+      "url": "https://chronicaria.github.io/weather-basis-atlas/v1/index.html?release_check=306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74",
+      "status": 200,
+      "bytes": 5378,
+      "sha256": "ca873d2e047a428c63c23e0cfacaca635134b0de799ab7fbb92c6e4901a88c73",
+      "matches_sealed_bundle": true
+    },
+    {
+      "path": "data/v2/current.json",
+      "url": "https://chronicaria.github.io/weather-basis-atlas/data/v2/current.json?release_check=306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74",
+      "status": 200,
+      "bytes": 113,
+      "sha256": "921c4aaab0e46dfb11ebc32c5d7aadffa8a52c9e8823ef6ec301f12727392300",
+      "matches_sealed_bundle": true
+    },
+    {
+      "path": "data/v2/releases/release:306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74/bootstrap.json",
+      "url": "https://chronicaria.github.io/weather-basis-atlas/data/v2/releases/release:306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74/bootstrap.json?release_check=306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74",
+      "status": 200,
+      "bytes": 388811,
+      "sha256": "1621bc5c969b7a4165c3f537c5b0714e922571458a0e407bac467eb12acb8717",
+      "matches_sealed_bundle": true
+    },
+    {
+      "path": "release-lock.json",
+      "url": "https://chronicaria.github.io/weather-basis-atlas/release-lock.json?release_check=306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74",
+      "status": 200,
+      "bytes": 25149,
+      "sha256": "d5e20dd4a785cc04276f84a9264f7bfae6e203716f7bb7f13011b1b1a14df827",
+      "matches_sealed_bundle": true
+    },
+    {
+      "path": "bundle-manifest.json",
+      "url": "https://chronicaria.github.io/weather-basis-atlas/bundle-manifest.json?release_check=306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74",
+      "status": 200,
+      "bytes": 25525558,
+      "sha256": "11ef449891abbac0ccacc20418fef0ad0a8be4bedf92151fbd77e2cd31f6118b",
+      "matches_sealed_bundle": true
+    },
+    {
+      "path": "js/state/scenario.js",
+      "url": "https://chronicaria.github.io/weather-basis-atlas/js/state/scenario.js?release_check=306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74",
+      "status": 200,
+      "bytes": 4923,
+      "sha256": "ad9feae30a42f1d725bc332906e7b978276802e79bbd307f4d3fd73be83aef1f",
+      "matches_sealed_bundle": true
+    },
+    {
+      "path": "js/pages/research.js",
+      "url": "https://chronicaria.github.io/weather-basis-atlas/js/pages/research.js?release_check=306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74",
+      "status": 200,
+      "bytes": 7222,
+      "sha256": "f3f3f9777907615f12e975654f593014e5d8431d44849eb9c18b458e7809ac06",
+      "matches_sealed_bundle": true
+    },
+    {
+      "path": "js/workers/portfolio-worker.js",
+      "url": "https://chronicaria.github.io/weather-basis-atlas/js/workers/portfolio-worker.js?release_check=306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74",
+      "status": 200,
+      "bytes": 13456,
+      "sha256": "7bf56e7ca5b708abce6f9a537e889ef6bfe229b5da763e5015e82801b6db62ec",
+      "matches_sealed_bundle": true
+    }
+  ],
+  "limitations": "Full 93,495-file inventory verified before upload and in the deployment runner; this public check downloads the exact manifest and critical served files, with actual browser journeys recorded separately."
+}

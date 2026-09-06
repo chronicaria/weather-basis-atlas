@@ -111,3 +111,14 @@ The workflow is research-only. Do not upload raw data or deploy a release under
 an account without confirming the destination and applicable source terms.
 The public deployment step remains a human-controlled action because it selects
 the hosting identity and makes the artifact externally visible.
+
+
+## V2 workbench maintenance
+
+The historical commands above remain the V1 archive workflow. V2 stage planning,
+content-addressed resume, custom portfolio work and sealed publication use the
+`wba v2` namespace. Start with the [V2 quickstart](v2/quickstart.md),
+[command reference](v2/commands.md), [handover](v2/handover.md) and
+[release/recovery runbook](v2/release.md). The V2 release workflow consumes a
+pinned GitHub Release asset and verifies its lock and complete byte inventory;
+it does not upload the tracked V1 `site/` directory.

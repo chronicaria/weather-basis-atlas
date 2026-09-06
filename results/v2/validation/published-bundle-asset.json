@@ -1,0 +1,34 @@
+{
+  "asset": {
+    "bytes": 704474367,
+    "manifest": {
+      "sha256": "db11c756a8f93929f48b7ef352b6db7c66c5f9501a1f8523ad3ff8e9213c433d",
+      "url": "https://github.com/chronicaria/weather-basis-atlas/releases/download/untagged-6f2a1eb2d0bbb9172f28/weather-basis-atlas-v2-published.tar.gz.manifest.json"
+    },
+    "name": "weather-basis-atlas-v2-published.tar.gz",
+    "sha256": "3b9588fecc7db5f3a3cfdfa0dabdb05238aba4fbe153ddd31610096de0532f45",
+    "sha256_sidecar": {
+      "sha256": "fd4d5ad6256143a2b58e5a286a8618db5cab41d8d57ded1d8e0e37449a5b7a0b",
+      "url": "https://github.com/chronicaria/weather-basis-atlas/releases/download/untagged-6f2a1eb2d0bbb9172f28/weather-basis-atlas-v2-published.tar.gz.sha256"
+    },
+    "url": "https://github.com/chronicaria/weather-basis-atlas/releases/download/untagged-6f2a1eb2d0bbb9172f28/weather-basis-atlas-v2-published.tar.gz"
+  },
+  "bundle_digest": "bundle:500a17e4202c6bc05fad8e2f7daa993cdedc204dc594397a3006c42210d85ae6",
+  "draft_release": {
+    "is_draft": true,
+    "published": false,
+    "tag": "v2.0.0-20260905",
+    "url": "https://github.com/chronicaria/weather-basis-atlas/releases/tag/untagged-6f2a1eb2d0bbb9172f28"
+  },
+  "file_count": 93495,
+  "public_source_sha256": "4da95206d2f325a8772b844055dc9a901976cd9250214aa2c1c486e82e8073f9",
+  "release_id": "release:306bdf8f6a3a1c31762f00b668d43e26f1cf0a33273dc51baf23f9d7635bef74",
+  "schema_version": "2.0",
+  "served_bytes": 749244937,
+  "status": "uploaded_to_draft",
+  "supersedes": {
+    "asset": "weather-basis-atlas-v2.tar.gz",
+    "release_lock_content_id_prefix": "6ef583ab",
+    "status": "retained immutable prepublication candidate"
+  }
+}

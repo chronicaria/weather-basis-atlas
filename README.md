@@ -1,33 +1,37 @@
 # Weather Basis Atlas
 
-Weather Basis Atlas is a reproducible county-to-weather-station basis-risk
-research instrument. V2 candidate validation is underway; the public release
-remains V1 until a V2 candidate is accepted, sealed, and deployed.
+Weather Basis Atlas is a reproducible temperature-exposure and portfolio research
+workbench. [V2 is live](https://chronicaria.github.io/weather-basis-atlas/), with
+Explore, Compare, Contract Lab, Portfolio Lab, Scenario Room and Research.
 
-The current V2 national evaluation ledger contains 43,498 county/pair records:
-43,148 evaluable records, 350 unavailable records, and 6,355 records where the
-prior best is better. These are ledger counts, not a release headline or a
-general performance claim.
+The national study retains all 3,107 counties × 14 index/month pairs: 43,148
+records are evaluable and 350 unavailable. Prior-best selection beats nearest
+in 6,355 evaluable records; that is a matched historical finding, not a universal
+performance claim. Current as-of station selection is a separate object.
 
-The current V2 plan has valuation as-of 2026-07-01 and a 2026-05-31 observation
-cutoff. It uses one joint 10,000-path offline scenario set and its deterministic
-2,000-path public prefix. The three supplied portfolio books retain declared
-constraints and local-CSV inputs; physical pricing, assumed loads, and absent
-market observations remain distinct regimes. The 2023--2025 outcomes have
-already been consumed for development and are exploratory evidence.
+One joint 10,000-path offline scenario set supplies an exact 2,000-path public
+prefix. Three illustrative books and bounded local CSV books support actual
+browser optimization and decision JSON, memo and CSV export/restore. Physical
+payouts, assumed risk charges and unavailable market observations remain
+separate. The valuation convention is July 1, 2026, with May 31 observation
+cutoff and an explicitly frozen retrospective vintage. Outcomes from 2023–2025
+are consumed development evidence.
+
+Start with the [handover](docs/v2/handover.md), [acceptance register](docs/v2/acceptance.md),
+[quickstart](docs/v2/quickstart.md) and [release/recovery runbook](docs/v2/release.md).
 
 ## What is in this repository
 
 - `data/` contains manifests, metadata, contracts, and reproducible input
   records. Raw source files are versioned separately from derived panels.
 - `results/atlas/` is retained V1 atlas evidence. `results/v2/` contains V2
-  candidate artifacts and validation ledgers.
+  accepted artifacts, explicit superseded candidates and validation ledgers.
 - `results/indices/` contains monthly county and station index panels.
 - `results/qc/` records panel, station, geography, and vintage checks.
 - `docs/site/` contains methodological, provenance, model-card, and Nebraska
   case-study copy rendered into the static site.
-- `site/` is the locally built static release artifact; its county payloads
-  are deterministic gzip files.
+- `site/` retains the historical V1 release. V2 is freshly built from
+  `apps/site/` and pinned public artifacts into a sealed release directory.
 
 ## Definitions
 
@@ -38,12 +42,11 @@ Monthly indexes sum those daily values. County `tbar` is daily TAVG; station
 This station calculation reproduces the public index convention, but is not
 settlement data.
 
-The primary outcome is held-out hedge effectiveness: one minus the hedged
-residual sum of squares divided by the comparable unhedged anomaly sum of
-squares. A county is labelled hedgeable only under the jointly pre-registered
-point-in-time effectiveness and bootstrap-lower-bound rule. Definitions,
-selection, and uncertainty procedures are fixed in
-[the pre-registration](docs/preregistration.md).
+V2 historical hedge effectiveness compares residual sums of squares on the
+same paired seasons and denominator. It reports coverage and unavailable
+reasons separately. Current eligibility, station choice, contract window and
+model/scenario identity are explicit. The retained V1 labels and their original
+rule remain documented in [the V1 pre-registration](docs/preregistration.md).
 
 ## V1 archive workflow
 
@@ -57,7 +60,7 @@ uv run wba site build
 uv run wba site check
 ```
 
-These commands reproduce the retained V1 workflow. The V2 candidate commands,
+These commands reproduce the retained V1 workflow. The V2 commands,
 artifact locators, and release requirements are in [docs/v2](docs/v2/).
 
 ## V2 sealed release commands
