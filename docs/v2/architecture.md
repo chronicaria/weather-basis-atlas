@@ -22,3 +22,23 @@ is permitted.
 
 The retained `hedge` domain also imports `provenance` for V2 decision identity;
 it remains a domain-to-foundation dependency and is covered by the same check.
+
+## Artifact flow
+
+```mermaid
+flowchart LR
+  F[Frozen vintage and contracts] --> P[Plan: identities and coordinates]
+  P --> S[Content-addressed scientific shards]
+  S --> R[Research, scenarios, portfolio and case records]
+  R --> E[Typed ResultEnvelope public source]
+  E --> B[Sealed static bundle]
+  B --> V[Release verification]
+```
+
+`ScenarioSet` and `ScenarioMatrix` carry the shared coordinate boundary from
+scientific artifacts through portfolio calculations and public projections.
+`ResultEnvelope` adds release, source, model, vintage, scenario and status
+identity at the public boundary. The browser consumes only verified envelopes;
+it never reconstructs a research result from a raw source panel. A release
+bundle is a descendant of a frozen public source and its lock, rather than a
+second scientific producer.

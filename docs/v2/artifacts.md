@@ -71,3 +71,25 @@ The canonical selected 10,000-path scenario shard is separately retained as
 inventory beside it. Its source root is
 `var/shards/v2/scenarios.build/sha256-750b533a8f349990e6b01b1bb9853e32a163c111291a468417ea8d17f63cf609`;
 the archive preserves that exact locator for clean extraction and resume.
+
+## Lifecycle used by the final candidate
+
+The planner first freezes stage coordinates and input hashes; the executor then
+either reuses a complete matching shard or writes a fresh staging directory,
+validates hashes and schema, and publishes its manifest last. A failed or
+corrupt candidate goes to quarantine and cannot become a downstream input.
+`cases.build` projects accepted research and public records; `site.build`
+turns that identified source into a sealed bundle; `release.verify` checks the
+bundle before any hosting action.
+
+The final candidate's downstream run is
+[`var/runs/v2-final-research-run.json`](../../var/runs/v2-final-research-run.json).
+The B26 next-station report is
+[`results/v2/next-station/sha256-a6e569904e030545f18e1e490d64febd2657d45ed0e99af8e9192c7c8d1b9ddf/next_station_report.json`](../../results/v2/next-station/sha256-a6e569904e030545f18e1e490d64febd2657d45ed0e99af8e9192c7c8d1b9ddf/next_station_report.json).
+These locators are local evidence inputs, not a declaration that a final site
+bundle or public tag has been published.
+
+The release asset packer is preparing the final deltas for the intended
+`v2.0.0-20260905` tag. Eight core assets have already been uploaded by the
+release owner. Keep the resulting asset checksums and inventory with the final
+release lock; do not infer publication from an upload in progress.

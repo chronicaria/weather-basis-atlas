@@ -1,0 +1,19 @@
+{
+  "release_id": "release:6ef583abd964e2d0d9ad0b560bb0df212da2d298d262e633d501b17fa3ad3b20",
+  "bundle_digest": "bundle:992cd02821e0dd8728757d7e59ef85c6511bb3531ec489ec3122f5af3c212814",
+  "routes": {
+    "/": "index.html",
+    "/compare": "compare.html",
+    "/contract": "contract.html",
+    "/portfolio": "portfolio.html",
+    "/research/": "research/index.html"
+  },
+  "file_count": 93495,
+  "served_bytes": 749137207,
+  "bundle": "/Users/andrewpark/Desktop/Code/weather-basis-atlas/build/releases/v2-final",
+  "build_wall_seconds": 325.1520897500013,
+  "process_peak_rss_bytes": 484933632,
+  "lock_sha256": "7f883c9ab34dcfcf647dd92331074c70bd6f6d1ea2a247e8685deef0c9346919",
+  "public_source_sha256": "4da95206d2f325a8772b844055dc9a901976cd9250214aa2c1c486e82e8073f9",
+  "scope": "final_national_with_b26"
+}

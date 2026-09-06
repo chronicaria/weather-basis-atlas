@@ -1,0 +1,299 @@
+{
+  "declared_numeric_tolerances": {
+    "constraint_residual_abs_usd": 0.01,
+    "deterministic_cost_abs_usd": 0.01,
+    "es_objective_abs_usd": 0.01,
+    "min_cost_objective_abs_usd": 0.01,
+    "mse_objective_abs_usd_squared": 1000.0,
+    "positions_abs_usd_per_dd_contract": 0.0001,
+    "risk_es_abs_usd": 0.01,
+    "risk_mean_abs_usd": 0.01,
+    "risk_variance_abs_usd_squared": 100.0,
+    "variance_objective_abs_usd_squared": 100.0
+  },
+  "execution": {
+    "browser_command": "AGENT_BROWSER_SESSION_NAME=wba-parity agent-browser open http://127.0.0.1:8877/index.html; worker initialize; optimize variance,mse,es,min_cost_es",
+    "browser_execution": "Real Chromium worker execution through agent-browser on a local temporary static harness; the worker initialized and solved all four requests with the vendored Highs WASM asset.",
+    "no_lots": true,
+    "python_command": "uv run python /tmp/wba_make_parity_input.py"
+  },
+  "kind": "final-four-objective-browser-worker-parity",
+  "pairs": [
+    {
+      "absolute_deltas": {
+        "constraint_residual_max_abs": 0.0056812562615959905,
+        "deterministic_cost_abs": 0.0056812562615959905,
+        "objective_abs": 3.8951635360717773e-05,
+        "positions_max_abs": 4.214322885331967e-06,
+        "risk_expected_shortfall_abs": 0.0018986811628565192,
+        "risk_mean_abs": 7.059328345349059e-05,
+        "risk_variance_abs": 3.8951635360717773e-05
+      },
+      "browser_worker": {
+        "constraint_residuals": {
+          "cash_budget": 25324.726959796004,
+          "lower_bounds": 0.0986434,
+          "upper_bounds": 91.82935
+        },
+        "deterministic_cost": 24675.273040203996,
+        "feasibility": {
+          "max_constraint_violation": 0
+        },
+        "objective_value": 220683192.55209288,
+        "positions": [
+          5.97985,
+          8.17065,
+          0.0986434
+        ],
+        "reason_code": null,
+        "risk": {
+          "expected_shortfall": 56997.32638123397,
+          "mean": 27275.683090465653,
+          "standard_deviation": 14855.409538349755,
+          "variance": 220683192.55209288
+        },
+        "solver": "highs-js-1.15.2",
+        "status": "optimal"
+      },
+      "objective": "variance",
+      "passed": true,
+      "python": {
+        "constraint_residuals": {
+          "cash_budget": 25324.732641052266,
+          "lower_bounds": 0.0986434444143022,
+          "upper_bounds": 91.82935421432289
+        },
+        "deterministic_cost": 24675.267358947734,
+        "message": "Optimization terminated successfully",
+        "objective": "variance",
+        "objective_value": 220683192.55205393,
+        "positions": [
+          5.979850640227428,
+          8.170645785677115,
+          0.0986434444143022
+        ],
+        "risk": {
+          "expected_shortfall": 56997.328279915135,
+          "mean": 27275.68301987237,
+          "quantile": 46049.06024708737,
+          "standard_deviation": 14855.409538348444,
+          "variance": 220683192.55205393
+        },
+        "status": "optimal"
+      }
+    },
+    {
+      "absolute_deltas": {
+        "constraint_residual_max_abs": 0.003008663403306855,
+        "deterministic_cost_abs": 0.003008663403306855,
+        "objective_abs": 9.179115295410156e-06,
+        "positions_max_abs": 2.984558112650859e-06,
+        "risk_expected_shortfall_abs": 0.0011833237076643854,
+        "risk_mean_abs": 2.89363888441585e-05,
+        "risk_variance_abs": 1.5783110558986664
+      },
+      "browser_worker": {
+        "constraint_residuals": {
+          "cash_budget": 25575.800566576345,
+          "lower_bounds": 0,
+          "upper_bounds": 92.02957
+        },
+        "deterministic_cost": 24424.199433423655,
+        "feasibility": {
+          "max_constraint_violation": 0
+        },
+        "objective_value": 964544630.2517426,
+        "positions": [
+          6.0972,
+          7.97043,
+          0
+        ],
+        "reason_code": null,
+        "risk": {
+          "expected_shortfall": 57084.10015424463,
+          "mean": 27272.05282246584,
+          "standard_deviation": 14858.659599720562,
+          "variance": 220779765.100368
+        },
+        "solver": "highs-js-1.15.2",
+        "status": "optimal"
+      },
+      "objective": "mse",
+      "passed": true,
+      "python": {
+        "constraint_residuals": {
+          "cash_budget": 25575.79755791294,
+          "lower_bounds": 0.0,
+          "upper_bounds": 92.02957153774625
+        },
+        "deterministic_cost": 24424.20244208706,
+        "message": "Optimization terminated successfully",
+        "objective": "mse",
+        "objective_value": 964544630.2517334,
+        "positions": [
+          6.097202984558113,
+          7.970428462253757,
+          0.0
+        ],
+        "risk": {
+          "expected_shortfall": 57084.098970920924,
+          "mean": 27272.05285140223,
+          "quantile": 46094.72690642008,
+          "standard_deviation": 14858.659546609746,
+          "variance": 220779763.52205694
+        },
+        "status": "optimal"
+      }
+    },
+    {
+      "absolute_deltas": {
+        "constraint_residual_max_abs": 0.0013201119763834868,
+        "deterministic_cost_abs": 0.0013201119763834868,
+        "objective_abs": 5.629663064610213e-06,
+        "positions_max_abs": 4.89081253718382e-07,
+        "risk_expected_shortfall_abs": 5.629663064610213e-06,
+        "risk_mean_abs": 1.4798180927755311e-05,
+        "risk_variance_abs": 12.931986540555954
+      },
+      "browser_worker": {
+        "constraint_residuals": {
+          "cash_budget": 20945.65977401905,
+          "lower_bounds": 0,
+          "upper_bounds": 90.27468
+        },
+        "deterministic_cost": 29054.34022598095,
+        "feasibility": {
+          "max_constraint_violation": 0
+        },
+        "objective_value": 56155.88702717324,
+        "positions": [
+          9.72532,
+          6.69246,
+          0
+        ],
+        "reason_code": null,
+        "risk": {
+          "expected_shortfall": 56155.88702717324,
+          "mean": 27319.055822465943,
+          "standard_deviation": 15586.154043175598,
+          "variance": 242928197.85759905
+        },
+        "solver": "highs-js-1.15.2",
+        "status": "optimal"
+      },
+      "objective": "es",
+      "passed": true,
+      "python": {
+        "constraint_residuals": {
+          "cash_budget": 20945.661094131025,
+          "lower_bounds": -0.0,
+          "upper_bounds": 90.27468048908125
+        },
+        "deterministic_cost": 29054.338905868975,
+        "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+        "objective": "es",
+        "objective_value": 56155.887021543575,
+        "positions": [
+          9.725319510918746,
+          6.692459749169768,
+          -0.0
+        ],
+        "risk": {
+          "expected_shortfall": 56155.887021543575,
+          "mean": 27319.055807667763,
+          "quantile": 45444.07531336584,
+          "standard_deviation": 15586.153628320635,
+          "variance": 242928184.9256125
+        },
+        "status": "optimal"
+      }
+    },
+    {
+      "absolute_deltas": {
+        "constraint_residual_max_abs": 0.0032062008322100155,
+        "deterministic_cost_abs": 0.0032062008322100155,
+        "objective_abs": 0.0032062008322100155,
+        "positions_max_abs": 1.8641742762781632e-06,
+        "risk_expected_shortfall_abs": 0.002818135457346216,
+        "risk_mean_abs": 3.802583159995265e-05,
+        "risk_variance_abs": 35.63082578778267
+      },
+      "browser_worker": {
+        "constraint_residuals": {
+          "cash_budget": 30298.411671214068,
+          "lower_bounds": 1.93181,
+          "upper_bounds": 93.58408
+        },
+        "deterministic_cost": 19701.588328785932,
+        "feasibility": {
+          "max_constraint_violation": 0
+        },
+        "objective_value": 19701.588328785932,
+        "positions": [
+          3.45795,
+          6.41592,
+          1.93181
+        ],
+        "reason_code": null,
+        "risk": {
+          "expected_shortfall": 59999.99718186453,
+          "mean": 27226.81382246629,
+          "standard_deviation": 15764.767346423496,
+          "variance": 248527889.48686048
+        },
+        "solver": "highs-js-1.15.2",
+        "status": "optimal"
+      },
+      "objective": "min_cost_es",
+      "passed": true,
+      "python": {
+        "constraint_residuals": {
+          "cash_budget": 30298.4148774149,
+          "lower_bounds": 1.9318101608412783,
+          "upper_bounds": 93.58408186417428
+        },
+        "deterministic_cost": 19701.5851225851,
+        "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+        "objective": "min_cost_es",
+        "objective_value": 19701.5851225851,
+        "positions": [
+          3.457949802056319,
+          6.415918135825724,
+          1.9318101608412783
+        ],
+        "risk": {
+          "expected_shortfall": 59999.999999999985,
+          "mean": 27226.81378444046,
+          "quantile": 48548.483568644595,
+          "standard_deviation": 15764.768476501209,
+          "variance": 248527925.11768627
+        },
+        "status": "optimal"
+      }
+    }
+  ],
+  "schema_version": "2.0",
+  "scope": "One actual canonical regional-heating portfolio compiled on the declared public 2,000-path prefix. Python uses SciPy/HiGHS; browser uses the vendored HiGHS 1.15.2 WASM worker.",
+  "source": {
+    "alpha": 0.9,
+    "book_config": "config/books/regional-heating.json",
+    "book_config_sha256": "62c3a692886d154e1c300432cbd9d381655bfd144fa77ab558f518df390176cc",
+    "book_id": "regional-heating-v1",
+    "browser_solver": "highs-js-1.15.2",
+    "candidate_count": 3,
+    "cash_budget_usd": 50000.0,
+    "es_target_usd": 60000.0,
+    "fixed_cost_usd": 0.0,
+    "kernel": "apps/site/js/kernels/portfolio.js",
+    "lower_bounds": 0.0,
+    "optimize_py_sha256": "1504526369b1f7bd01a9bc929064f8b2007a5ea453e8ac5ef3be6a3cf8cb3ca1",
+    "prefix_policy": "declared public prefix values[0:2000] of the accepted 10,000-path bridged artifact",
+    "scenario_artifact_id": null,
+    "scenario_manifest": "var/r2j-production-national-10000-bridged/manifest.json",
+    "scenario_prefix_paths": 2000,
+    "scenario_set_id": "sha256:ac7236e86321bb268817ecc41bf11d1eb438167651b38160ad1ddb12103f5ed3",
+    "upper_bounds": 100.0,
+    "worker": "apps/site/js/workers/portfolio-worker.js"
+  },
+  "status": "passed"
+}
