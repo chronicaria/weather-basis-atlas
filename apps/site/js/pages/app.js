@@ -44,7 +44,7 @@ function populateIndexOptions() {
   const ids = bootstrap.objects.map((item) => item.object_key || item.object_id).filter((id) => id?.startsWith('summary:')).map((id) => id.slice('summary:'.length));
   if (!ids.length) return;
   const groups = { HDD: node('optgroup', undefined, { label: 'Heating degree days (cold months)' }), CDD: node('optgroup', undefined, { label: 'Cooling degree days (warm months)' }) };
-  const order = (id) => { const parts = pairParts(id); return parts ? (parts.month + 5) % 12 : 99; };
+  const order = (id) => { const parts = pairParts(id); return parts ? (parts.kind === 'HDD' ? (parts.month + 5) % 12 : parts.month) : 99; };
   ids.sort((a, b) => order(a) - order(b)).forEach((id) => { const parts = pairParts(id); const option = node('option', pairLabel(id), { value: id }); (groups[parts?.kind] || groups.HDD).append(option); });
   select.replaceChildren(groups.HDD, groups.CDD); if (ids.includes(scenario.indexId)) select.value = scenario.indexId;
 }
@@ -77,10 +77,13 @@ function renderCountyDetails(record) {
       const id = item.station_id || item.station_name; const isSelected = id === asof.station_id || item.station_name === asof.station_name; const bar = node('span', undefined, { class: `bar${(item.historical_he ?? 0) < 0 ? ' neg' : ''}`, style: `width:${Math.min(100, Math.abs(item.historical_he ?? 0) * 60)}px` });
       const heCell = node('span'); heCell.append(bar, document.createTextNode(pct(item.historical_he)));
       const name = node('span'); name.append(node('i', undefined, { style: `display:inline-block;width:.6rem;height:.6rem;border-radius:2px;margin-right:.45rem;background:${stationColor(id)}` }), document.createTextNode(stationLabel(id)));
-      if (isSelected) name.append(node('span', ' · selected', { class: 'muted' }));
+      if (isSelected) name.append(node('span', ' · selected', { class: 'small', style: 'color:var(--ink-2)' }));
       const row = [index + 1, name, heCell, km(item.distance_km), num(item.n_test)]; row.__class = isSelected ? 'is-selected' : (item.n_test != null && item.n_test < 20 ? 'is-muted' : ''); return row;
     });
-    const section = node('div'); section.append(node('h3', 'How every listed station would have done'), node('p', 'Historical hedge effectiveness for each of the thirteen listed stations against this county, ranked. This is the V1 pooled figure over each station\'s available record, so it is a screening view; the matched-season figure above is the release headline.', { class: 'status' }), dataTable(['#', 'Station', 'Historical hedge effectiveness', 'Distance', 'Seasons'], rows, { numeric: [0, 3, 4] }));
+    const section = node('div'); const scrollNote = node('p', 'This table is wider than the page. Scroll it sideways to see every column.', { class: 'status', hidden: 'hidden' });
+    section.append(node('h3', 'Rough ranking of the thirteen stations'), node('p', 'These percentages come from the first edition of the atlas, measured over each station\'s whole record rather than the 45 seasons this county and station share. They are not comparable with the figure above and are shown only to order which stations are worth looking at.', { class: 'status' }), scrollNote, dataTable(['#', 'Station', 'First-edition score', 'Distance', 'Seasons'], rows, { numeric: [0, 3, 4] }));
+    const wrap = section.querySelector('.table-wrap');
+    if (wrap) { wrap.tabIndex = 0; wrap.setAttribute('role', 'region'); wrap.setAttribute('aria-label', 'Station ranking, scrollable'); requestAnimationFrame(() => { scrollNote.hidden = !(wrap.scrollWidth > wrap.clientWidth + 1); }); }
     facts.append(section);
   }
   const actions = node('div', undefined, { class: 'btn-row mt' });
@@ -106,13 +109,19 @@ function renderSimulation(fips, pairId, stationEntity) {
     const countyValues = matrixColumn(countyRecord, `${fips}:${pairId}`); const stationValues = matrixColumn(stationRecord, `${stationId}:${pairId}`);
     if (!countyValues) { note.textContent = 'No simulated seasons are published for this county and month.'; grid.remove(); return; }
     const sorted = [...countyValues].sort((a, b) => a - b); const median = quantile(sorted, 0.5); const low = quantile(sorted, 0.05); const high = quantile(sorted, 0.95);
-    drawHistogram(histogram, countyValues, { xLabel: `${pairLabel(pairId, { short: true })} for the county, degree days`, markers: [{ value: median, label: `median ${num(median)}` }] });
     captionA.textContent = `${num(countyValues.length)} simulated seasons of ${pairLabel(pairId)} for this county: the median is ${num(median)} degree days and nine seasons in ten fall between ${num(low)} and ${num(high)}.`;
     note.textContent = `Simulated from the county's own temperature history at the July 2026 valuation date; these paths are what the Contract Lab prices on.`;
-    if (stationValues) {
-      const fit = drawScatter(scatter, stationValues, countyValues, { xLabel: `${stationCity(stationId)} station index, degree days`, yLabel: 'County index, degree days' });
+    if (!stationValues) figureB.replaceChildren(node('p', 'No aligned simulation is published for the selected station.', { class: 'status' }));
+    // Draw at the size the chart is actually shown, so tick labels stay legible on a phone.
+    const draw = () => {
+      const width = Math.max(260, Math.round(figureA.clientWidth || 520)); const height = Math.round(Math.max(180, Math.min(240, width * 0.45)));
+      drawHistogram(histogram, countyValues, { width, height, xLabel: `${pairLabel(pairId, { short: true })} for the county, degree days`, markers: [{ value: median, label: `median ${num(median)}` }] });
+      if (!stationValues) return;
+      const fit = drawScatter(scatter, stationValues, countyValues, { width, height, xLabel: `${stationCity(stationId)} station index, degree days`, yLabel: 'County index, degree days' });
       captionB.textContent = `Each dot is one simulated season. The county index and the ${stationCity(stationId)} index move together with correlation ${fit ? fit.r.toFixed(2) : NA}; the closer the dots hug the line, the better a contract on that station tracks this county.`;
-    } else { figureB.replaceChildren(node('p', 'No aligned simulation is published for the selected station.', { class: 'status' })); }
+    };
+    draw();
+    if (window.ResizeObserver) { let last = figureA.clientWidth; new ResizeObserver(() => { if (Math.abs(figureA.clientWidth - last) > 24) { last = figureA.clientWidth; draw(); } }).observe(figureA); }
   }).catch((error) => { note.textContent = `Simulated seasons are unavailable: ${error.message}`; grid.remove(); });
   return section;
 }
@@ -121,7 +130,15 @@ function showCounty(state) {
   const name = $('#county-name'); const status = $('#county-load-status'); const retry = $('#retry-county');
   if (!name || !status) return;
   if (state.phase === 'loading') { status.textContent = `Loading ${countyLabel(countyFor(state.committedFips), state.committedFips)}…`; retry?.classList.add('hidden'); return; }
-  if (state.phase === 'error') { status.textContent = `Could not load ${countyLabel(countyFor(state.committedFips), state.committedFips)}: ${state.error.message}`; status.classList.add('status-error'); retry?.classList.remove('hidden'); return; }
+  if (state.phase === 'error') {
+    const label = countyLabel(countyFor(state.committedFips), state.committedFips);
+    name.textContent = label;
+    $('#county-facts')?.replaceChildren();
+    status.textContent = countyFor(state.committedFips)
+      ? `${label} could not be loaded. ${state.error.message}`
+      : `${label} is not part of this study, which covers the counties of the contiguous United States.`;
+    status.classList.add('status-error'); retry?.classList.toggle('hidden', !countyFor(state.committedFips)); return;
+  }
   status.classList.remove('status-error'); retry?.classList.add('hidden');
   const county = state.payload?.payload?.county || countyFor(state.committedFips);
   name.replaceChildren(document.createTextNode(countyLabel(county, state.committedFips)), node('span', ` FIPS ${state.committedFips}`, { class: 'muted small', style: 'font-family:var(--sans);font-weight:400;margin-left:.6rem;font-size:.85rem' }));
@@ -158,7 +175,7 @@ function renderCountyTable(rows, layer) {
   const details = node('details', undefined, { class: 'plain' }); details.append(node('summary', `Browse all ${num(rows.length)} counties by ${layer.name.toLowerCase()}`));
   const input = node('input', undefined, { type: 'search', class: 'control', placeholder: 'Filter by county, state, or FIPS', 'aria-label': 'Filter county table', style: 'max-width:22rem' });
   const holder = node('div', undefined, { class: 'mt' }); const values = layerRows(rows, layer.key);
-  const draw = () => { const query = input.value.trim().toLowerCase(); const matches = values.filter(({ fips }) => { const county = countyFor(fips); return !query || `${county?.name || ''} ${county?.state || ''} ${fips}`.toLowerCase().includes(query); }); const sorted = layer.kind === 'category' ? matches : [...matches].sort((a, b) => (Number.isFinite(b.value) ? b.value : -Infinity) - (Number.isFinite(a.value) ? a.value : -Infinity)); const shown = sorted.slice(0, 150); holder.replaceChildren(node('p', `${num(matches.length)} counties${shown.length < matches.length ? `, showing the top ${shown.length}` : ''}`, { class: 'status' }), dataTable(['County', 'FIPS', layer.name], shown.map(({ fips, value }) => { const county = countyFor(fips); const link = node('a', countyLabel(county, fips), { href: '#', 'data-fips': fips }); link.addEventListener('click', (event) => { event.preventDefault(); setScenario({ fips }); selection.commit(fips); window.scrollTo({ top: 0, behavior: 'smooth' }); }); return [link, fips, layer.format(value)]; }), { numeric: [2] })); };
+  const draw = () => { const query = input.value.trim().toLowerCase(); const matches = values.filter(({ fips }) => { const county = countyFor(fips); return !query || `${county?.name || ''} ${county?.state || ''} ${fips}`.toLowerCase().includes(query); }); const sorted = layer.kind === 'category' ? matches : [...matches].sort((a, b) => (Number.isFinite(b.value) ? b.value : -Infinity) - (Number.isFinite(a.value) ? a.value : -Infinity)); const shown = sorted.slice(0, 150); holder.replaceChildren(node('p', `${num(matches.length)} count${matches.length === 1 ? 'y' : 'ies'}${shown.length < matches.length ? `, showing the first ${shown.length}` : ''}`, { class: 'status' }), dataTable(['County', 'FIPS', layer.name], shown.map(({ fips, value }) => { const county = countyFor(fips); const link = node('a', countyLabel(county, fips), { href: '#', 'data-fips': fips }); link.addEventListener('click', (event) => { event.preventDefault(); setScenario({ fips }); selection.commit(fips); window.scrollTo({ top: 0, behavior: 'smooth' }); }); return [link, fips, layer.format(value)]; }), { numeric: [2] })); };
   input.addEventListener('input', draw); details.append(input, holder); details.addEventListener('toggle', () => { if (details.open && !holder.hasChildNodes()) draw(); }); panel.append(details);
 }
 async function loadSummary(pairId) { if (!summaryCache.has(pairId)) summaryCache.set(pairId, loadObject(`summary:${pairId}`)); return summaryCache.get(pairId); }
@@ -183,7 +200,8 @@ async function initializeExplore() {
     try {
       const summary = await loadSummary(scenario.indexId); rows = summary.payload?.rows || summary.payload?.counties || [];
       const sample = rows[0]?.layers || {}; const keys = [...new Set(rows.flatMap((row) => Object.keys(row.layers || {})))].sort((a, b) => (LAYER_ORDER.indexOf(a) + 100) % 100 - (LAYER_ORDER.indexOf(b) + 100) % 100);
-      layers = keys.map((key) => layerMeta(key, sample[key])); activeLayer = layers.find((layer) => layer.key === activeLayer?.key) || layers[0] || null;
+      const informative = (key) => new Set(rows.map((row) => { const layer = row.layers?.[key]; return layer && typeof layer === 'object' ? layer.value : layer; })).size > 1;
+      layers = keys.filter(informative).map((key) => layerMeta(key, sample[key])); activeLayer = layers.find((layer) => layer.key === activeLayer?.key) || layers[0] || null;
       buildLayerButtons(); renderHeadline(rows, scenario.indexId); await paint();
     } catch (error) { $('#map-status').textContent = error.message; }
   };

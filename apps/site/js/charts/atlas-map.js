@@ -45,11 +45,15 @@ async function geometry(topologyUrl) {
     if (!window.d3 || !window.topojson) throw new Error('Map libraries did not load. Use the county search and table instead.');
     const response = await fetch(topologyUrl); if (!response.ok) throw new Error('The national map geometry is unavailable. Use the county search and table instead.');
     const topology = await response.json(); const object = topology.objects.counties || Object.values(topology.objects)[0]; const path = d3.geoPath();
-    const features = topojson.feature(topology, object).features.map((feature) => ({ fips: String(feature.id).padStart(5, '0'), area: new Path2D(path(feature)) }));
+    // Bounding boxes make hit testing exact and cheap: filter by box, then isPointInPath.
+    // A colour-coded hit canvas cannot be used here, because canvas antialiases path fills
+    // and a blended edge pixel decodes to an unrelated county.
+    const features = topojson.feature(topology, object).features.map((feature) => {
+      const [[x0, y0], [x1, y1]] = path.bounds(feature);
+      return { fips: String(feature.id).padStart(5, '0'), area: new Path2D(path(feature)), x0, y0, x1, y1 };
+    });
     const states = new Path2D(path(topojson.mesh(topology, object, (a, b) => a !== b && String(a.id).slice(0, 2) !== String(b.id).slice(0, 2))));
-    const hit = document.createElement('canvas'); hit.width = 975; hit.height = 610; const context = hit.getContext('2d', { willReadFrequently: true }); const lookup = new Map();
-    features.forEach((feature, index) => { const n = index + 1; lookup.set(n, feature.fips); context.fillStyle = `rgb(${n & 255},${(n >> 8) & 255},${(n >> 16) & 255})`; context.fill(feature.area); });
-    return { features, states, hit: context, lookup };
+    return { features, states };
   })();
   cache.set(topologyUrl, promise); return promise;
 }
@@ -63,17 +67,35 @@ export async function renderAtlasMap(canvas, { topologyUrl, rows = [], layer, se
   const context = canvas.getContext('2d');
   const geo = await geometry(topologyUrl);
   const values = new Map(rows.map((row) => [String(row.fips).padStart(5, '0'), row.value]));
+  // The study covers the contiguous states, so counties it does not publish are not drawn
+  // at all: an Alaskan county the reader could click has nothing behind it.
+  const drawn = geo.features.filter((feature) => values.has(feature.fips));
   const domain = layerDomain(rows.map((row) => row.value), layer);
   context.fillStyle = '#e3ece8'; context.fillRect(0, 0, canvas.width, canvas.height);
-  geo.features.forEach((feature) => { context.fillStyle = colorFor(values.has(feature.fips) ? values.get(feature.fips) : null, layer, domain); context.fill(feature.area); });
+  drawn.forEach((feature) => { context.fillStyle = colorFor(values.get(feature.fips), layer, domain); context.fill(feature.area); });
   context.strokeStyle = 'rgba(23,44,56,.55)'; context.lineWidth = .8; context.stroke(geo.states);
-  const selected = geo.features.find((feature) => feature.fips === selectedFips);
+  const selected = drawn.find((feature) => feature.fips === selectedFips);
   if (selected) { context.strokeStyle = '#fff'; context.lineWidth = 4; context.stroke(selected.area); context.strokeStyle = '#c2543a'; context.lineWidth = 2.2; context.stroke(selected.area); }
-  const fipsAt = (event) => { const box = canvas.getBoundingClientRect(); const x = Math.round((event.clientX - box.left) * canvas.width / box.width); const y = Math.round((event.clientY - box.top) * canvas.height / box.height); if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) return null; const pixel = geo.hit.getImageData(x, y, 1, 1).data; return geo.lookup.get(pixel[0] + (pixel[1] << 8) + (pixel[2] << 16)) || null; };
+  const pointAt = (event) => { const box = canvas.getBoundingClientRect(); return [(event.clientX - box.left) * canvas.width / box.width, (event.clientY - box.top) * canvas.height / box.height]; };
+  const fipsAt = (event) => {
+    const [x, y] = pointAt(event);
+    if (x < 0 || y < 0 || x > canvas.width || y > canvas.height) return null;
+    const hit = drawn.find((feature) => x >= feature.x0 - .5 && x <= feature.x1 + .5 && y >= feature.y0 - .5 && y <= feature.y1 + .5 && context.isPointInPath(feature.area, x, y));
+    return hit ? hit.fips : null;
+  };
   canvas.onclick = (event) => { const fips = fipsAt(event); if (fips) onSelect(fips); };
   if (tooltip) {
-    canvas.onmousemove = (event) => { const fips = fipsAt(event); const text = fips ? describe?.(fips) : null; if (!text) { tooltip.hidden = true; return; } tooltip.textContent = text; tooltip.hidden = false; const box = canvas.parentElement.getBoundingClientRect(); tooltip.style.left = `${event.clientX - box.left}px`; tooltip.style.top = `${event.clientY - box.top}px`; };
+    canvas.onmousemove = (event) => {
+      const fips = fipsAt(event); const text = fips ? describe?.(fips) : null;
+      if (!text) { tooltip.hidden = true; return; }
+      tooltip.textContent = text; tooltip.hidden = false;
+      // Keep the label inside the panel: a county on either edge would otherwise lose its name.
+      const panel = canvas.parentElement.getBoundingClientRect();
+      const half = tooltip.offsetWidth / 2; const centre = event.clientX - panel.left;
+      tooltip.style.left = `${Math.max(half + 4, Math.min(panel.width - half - 4, centre))}px`;
+      tooltip.style.top = `${event.clientY - panel.top}px`;
+    };
     canvas.onmouseleave = () => { tooltip.hidden = true; };
   }
-  return { domain };
+  return { domain, drawn: drawn.length };
 }

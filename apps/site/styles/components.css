@@ -44,8 +44,9 @@ fieldset + fieldset { margin-top: 1.1rem; }
 .county-option .mono { color: var(--ink-3); margin-left: .35rem; }
 
 /* Metric tiles */
-.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
-.tile { background: var(--paper); padding: .85rem 1rem; min-width: 0; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); gap: 1px; border-radius: var(--radius); overflow: hidden; }
+/* Each tile carries its own rule, so a row that does not fill leaves paper, not a grey slab. */
+.tile { background: var(--paper); padding: .85rem 1rem; min-width: 0; box-shadow: 0 0 0 1px var(--line); }
 .tile .label { display: block; font-size: .74rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); font-weight: 700; margin-bottom: .3rem; }
 .tile .value { display: block; font-family: var(--serif); font-size: 1.55rem; line-height: 1.1; font-weight: 500; overflow-wrap: anywhere; }
 .tile .value.small { font-size: 1.15rem; }

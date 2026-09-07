@@ -29,7 +29,7 @@ def _source(root: Path, path: str) -> Path:
     return result if result.is_absolute() else root / result
 
 
-def _legacy_stub(filename: str, title: str) -> str:
+def _legacy_stub(archived: str, title: str) -> str:
     """A styled signpost for a V1 URL: the archived page is preserved, not current."""
 
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
@@ -50,13 +50,15 @@ def _legacy_stub(filename: str, title: str) -> str:
 <p class="eyebrow">First edition archive</p>
 <h1>{title} has moved.</h1>
 <p class="lede">This address belongs to the first edition of the atlas,
-published in September 2026 and kept exactly as it was. Its station choices
-and effectiveness figures were later re-measured on matched seasons, and some
-of them changed, so read it as a record rather than as the current result.</p>
+published in September 2026 and kept exactly as it was. Its station choices and
+effectiveness figures were later re-measured on matched seasons and some of them
+changed, and it shows modelled bid, mid and ask indications that the current
+release does not publish. Read it as a record of what was said then, not as the
+current result.</p>
 </div></div>
 <div class="btn-row">
 <a class="btn btn-primary" href="research/index.html">Read the current research</a>
-<a class="btn" href="v1/{filename}">Open the archived page</a>
+<a class="btn" href="v1/{archived}">Open the archived page</a>
 <a class="btn btn-quiet" href="index.html">Go to the map</a></div></main>
 <footer class="site-footer"><div class="site-footer-inner"><div>
 <h4>Research and education only</h4>
@@ -165,13 +167,18 @@ def build_site(*, root: Path, out: Path, release_id: str, lock: dict[str, Any]) 
         require((legacy_root / "index.html").is_file(), "Missing preserved V1 bundle")
         shutil.copytree(legacy_root, out / "v1")
     # Legacy document routes remain explicit archival destinations, never new figures under old IDs.
-    for filename, title in (
-        ("methodology.html", "Methodology"),
-        ("model-card.html", "Model card"),
-        ("nebraska.html", "Nebraska case study"),
-        ("about.html", "Provenance"),
+    for route, archived, title in (
+        ("methodology.html", "methodology.html", "Methodology"),
+        ("model-card.html", "model_card.html", "Model card"),
+        ("nebraska.html", "nebraska.html", "Nebraska case study"),
+        ("about.html", "about.html", "Provenance"),
+        # The footer's archive link lands here rather than inside the sealed V1 tree,
+        # which cannot carry a banner of its own without breaking its pinned digest.
+        ("v1-archive.html", "index.html", "The first edition"),
     ):
-        (out / filename).write_text(_legacy_stub(filename, title))
+        require((out / "v1" / archived).is_file(), f"Missing archived page v1/{archived}")
+        (out / route).write_text(_legacy_stub(archived, title))
+    (out / "404.html").write_text(_legacy_stub("index.html", "Page not found"))
     (out / ".nojekyll").write_text("")
     return {
         "schema_version": "2.0",

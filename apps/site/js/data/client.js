@@ -51,7 +51,7 @@ export function createPayloadClient({ baseUrl = 'data/v2', fetchImpl = fetch } =
     object: async (bootstrap, objectId, signal) => {
       let ref = Array.isArray(bootstrap.objects) ? bootstrap.objects.find((item) => item.object_key === objectId || item.object_id === objectId) : bootstrap.objects[objectId];
       if (!ref) ref = await catalogObject(bootstrap, objectId, signal);
-      if (!ref) throw new Error(`Release ${bootstrap.release_id} does not contain ${objectId}.`);
+      if (!ref) throw new Error('This release does not publish that record.');
       if (ref.schema_version) return assertResultEnvelope(ref, { releaseId: bootstrap.release_id });
       const url = `${baseUrl}/releases/${encodeURIComponent(bootstrap.release_id)}/${ref.path.replace(/^\/+/, '')}`;
       let result = assertResultEnvelope(await verifiedObjectJson(url, ref, signal), { releaseId: bootstrap.release_id });

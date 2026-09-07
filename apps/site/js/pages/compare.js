@@ -198,7 +198,9 @@ function nearestSentence(evaluated) {
     const groups = [
       { items: better, single: (list) => `the past-performance choice beat the nearest station, by ${upTo(list.map((item) => item.delta))}`, multi: (list) => `it beat the nearest station by ${upTo(list.map((item) => item.delta))}` },
       { items: same, single: () => 'the past-performance choice always landed on the nearest station, so there was nothing to gain or lose', multi: () => 'the two are the same station', silent: true },
-      { items: close, single: () => 'the nearest station would have done practically as well (within one point)', multi: () => 'the nearest would have done practically as well' },
+      { items: close,
+        single: (list) => (list.every((item) => item.delta < 0) ? `the nearest station would have done slightly better, by ${upTo(list.map((item) => item.delta))}` : 'the nearest station would have done practically as well (within one point)'),
+        multi: (list) => (list.every((item) => item.delta < 0) ? `the nearest station would have done slightly better, by ${upTo(list.map((item) => item.delta))}` : 'the nearest would have done practically as well') },
       { items: worse, single: (list) => `the nearest station would actually have scored higher, by ${upTo(list.map((item) => item.delta))}`, multi: (list) => `the nearest station would actually have scored higher, by ${upTo(list.map((item) => item.delta))}` },
     ].filter((group) => group.items.length);
     const note = (group, form) => {
@@ -355,6 +357,8 @@ export function mountCompare({ bootstrap, counties, scenario, loadObject, setSce
     compare.textContent = ready ? `Compare ${count} counties` : 'Compare';
     compare.setAttribute('aria-disabled', String(!ready));
     if (!ready) formStatus.textContent = count === 0 ? 'Choose two or more counties to compare.' : 'Add one more county to compare.';
+    // The panel below must not keep telling the reader to add a county they have already added.
+    if (!shownKey) showEmpty();
     else if (shownKey === null) formStatus.textContent = `Press Compare to score these ${count} counties on ${pairLabel(scenario.indexId)}.`;
     else if (shownKey !== currentKey()) formStatus.textContent = 'The table below still shows the previous set. Press Compare to update it.';
     else formStatus.textContent = '';
@@ -421,10 +425,13 @@ export function mountCompare({ bootstrap, counties, scenario, loadObject, setSce
   function showEmpty() {
     shownKey = null;
     results.replaceChildren(); results.removeAttribute('aria-busy');
-    const only = chosen[0] ? countyLabel(countyFor(chosen[0]), chosen[0]) : null;
+    const only = chosen.length === 1 ? countyLabel(countyFor(chosen[0]), chosen[0]) : null;
+    const heading = chosen.length >= MIN_COUNTIES
+      ? `Press Compare to score ${count(chosen.length)} counties side by side.`
+      : only ? `Add one more county to compare it with ${only}.` : 'Add two or more counties to compare them.';
     results.append(
       node('p', 'Side by side', { class: 'eyebrow' }),
-      node('h2', only ? `Add one more county to compare it with ${only}.` : 'Add two or more counties to compare them.'),
+      node('h2', heading),
       node('p', 'Search above by county name, state or FIPS code and choose a match to add it. Once two or more are chosen, press Compare to score them all on the same index. The link in the address bar then carries the whole set, so it can be shared.', { class: 'status' }),
     );
   }
