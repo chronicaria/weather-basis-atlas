@@ -112,10 +112,16 @@ original claims.
 
 ## V2.1 presentation release
 
-V2.1 (September 2026) redesigned `apps/site/` for a public reader without
+V2.1 (7 September 2026) redesigned `apps/site/` for a public reader without
 touching any scientific artifact: plain-language copy, formatted numbers with
 units, named map layers with legends, metric tiles with one-line meanings,
 simulated-season charts, a stepped Portfolio Lab, a documentation shell for
 Research, and provenance identifiers moved into collapsed blocks. The
 presentation-only release path (`scripts/presentation_lock.py`,
 `scripts/serve_site.py`) is documented in [the release runbook](release.md).
+
+It is live as `release:42ca66b42f7be6f9efa7bd6da40acb9504b55507931d69055fc5c1b5df1db67c`
+(tag `v2.1.0-20260907`, Pages run 34132093294). The public text also carries the
+corrections from the V2 audit: R01 is reported with its wins, ties and losses,
+no risk-transfer loading is claimed, and the superseded R01 artifact directories
+are marked.

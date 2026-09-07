@@ -124,9 +124,12 @@ with their inventories and checksums; they are recovery inputs, not Pages
 deployment content. These assets are now retained on the immutable release above.
 
 The Pages workflow is manually dispatched with the GitHub Release asset URL,
-archive SHA-256, and expected `release_id`. Dispatch it from the release tag
-(`gh workflow run pages.yml --ref <tag> …`) so the checkout, dependency lock
-and verifier are the ones sealed with that release, including on rollback. It downloads only that asset,
+archive SHA-256, and expected `release_id`. The `github-pages`
+environment accepts only protected branches, so dispatch it with `--ref main`
+and make sure `main` is at the release commit first; a tag ref is rejected with
+"not allowed to deploy to github-pages due to environment protection rules".
+Tag the release commit as well, so a later rollback can check out the verifier
+that was sealed with the release. It downloads only that asset,
 checks the archive digest, extracts exactly one bundle, requires its V1 archive
 entrypoint, runs `wba v2 release verify`, compares the embedded ID, and uploads
 only that verified directory to Pages. It never uploads the tracked `site/`
@@ -173,6 +176,17 @@ the public objects inside the bundle are re-stamped with that identity by the
 builder, while their scientific `analysis_id`, `scenario_set_id` and source
 artifact ids are unchanged. Record the tag, asset SHA-256 and release id in
 PROGRESS.md after the Pages workflow succeeds.
+
+## Published releases
+
+| Release | Tag | Asset SHA-256 | Deployed |
+| --- | --- | --- | --- |
+| `release:306bdf8f…` | `v2.0.0-20260905` | `3b9588fe…` | run 34001239283 |
+| `release:42ca66b4…` | `v2.1.0-20260907` | `ca3b4909…` | run 34132093294 |
+
+V2.1 is the presentation release of the same accepted study: 93,503 files,
+749,471,636 served bytes, asset 703,704,611 bytes. Its scientific identity is
+the V2 one; `scripts/presentation_lock.py` asserts that before writing a lock.
 
 ## Recovery
 

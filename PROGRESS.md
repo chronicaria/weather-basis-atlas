@@ -252,3 +252,23 @@ Checks: Ruff clean; 198 tests pass with 5 data-marked deselections. Every route
 was driven headlessly at 1280, 390 and 320 CSS pixels and at 200% text zoom with
 no page overflow and no console errors, and no page shows an internal identifier
 outside a collapsed block.
+
+Three adversarial gates ran against the sealed bundle before publication, each
+re-testing the last one's findings. They caught five blockers in the first round
+and two in the second, all fixed and re-verified: county picking on the map
+returned the wrong county for about a fifth of clickable pixels because the
+colour-coded hit buffer was antialiased; Alaska and Hawaii were drawn and
+clickable on a map of the contiguous states; the model-card signpost pointed at
+a filename that does not exist; the footer led straight into the sealed first
+edition, which shows modelled bid and ask prices; the station table read as a
+rival to the headline number; the county search rejected the exact format its
+own placeholder demonstrates; and the 404 page was a first-edition redirect. The
+third gate found no blockers and no majors.
+
+Published as `release:42ca66b42f7be6f9efa7bd6da40acb9504b55507931d69055fc5c1b5df1db67c`,
+tag `v2.1.0-20260907`, asset SHA-256
+`ca3b49096ea36fd4a7884725bafea8b6f181fab489efd377c029bddfae09c208`
+(703,704,611 bytes; bundle 93,503 files, 749,471,636 served bytes). Pages run
+34132093294 deployed it; the live release pointer matches the sealed bundle and
+all twelve routes answer. Note that the `github-pages` environment rejects a tag
+ref, so the deploy is dispatched from `main` at the release commit.
