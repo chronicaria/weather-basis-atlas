@@ -176,8 +176,10 @@ function sentenceFor(outcome, county) {
   const strong = (text) => node('strong', text); const parts = [];
   const kindWord = indexKindWord(outcome.shared.indexId); const capped = spec.cap != null && ['call', 'put'].includes(kind); const noun = kindNoun(kind, spec);
   const summed = next.payoffStructure === 'sum_of_monthly_options'; const pays = summed ? 'paying' : 'pays'; const owes = summed ? 'owing' : 'owes';
-  if (next.payoffStructure === 'monthly_option') parts.push(`A ${monthYear(windows[0])} ${kindWord} ${noun} on ${county} `);
-  else if (next.payoffStructure === 'option_on_strip') parts.push(`A ${seasonLabel(windows)} ${kindWord} ${noun} on ${county}, based on the ${windows.length}-month total, `);
+  // "An August", not "A August": the article follows the month that opens the sentence.
+  const article = (text) => (/^[aeiou]/i.test(String(text).trim()) ? 'An' : 'A');
+  if (next.payoffStructure === 'monthly_option') parts.push(`${article(monthYear(windows[0]))} ${monthYear(windows[0])} ${kindWord} ${noun} on ${county} `);
+  else if (next.payoffStructure === 'option_on_strip') parts.push(`${article(seasonLabel(windows))} ${seasonLabel(windows)} ${kindWord} ${noun} on ${county}, based on the ${windows.length}-month total, `);
   else parts.push(`${capitalize(countWord(windows.length))} separate monthly ${kindWord} ${noun}s on ${county}, ${seasonLabel(windows)}, each `);
   const per = strong(usd(contractMultiplier)); const strike = strong(num(spec.strike));
   if (kind === 'call') parts.push(`${pays} `, per, ' for every degree day above ', strike);
@@ -320,8 +322,8 @@ export async function mountContract({ scenario, loadObject, setScenario, pageLin
     const referencePhysical = price.physical?.status === 'available' && price.physical?.amount != null ? `The release’s reference ticket is worth ${usd(price.physical.amount)}.` : statusText(price.physical?.reason || price.physical?.status);
     const numbers = dataTable(['Number', 'Amount', 'What it means'], [
       ['Expected payout', usd(expected), `Average payout across the ${num(paths.ids.length)} simulated ${seasonWord}, using real-world weather odds rather than a market’s. ${referencePhysical}`],
-      ['Assumed risk-transfer loading', enteredLoad == null ? NA : usd(enteredLoad), enteredLoad == null ? statusText(price.model_load?.reason || price.model_load?.status) : `Your assumption, not the release’s. Expected payout plus loading: ${usd(loadedExpected)}.`],
-      ['Market price', price.market?.amount != null ? usd(price.market.amount) : NA, statusText(price.market?.reason || price.market?.status)],
+      ['Assumed risk-transfer loading', enteredLoad == null ? 'None assumed' : usd(enteredLoad), enteredLoad == null ? 'This release assumes no charge for taking the risk on. Enter one above to see what it would add.' : `Your assumption, not the release’s. Expected payout plus loading: ${usd(loadedExpected)}.`],
+      ['Market price', price.market?.amount != null ? usd(price.market.amount) : 'Not observed', statusText(price.market?.reason || price.market?.status)],
     ], { numeric: [1] });
     const numbersSection = node('div'); numbersSection.append(node('h3', 'Three separate numbers'), node('p', 'Reported apart, so none of them is mistaken for a quote.', { class: 'status' }), numbers);
     /* Actions. The export shape is unchanged from V2. */

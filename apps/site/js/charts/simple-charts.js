@@ -11,7 +11,7 @@ function prepare(canvas, width, height) { canvas.width = width * 2; canvas.heigh
 export function drawHistogram(canvas, values, { markers = [], xLabel = '', width = 520, height = 220, bins = 32, color = TEAL } = {}) {
   const data = values.filter(Number.isFinite); if (data.length < 2) return false;
   const context = prepare(canvas, width, height); const pad = { left: 44, right: 14, top: 14, bottom: 34 }; const plotW = width - pad.left - pad.right; const plotH = height - pad.top - pad.bottom;
-  const min = Math.min(...data); const max = Math.max(...data); const xTicks = niceTicks(min, max, 6); const lo = Math.min(min, xTicks[0]); const hi = Math.max(max, xTicks.at(-1)); const binW = (hi - lo) / bins || 1;
+  const min = Math.min(...data); const max = Math.max(...data); const xTicks = niceTicks(min, max, Math.max(3, Math.floor((width - 58) / 78))); const lo = Math.min(min, xTicks[0]); const hi = Math.max(max, xTicks.at(-1)); const binW = (hi - lo) / bins || 1;
   const counts = Array(bins).fill(0); data.forEach((v) => { counts[Math.min(bins - 1, Math.floor((v - lo) / binW))] += 1; }); const peak = Math.max(...counts);
   const x = (v) => pad.left + (v - lo) / (hi - lo || 1) * plotW; const y = (c) => pad.top + plotH - c / peak * plotH;
   context.strokeStyle = LINE; context.lineWidth = 1; niceTicks(0, peak, 4).forEach((t) => { context.beginPath(); context.moveTo(pad.left, y(t)); context.lineTo(width - pad.right, y(t)); context.stroke(); context.fillStyle = MUTED; context.textAlign = 'right'; context.fillText(fmt(t / data.length * 100) + '%', pad.left - 6, y(t) + 4); });
@@ -28,7 +28,7 @@ export function drawScatter(canvas, xs, ys, { xLabel = '', yLabel = '', width = 
   const points = xs.map((x, i) => [x, ys[i]]).filter(([x, y]) => Number.isFinite(x) && Number.isFinite(y)); if (points.length < 2) return false;
   const context = prepare(canvas, width, height); const pad = { left: 52, right: 14, top: 12, bottom: 36 }; const plotW = width - pad.left - pad.right; const plotH = height - pad.top - pad.bottom;
   const xMin = Math.min(...points.map((p) => p[0])); const xMax = Math.max(...points.map((p) => p[0])); const yMin = Math.min(...points.map((p) => p[1])); const yMax = Math.max(...points.map((p) => p[1]));
-  const xTicks = niceTicks(xMin, xMax, 5); const yTicks = niceTicks(yMin, yMax, 5); const xl = Math.min(xMin, xTicks[0]); const xh = Math.max(xMax, xTicks.at(-1)); const yl = Math.min(yMin, yTicks[0]); const yh = Math.max(yMax, yTicks.at(-1));
+  const xTicks = niceTicks(xMin, xMax, Math.max(3, Math.floor((width - 66) / 78))); const yTicks = niceTicks(yMin, yMax, Math.max(3, Math.floor((height - 48) / 46))); const xl = Math.min(xMin, xTicks[0]); const xh = Math.max(xMax, xTicks.at(-1)); const yl = Math.min(yMin, yTicks[0]); const yh = Math.max(yMax, yTicks.at(-1));
   const x = (v) => pad.left + (v - xl) / (xh - xl || 1) * plotW; const y = (v) => pad.top + plotH - (v - yl) / (yh - yl || 1) * plotH;
   context.strokeStyle = LINE; context.lineWidth = 1; context.fillStyle = MUTED; context.textAlign = 'right'; yTicks.forEach((t) => { context.beginPath(); context.moveTo(pad.left, y(t)); context.lineTo(width - pad.right, y(t)); context.stroke(); context.fillText(fmt(t), pad.left - 6, y(t) + 4); });
   context.textAlign = 'center'; xTicks.forEach((t) => { context.fillText(fmt(t), x(t), pad.top + plotH + 14); });

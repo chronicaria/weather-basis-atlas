@@ -93,7 +93,10 @@ export async function renderAtlasMap(canvas, { topologyUrl, rows = [], layer, se
       const panel = canvas.parentElement.getBoundingClientRect();
       const half = tooltip.offsetWidth / 2; const centre = event.clientX - panel.left;
       tooltip.style.left = `${Math.max(half + 4, Math.min(panel.width - half - 4, centre))}px`;
-      tooltip.style.top = `${event.clientY - panel.top}px`;
+      // Near the top of the map there is no room above the cursor, so sit below it.
+      const top = event.clientY - panel.top; const below = top < tooltip.offsetHeight + 14;
+      tooltip.classList.toggle('below', below);
+      tooltip.style.top = `${below ? top + 18 : top}px`;
     };
     canvas.onmouseleave = () => { tooltip.hidden = true; };
   }

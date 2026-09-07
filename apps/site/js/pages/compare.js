@@ -356,7 +356,7 @@ export function mountCompare({ bootstrap, counties, scenario, loadObject, setSce
     const count = chosen.length; const ready = count >= MIN_COUNTIES;
     compare.textContent = ready ? `Compare ${count} counties` : 'Compare';
     compare.setAttribute('aria-disabled', String(!ready));
-    if (!ready) formStatus.textContent = count === 0 ? 'Choose two or more counties to compare.' : 'Add one more county to compare.';
+    formStatus.textContent = ready ? '' : count === 0 ? 'Choose two or more counties to compare.' : 'Add one more county to compare.';
     // The panel below must not keep telling the reader to add a county they have already added.
     if (!shownKey) showEmpty();
     else if (shownKey === null) formStatus.textContent = `Press Compare to score these ${count} counties on ${pairLabel(scenario.indexId)}.`;
